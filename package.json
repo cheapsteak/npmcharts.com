@@ -19,11 +19,12 @@
     "gulp-stylus": "0.0.9",
     "gulp-jade": "~0.3.0",
     "gulp-browserify": "~0.2.5",
-    "gulp": "~3.3.1",
+    "gulp": "~3.3.2",
     "node-static": "~0.7.3",
     "gulp-minify-css": "~0.2.0",
     "coffeeify": "~0.5.2",
     "tiny-lr": "0.0.5",
-    "gulp-livereload": "~0.2.0"
+    "gulp-livereload": "~0.2.0",
+    "bower": "~1.2.8"
   }
 }
