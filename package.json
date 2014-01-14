@@ -3,7 +3,10 @@
   "version": "0.0.0",
   "description": "Project template for gulp.js",
   "main": "gulpfile.js",
-  "scripts": {},
+  "scripts": {
+    "prepublish": "./node_modules/.bin/bower install",
+    "start": "./node_modules/.bin/gulp"
+  },
   "keywords": [
     "gulp",
     "template"
