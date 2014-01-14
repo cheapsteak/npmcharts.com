@@ -8,6 +8,10 @@ browserify = require 'gulp-browserify'
 rename     = require 'gulp-rename'
 uglify     = require 'gulp-uglify'
 coffeeify  = require 'coffeeify'
+nodeStatic = require 'node-static'
+lr         = require 'tiny-lr'
+livereload = require 'gulp-livereload'
+reloadServer = lr()
 
 compileCoffee = (debug = false) ->
   config = transform: ['coffeeify']
@@ -27,12 +31,14 @@ compileCoffee = (debug = false) ->
 
   bundle.pipe(uglify()) unless debug
   bundle.pipe gulp.dest('public/js/')
+    .pipe livereload reloadServer
 
 compileJade = (debug = false) ->
   gulp
     .src('src/jade/*.jade')
     .pipe(jade(pretty: debug))
     .pipe(gulp.dest('public/'))
+    .pipe livereload(reloadServer)
 
 compileStylus = (debug = false) ->
   styles = gulp
@@ -42,6 +48,7 @@ compileStylus = (debug = false) ->
   styles.pipe(CSSmin()) unless debug
 
   styles.pipe(gulp.dest('public/css/'))
+    .pipe livereload reloadServer
 
 # Build tasks
 gulp.task "jade-production", -> compileJade()
@@ -54,7 +61,6 @@ gulp.task 'stylus', -> compileStylus(true)
 gulp.task 'coffee', -> compileCoffee(true)
 
 gulp.task "server", ->
-  nodeStatic = require('node-static')
   staticFiles = new nodeStatic.Server './public'
   require('http').createServer (req, res) ->
     req.addListener 'end', ->
@@ -63,14 +69,17 @@ gulp.task "server", ->
   .listen 9001
 
 gulp.task "watch", ->
-  gulp.watch "src/coffee/*.coffee", ->
-    gulp.run "coffee"
+  reloadServer.listen 35729, (err) ->
+    console.error err if err?
 
-  gulp.watch "src/jade/*.jade", ->
-    gulp.run "jade"
+    gulp.watch "src/coffee/*.coffee", ->
+      gulp.run "coffee"
 
-  gulp.watch "src/stylus/*.styl", ->
-    gulp.run "stylus"
+    gulp.watch "src/jade/*.jade", ->
+      gulp.run "jade"
+
+    gulp.watch "src/stylus/*.styl", ->
+      gulp.run "stylus"
 
 gulp.task "build", ->
   gulp.run "coffee-production", "jade-production", "stylus-production"
