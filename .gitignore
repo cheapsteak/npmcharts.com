@@ -1,0 +1,5 @@
+node_modules
+public/*.html
+public/css/*.css
+public/js/*.js
+vendor
