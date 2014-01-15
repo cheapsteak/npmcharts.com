@@ -4,8 +4,8 @@
   "description": "Project template for gulp.js",
   "main": "gulpfile.js",
   "scripts": {
-    "prepublish": "./node_modules/.bin/bower install",
-    "start": "./node_modules/.bin/gulp"
+    "prepublish": "bower install",
+    "start": "gulp"
   },
   "keywords": [
     "gulp",
