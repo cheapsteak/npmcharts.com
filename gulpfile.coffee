@@ -14,7 +14,6 @@ livereload = require 'gulp-livereload'
 reloadServer = lr()
 
 compileCoffee = (debug = false) ->
-  config = transform: ['coffeeify']
 
   config =
     debug: debug
@@ -30,8 +29,10 @@ compileCoffee = (debug = false) ->
     .pipe(rename('bundle.js'))
 
   bundle.pipe(uglify()) unless debug
-  bundle.pipe gulp.dest('public/js/')
-    .pipe livereload reloadServer
+
+  bundle
+    .pipe(gulp.dest('./public/js/'))
+    .pipe(livereload(reloadServer))
 
 compileJade = (debug = false) ->
   gulp
