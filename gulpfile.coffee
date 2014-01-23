@@ -24,7 +24,7 @@ compileCoffee = (debug = false) ->
         exports: '$'
 
   bundle = gulp
-    .src('./src/coffee/main.coffee')
+    .src('./src/coffee/main.coffee', read: false)
     .pipe(browserify(config))
     .pipe(rename('bundle.js'))
 

@@ -1,2 +1,2 @@
-$ = require 'jquery'
+$ = require 'jquery'
 console.log 'foobar'
