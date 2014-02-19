@@ -5,7 +5,8 @@
   "main": "gulpfile.js",
   "scripts": {
     "prepublish": "bower install",
-    "start": "gulp"
+    "start": "gulp",
+    "build": "gulp build"
   },
   "keywords": [
     "gulp",
