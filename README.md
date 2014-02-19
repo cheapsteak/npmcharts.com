@@ -23,5 +23,9 @@
 * npm run build
     * Builds & minifies everything
 
+## Development guidelines
+* **public** - directory should be dedicated only to compiled/copied files from **src** - directory.
+  It should be possible to delete directory completely and after **npm start** or **npm run build** everything should be as they were before the deletation.
+
 ## Enable LiveReload
 Install [LiveReload for Chrome](https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei?hl=en)

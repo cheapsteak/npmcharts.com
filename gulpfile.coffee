@@ -14,7 +14,6 @@ livereload = require 'gulp-livereload'
 reloadServer = lr()
 
 compileCoffee = (debug = false) ->
-
   config =
     debug: debug
     transform: ['coffeeify']
@@ -51,15 +50,22 @@ compileStylus = (debug = false) ->
   styles.pipe(gulp.dest('public/css/'))
     .pipe livereload reloadServer
 
+copyAssets = (debug = false) ->
+  gulp
+    .src('src/assets/**/*.*')
+    .pipe gulp.dest 'public/'
+
 # Build tasks
 gulp.task "jade-production", -> compileJade()
 gulp.task 'stylus-production', ->compileStylus()
 gulp.task 'coffee-production', -> compileCoffee()
+gulp.task 'assets-production', -> copyAssets()
 
 # Development tasks
 gulp.task "jade", -> compileJade(true)
 gulp.task 'stylus', -> compileStylus(true)
 gulp.task 'coffee', -> compileCoffee(true)
+gulp.task 'assets', -> copyAssets(true)
 
 gulp.task "server", ->
   staticFiles = new nodeStatic.Server './public'
@@ -76,9 +82,10 @@ gulp.task "watch", ->
     gulp.watch "src/coffee/*.coffee", ["coffee"]
     gulp.watch "src/jade/*.jade", ["jade"]
     gulp.watch "src/stylus/*.styl", ["stylus"]
+    gulp.watch "src/assets/**/*.*", ["assets"]
 
 gulp.task "build", ->
-  gulp.run "coffee-production", "jade-production", "stylus-production"
+  gulp.run "coffee-production", "jade-production", "stylus-production", "assets-production"
 
 gulp.task "default", ->
-  gulp.run "coffee", "jade", "stylus", "watch", "server"
+  gulp.run "coffee", "jade", "stylus", "assets", "watch", "server"
