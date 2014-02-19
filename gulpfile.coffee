@@ -17,10 +17,6 @@ compileCoffee = (debug = false) ->
   config =
     debug: debug
     transform: ['coffeeify']
-    shim:
-      jquery:
-        path: './vendor/jquery/jquery.js'
-        exports: '$'
 
   bundle = gulp
     .src('./src/coffee/main.coffee', read: false)
