@@ -73,14 +73,9 @@ gulp.task "watch", ->
   reloadServer.listen 35729, (err) ->
     console.error err if err?
 
-    gulp.watch "src/coffee/*.coffee", ->
-      gulp.run "coffee"
-
-    gulp.watch "src/jade/*.jade", ->
-      gulp.run "jade"
-
-    gulp.watch "src/stylus/*.styl", ->
-      gulp.run "stylus"
+    gulp.watch "src/coffee/*.coffee", ["coffee"]
+    gulp.watch "src/jade/*.jade", ["jade"]
+    gulp.watch "src/stylus/*.styl", ["stylus"]
 
 gulp.task "build", ->
   gulp.run "coffee-production", "jade-production", "stylus-production"
