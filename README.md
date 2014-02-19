@@ -26,7 +26,7 @@
 ## Adding 3rd party libraries
     bower install jquery --save
 
-Now to use jQuery in your frontend code, you'll need to add jQuery to **gulp-browserify** [config](https://github.com/deepak1556/gulp-browserify#browserify-shim). Your [compiler config](https://github.com/leonidas/gulp-project-template/blob/master/gulpfile.coffee#L16) should be something like this:
+Now to use jQuery in your frontend code, you'll need to add jQuery to **gulp-browserify** [config](https://github.com/deepak1556/gulp-browserify#browserify-shim). Your [compiler config](https://github.com/leonidas/gulp-project-template/blob/master/gulpfile.coffee#L17-L19) should be something like this:
 
     compileCoffee = (debug = false) ->
       config =
