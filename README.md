@@ -23,6 +23,25 @@
 * npm run build
     * Builds & minifies everything
 
+## Adding 3rd party libraries
+    bower install jquery --save
+
+Now to use jQuery in your frontend code, you'll need to add jQuery to **gulp-browserify** [config](https://github.com/deepak1556/gulp-browserify#browserify-shim). Your [compiler config](https://github.com/leonidas/gulp-project-template/blob/master/gulpfile.coffee#L16) should be something like this:
+
+    compileCoffee = (debug = false) ->
+      config =
+        debug: debug
+        transform: ['coffeeify']
+        shim:
+          jquery:
+            path: './vendor/jquery/jquery.js'
+            exports: '$'
+
+Now your should be able to require jQuery in your coffee files
+
+    $ = require 'jquery'
+
+
 ## Development guidelines
 * **public** - directory should be dedicated only to compiled/copied files from **src** - directory.
   It should be possible to delete directory completely and after **npm start** or **npm run build** everything should be as they were before the deletation.
