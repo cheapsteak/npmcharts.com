@@ -80,8 +80,5 @@ gulp.task "watch", ->
     gulp.watch "src/stylus/*.styl", ["stylus"]
     gulp.watch "src/assets/**/*.*", ["assets"]
 
-gulp.task "build", ->
-  gulp.run "coffee-production", "jade-production", "stylus-production", "assets-production"
-
-gulp.task "default", ->
-  gulp.run "coffee", "jade", "stylus", "assets", "watch", "server"
+gulp.task "build", ["coffee-production", "jade-production", "stylus-production", "assets-production"]
+gulp.task "default", ["coffee", "jade", "stylus", "assets", "watch", "server"]
