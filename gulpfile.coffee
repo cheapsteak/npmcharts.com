@@ -39,7 +39,7 @@ compileJade = (debug = false) ->
 compileStylus = (debug = false) ->
   styles = gulp
     .src('src/stylus/style.styl')
-    .pipe(stylus('include css': true))
+    .pipe(stylus({set: ['include css']}))
 
   styles.pipe(CSSmin()) unless debug
 
