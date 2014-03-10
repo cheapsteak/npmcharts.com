@@ -11,11 +11,13 @@ coffeeify  = require 'coffeeify'
 nodeStatic = require 'node-static'
 lr         = require 'tiny-lr'
 livereload = require 'gulp-livereload'
+plumber    = require 'gulp-plumber'
 reloadServer = lr()
 
 compileCoffee = (debug = false) ->
   bundle = gulp
     .src('./src/coffee/main.coffee', read: false)
+    .pipe(plumber())
     .pipe(browserify(debug: debug))
     .pipe(rename('bundle.js'))
 
