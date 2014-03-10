@@ -26,16 +26,20 @@
 ## Adding 3rd party libraries
     bower install jquery --save
 
-Now to use jQuery in your frontend code, you'll need to add jQuery to **gulp-browserify** [config](https://github.com/deepak1556/gulp-browserify#browserify-shim). Your [compiler config](https://github.com/leonidas/gulp-project-template/blob/master/gulpfile.coffee#L17-L19) should be something like this:
+Now to use jQuery in your frontend code, you'll need to add jQuery to "browser" and "browserify-shim" sections of your package.json. Your package.json should be something like this:
 
-    compileCoffee = (debug = false) ->
-      config =
-        debug: debug
-        transform: ['coffeeify']
-        shim:
-          jquery:
-            path: './vendor/jquery/jquery.js'
-            exports: '$'
+    ...
+
+    "browser": {
+      "jquery": "./vendor/jquery/dist/jquery.js"
+    },
+    "browserify-shim": {
+      "jquery": "$"
+    },
+    "browserify": {
+      "transform": [ "coffeeify", "browserify-shim" ]
+    }
+    ...
 
 Now your should be able to require jQuery in your coffee files
 
@@ -45,6 +49,7 @@ Now your should be able to require jQuery in your coffee files
 ## Development guidelines
 * **public** - directory should be dedicated only to compiled/copied files from **src** - directory.
   It should be possible to delete directory completely and after **npm start** or **npm run build** everything should be as they were before the deletation.
+* All backend dependencies should be installed with **npm**. Browser dependencies should be installed with **bower**.
 
 ## Enable LiveReload
 Install [LiveReload for Chrome](https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei?hl=en)
