@@ -31,7 +31,8 @@
     "bower": "~1.2.8",
     "gulp": "~3.5.2",
     "browserify-shim": "~3.3.1",
-    "gulp-plumber": "~0.5.6"
+    "gulp-plumber": "~0.5.6",
+    "gulp-autoprefixer": "0.0.6"
   },
   "browser": {},
   "browserify-shim": {},
