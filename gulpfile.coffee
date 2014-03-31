@@ -4,7 +4,9 @@ gutil      = require 'gulp-util'
 jade       = require 'gulp-jade'
 stylus     = require 'gulp-stylus'
 CSSmin     = require 'gulp-minify-css'
-browserify = require 'gulp-browserify'
+browserify = require 'browserify'
+source     = require 'vinyl-source-stream'
+streamify  = require 'gulp-streamify'
 rename     = require 'gulp-rename'
 uglify     = require 'gulp-uglify'
 coffeeify  = require 'coffeeify'
@@ -16,13 +18,11 @@ prefix     = require 'gulp-autoprefixer'
 reloadServer = lr()
 
 compileCoffee = (debug = false) ->
-  bundle = gulp
-    .src('./src/coffee/main.coffee', read: false)
-    .pipe(plumber())
-    .pipe(browserify(debug: debug))
-    .pipe(rename('bundle.js'))
+  bundle = browserify('./src/coffee/main.coffee')
+    .bundle(debug: debug)
+    .pipe(source('bundle.js'))
 
-  bundle.pipe(uglify()) unless debug
+  bundle.pipe(streamify(uglify())) unless debug
 
   bundle
     .pipe(gulp.dest('./public/js/'))
