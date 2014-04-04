@@ -24,7 +24,6 @@
     "gulp-jade": "~0.3.0",
     "node-static": "~0.7.3",
     "gulp-minify-css": "~0.2.0",
-    "coffeeify": "~0.5.2",
     "tiny-lr": "0.0.5",
     "gulp-livereload": "~0.2.0",
     "bower": "~1.2.8",
@@ -34,7 +33,8 @@
     "gulp-autoprefixer": "0.0.6",
     "browserify": "~3.33.0",
     "gulp-streamify": "0.0.5",
-    "vinyl-source-stream": "~0.1.1"
+    "vinyl-source-stream": "~0.1.1",
+    "coffeeify": "~0.6.0"
   },
   "browser": {},
   "browserify-shim": {},
