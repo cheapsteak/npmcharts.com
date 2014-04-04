@@ -5,6 +5,7 @@ jade       = require 'gulp-jade'
 stylus     = require 'gulp-stylus'
 CSSmin     = require 'gulp-minify-css'
 browserify = require 'browserify'
+watchify   = require 'watchify'
 source     = require 'vinyl-source-stream'
 streamify  = require 'gulp-streamify'
 rename     = require 'gulp-rename'
@@ -18,15 +19,23 @@ prefix     = require 'gulp-autoprefixer'
 reloadServer = lr()
 
 compileCoffee = (debug = false) ->
-  bundle = browserify('./src/coffee/main.coffee')
-    .bundle(debug: debug)
-    .pipe(source('bundle.js'))
 
-  bundle.pipe(streamify(uglify())) unless debug
+  bundle = watchify('./src/coffee/main.coffee')
 
-  bundle
-    .pipe(gulp.dest('./public/js/'))
-    .pipe(livereload(reloadServer))
+  rebundle = ->
+
+    build = bundle.bundle(debug: debug)
+      .pipe(source('bundle.js'))
+
+    build.pipe(streamify(uglify())) unless debug
+
+    build
+      .pipe(gulp.dest('./public/js/'))
+      .pipe(livereload(reloadServer))
+
+  bundle.on 'update', rebundle
+
+  rebundle()
 
 compileJade = (debug = false) ->
   gulp
@@ -75,7 +84,6 @@ gulp.task "watch", ->
   reloadServer.listen 35729, (err) ->
     console.error err if err?
 
-    gulp.watch "src/coffee/*.coffee", ["coffee"]
     gulp.watch "src/jade/*.jade", ["jade"]
     gulp.watch "src/stylus/*.styl", ["stylus"]
     gulp.watch "src/assets/**/*.*", ["assets"]
