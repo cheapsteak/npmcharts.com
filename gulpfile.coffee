@@ -18,59 +18,49 @@ plumber    = require 'gulp-plumber'
 prefix     = require 'gulp-autoprefixer'
 reloadServer = lr()
 
-compileCoffee = (debug = false) ->
+production = process.env.NODE_ENV is 'production'
+
+gulp.task 'coffee', ->
 
   bundle = watchify('./src/coffee/main.coffee')
 
   rebundle = ->
 
-    build = bundle.bundle(debug: debug)
+    build = bundle.bundle(debug: not production)
       .pipe(source('bundle.js'))
 
-    build.pipe(streamify(uglify())) unless debug
+    build.pipe(streamify(uglify())) if production
 
     build
       .pipe(gulp.dest('./public/js/'))
       .pipe(livereload(reloadServer))
 
-  bundle.on 'update', rebundle
+  bundle.on 'update', rebundle unless production
 
   rebundle()
 
-compileJade = (debug = false) ->
+gulp.task 'jade', ->
   gulp
     .src('src/jade/*.jade')
-    .pipe(jade(pretty: debug))
+    .pipe(jade(pretty: not production))
     .pipe(gulp.dest('public/'))
     .pipe livereload(reloadServer)
 
-compileStylus = (debug = false) ->
+gulp.task 'stylus', ->
   styles = gulp
     .src('src/stylus/style.styl')
     .pipe(stylus({set: ['include css']}))
     .pipe(prefix("last 1 version", "> 1%", "ie 8"))
 
-  styles.pipe(CSSmin()) unless debug
+  styles.pipe(CSSmin()) if production
 
   styles.pipe(gulp.dest('public/css/'))
     .pipe livereload reloadServer
 
-copyAssets = (debug = false) ->
+gulp.task 'assets', ->
   gulp
     .src('src/assets/**/*.*')
     .pipe gulp.dest 'public/'
-
-# Build tasks
-gulp.task "jade-production", -> compileJade()
-gulp.task 'stylus-production', ->compileStylus()
-gulp.task 'coffee-production', -> compileCoffee()
-gulp.task 'assets-production', -> copyAssets()
-
-# Development tasks
-gulp.task "jade", -> compileJade(true)
-gulp.task 'stylus', -> compileStylus(true)
-gulp.task 'coffee', -> compileCoffee(true)
-gulp.task 'assets', -> copyAssets(true)
 
 gulp.task "server", ->
   staticFiles = new nodeStatic.Server './public'
@@ -88,5 +78,5 @@ gulp.task "watch", ->
     gulp.watch "src/stylus/*.styl", ["stylus"]
     gulp.watch "src/assets/**/*.*", ["assets"]
 
-gulp.task "build", ["coffee-production", "jade-production", "stylus-production", "assets-production"]
-gulp.task "default", ["coffee", "jade", "stylus", "assets", "watch", "server"]
+gulp.task "build", ["coffee", "jade", "stylus", "assets"]
+gulp.task "default", ["build", "watch", "server"]

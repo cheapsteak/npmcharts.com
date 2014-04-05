@@ -24,9 +24,16 @@
 * npm start
     * Compiles your files, starts watching files for changes, serves static files to port 9001
 * npm run build
-    * Builds & minifies everything
+    * Builds everything
+
+Minification, uglification and other tasks you're expected to run before deploying your product can be made by running the build command with env variable NODE_ENV set to "production"
+
+    NODE_ENV=production npm run build
+
 
 ## Adding 3rd party libraries
+**Note**: If the package you are looking for can be found in NPM it's much easier to install it from there. After installing packages from NPM they can be required without any of the following instructions.
+
     bower install jquery --save
 
 Now to use jQuery in your frontend code, you'll need to add jQuery to "browser" and "browserify-shim" sections of your package.json. Your package.json should be something like this:
@@ -46,7 +53,7 @@ Now to use jQuery in your frontend code, you'll need to add jQuery to "browser" 
 
 Now your should be able to require jQuery in your coffee files
 
-    $ = require 'jquery'
+    $ = require 'jquery'
 
 
 ## Development guidelines
