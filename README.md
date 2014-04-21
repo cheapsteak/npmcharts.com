@@ -41,7 +41,7 @@ Now to use jQuery in your frontend code, you'll need to add jQuery to "browser" 
     ...
 
     "browser": {
-      "jquery": "./vendor/jquery/dist/jquery.js"
+      "jquery": "./bower_components/jquery/dist/jquery.js"
     },
     "browserify-shim": {
       "jquery": "$"
