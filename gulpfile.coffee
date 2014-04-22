@@ -61,7 +61,7 @@ gulp.task 'styles', ->
   styles = gulp
     .src paths.styles.source
     .pipe(stylus({set: ['include css']}))
-    .pipe(prefix("last 1 version", "> 1%", "ie 8"))
+    .pipe prefix 'last 2 versions', 'Chrome 34', 'Firefox 28', 'iOS 7'
 
   styles = styles.pipe(CSSmin()) if production
 
