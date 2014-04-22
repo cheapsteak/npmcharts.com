@@ -20,7 +20,7 @@ reloadServer = lr()
 
 production = process.env.NODE_ENV is 'production'
 
-gulp.task 'coffee', ->
+gulp.task 'scripts', ->
 
   bundle = browserify('./src/coffee/main.coffee')
 
@@ -32,14 +32,14 @@ gulp.task 'coffee', ->
   build
     .pipe(gulp.dest('./public/js/'))
 
-gulp.task 'jade', ->
+gulp.task 'templates', ->
   gulp
     .src('src/jade/*.jade')
     .pipe(jade(pretty: not production))
     .pipe(gulp.dest('public/'))
     .pipe livereload(reloadServer)
 
-gulp.task 'stylus', ->
+gulp.task 'styles', ->
   styles = gulp
     .src('src/stylus/style.styl')
     .pipe(stylus({set: ['include css']}))
@@ -66,9 +66,9 @@ gulp.task "server", ->
 gulp.task "watch", ->
   reloadServer.listen 35729
 
-  gulp.watch "src/jade/*.jade", ["jade"]
-  gulp.watch "src/stylus/*.styl", ["stylus"]
-  gulp.watch "src/assets/**/*.*", ["assets"]
+  gulp.watch 'src/jade/*.jade', ['templates']
+  gulp.watch 'src/stylus/*.styl', ['styles']
+  gulp.watch 'src/assets/**/*.*', ['assets']
 
   bundle = watchify('./src/coffee/main.coffee')
 
@@ -82,5 +82,5 @@ gulp.task "watch", ->
 
   .emit 'update'
 
-gulp.task "build", ["coffee", "jade", "stylus", "assets"]
+gulp.task "build", ['scripts', 'templates', 'styles', 'assets']
 gulp.task "default", ["build", "watch", "server"]
