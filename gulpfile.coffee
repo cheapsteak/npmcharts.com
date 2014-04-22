@@ -22,22 +22,15 @@ production = process.env.NODE_ENV is 'production'
 
 gulp.task 'coffee', ->
 
-  bundle = watchify('./src/coffee/main.coffee')
+  bundle = browserify('./src/coffee/main.coffee')
 
-  rebundle = ->
+  build = bundle.bundle(debug: not production)
+    .pipe(source('bundle.js'))
 
-    build = bundle.bundle(debug: not production)
-      .pipe(source('bundle.js'))
+  build.pipe(streamify(uglify())) if production
 
-    build.pipe(streamify(uglify())) if production
-
-    build
-      .pipe(gulp.dest('./public/js/'))
-      .pipe(livereload(reloadServer))
-
-  bundle.on 'update', rebundle unless production
-
-  rebundle()
+  build
+    .pipe(gulp.dest('./public/js/'))
 
 gulp.task 'jade', ->
   gulp
@@ -71,12 +64,23 @@ gulp.task "server", ->
   .listen 9001
 
 gulp.task "watch", ->
-  reloadServer.listen 35729, (err) ->
-    console.error err if err?
+  reloadServer.listen 35729
 
-    gulp.watch "src/jade/*.jade", ["jade"]
-    gulp.watch "src/stylus/*.styl", ["stylus"]
-    gulp.watch "src/assets/**/*.*", ["assets"]
+  gulp.watch "src/jade/*.jade", ["jade"]
+  gulp.watch "src/stylus/*.styl", ["stylus"]
+  gulp.watch "src/assets/**/*.*", ["assets"]
+
+  bundle = watchify('./src/coffee/main.coffee')
+
+  bundle.on 'update', ->
+    build = bundle.bundle(debug: not production)
+      .pipe(source('bundle.js'))
+
+    build
+      .pipe(gulp.dest('./public/js/'))
+      .pipe(livereload(reloadServer))
+
+  .emit 'update'
 
 gulp.task "build", ["coffee", "jade", "stylus", "assets"]
 gulp.task "default", ["build", "watch", "server"]
