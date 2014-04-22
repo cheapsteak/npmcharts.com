@@ -63,7 +63,7 @@ gulp.task 'styles', ->
     .pipe(stylus({set: ['include css']}))
     .pipe(prefix("last 1 version", "> 1%", "ie 8"))
 
-  styles.pipe(CSSmin()) if production
+  styles = styles.pipe(CSSmin()) if production
 
   styles.pipe gulp.dest paths.styles.destination
     .pipe livereload reloadServer
