@@ -20,40 +20,58 @@ reloadServer = lr()
 
 production = process.env.NODE_ENV is 'production'
 
+paths =
+  scripts:
+    source: './src/coffee/main.coffee'
+    destination: './public/js/'
+    filename: 'bundle.js'
+  templates:
+    source: './src/jade/*.jade'
+    watch: './src/jade/*.jade'
+    destination: './public/'
+  styles:
+    source: './src/stylus/style.styl'
+    watch: './src/stylus/*.styl'
+    destination: './public/css/'
+  assets:
+    source: './src/assets/**/*.*'
+    watch: './src/assets/**/*.*'
+    destination: './public/'
+
 gulp.task 'scripts', ->
 
-  bundle = browserify('./src/coffee/main.coffee')
+  bundle = browserify paths.scripts.source
 
   build = bundle.bundle(debug: not production)
-    .pipe(source('bundle.js'))
+    .pipe source paths.scripts.filename
 
   build.pipe(streamify(uglify())) if production
 
   build
-    .pipe(gulp.dest('./public/js/'))
+    .pipe gulp.dest paths.scripts.destination
 
 gulp.task 'templates', ->
   gulp
-    .src('src/jade/*.jade')
+    .src paths.templates.source
     .pipe(jade(pretty: not production))
-    .pipe(gulp.dest('public/'))
+    .pipe gulp.dest paths.templates.destination
     .pipe livereload(reloadServer)
 
 gulp.task 'styles', ->
   styles = gulp
-    .src('src/stylus/style.styl')
+    .src paths.styles.source
     .pipe(stylus({set: ['include css']}))
     .pipe(prefix("last 1 version", "> 1%", "ie 8"))
 
   styles.pipe(CSSmin()) if production
 
-  styles.pipe(gulp.dest('public/css/'))
+  styles.pipe gulp.dest paths.styles.destination
     .pipe livereload reloadServer
 
 gulp.task 'assets', ->
   gulp
-    .src('src/assets/**/*.*')
-    .pipe gulp.dest 'public/'
+    .src paths.assets.source
+    .pipe gulp.dest paths.assets.destination
 
 gulp.task "server", ->
   staticFiles = new nodeStatic.Server './public'
@@ -66,18 +84,18 @@ gulp.task "server", ->
 gulp.task "watch", ->
   reloadServer.listen 35729
 
-  gulp.watch 'src/jade/*.jade', ['templates']
-  gulp.watch 'src/stylus/*.styl', ['styles']
-  gulp.watch 'src/assets/**/*.*', ['assets']
+  gulp.watch paths.templates.watch, ['templates']
+  gulp.watch paths.styles.watch, ['styles']
+  gulp.watch paths.assets.watch, ['assets']
 
-  bundle = watchify('./src/coffee/main.coffee')
+  bundle = watchify paths.scripts.source
 
   bundle.on 'update', ->
     build = bundle.bundle(debug: not production)
-      .pipe(source('bundle.js'))
+      .pipe source paths.scripts.filename
 
     build
-      .pipe(gulp.dest('./public/js/'))
+      .pipe gulp.dest paths.scripts.destination
       .pipe(livereload(reloadServer))
 
   .emit 'update'
