@@ -38,11 +38,17 @@ paths =
     watch: './src/assets/**/*.*'
     destination: './public/'
 
+handleError = (err) ->
+  gutil.log err
+  gutil.beep()
+  this.emit 'end'
+
 gulp.task 'scripts', ->
 
   bundle = browserify paths.scripts.source
 
   build = bundle.bundle(debug: not production)
+    .on 'error', handleError
     .pipe source paths.scripts.filename
 
   build.pipe(streamify(uglify())) if production
@@ -54,6 +60,7 @@ gulp.task 'templates', ->
   gulp
     .src paths.templates.source
     .pipe(jade(pretty: not production))
+    .on 'error', handleError
     .pipe gulp.dest paths.templates.destination
     .pipe livereload(reloadServer)
 
@@ -61,6 +68,7 @@ gulp.task 'styles', ->
   styles = gulp
     .src paths.styles.source
     .pipe(stylus({set: ['include css']}))
+    .on 'error', handleError
     .pipe prefix 'last 2 versions', 'Chrome 34', 'Firefox 28', 'iOS 7'
 
   styles = styles.pipe(CSSmin()) if production
@@ -92,6 +100,8 @@ gulp.task "watch", ->
 
   bundle.on 'update', ->
     build = bundle.bundle(debug: not production)
+      .on 'error', handleError
+
       .pipe source paths.scripts.filename
 
     build
