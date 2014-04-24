@@ -55,6 +55,22 @@ Now your should be able to require jQuery in your coffee files
 
     $ = require 'jquery'
 
+## Using JavaScript instead of CoffeeScript
+Remove coffeeify transform from package.json file (browserify.transform field) 
+``````
+"browserify": {
+ "transform": ["browserify-shim"]
+}
+``````
+
+and change the ".coffee" extension to ".js" from gulpfile.coffee 
+``````
+paths =
+  scripts:
+    source: './src/coffee/main.js'
+`````
+
+You also can change the directory name to scripts or what ever.
 
 ## Development guidelines
 * **public** - directory should be dedicated only to compiled/copied files from **src** - directory.
