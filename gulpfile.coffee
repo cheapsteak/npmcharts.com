@@ -45,7 +45,9 @@ handleError = (err) ->
 
 gulp.task 'scripts', ->
 
-  bundle = browserify paths.scripts.source
+  bundle = browserify
+    entries: [paths.scripts.source]
+    extensions: ['.coffee']
 
   build = bundle.bundle(debug: not production)
     .on 'error', handleError
@@ -96,7 +98,9 @@ gulp.task "watch", ->
   gulp.watch paths.styles.watch, ['styles']
   gulp.watch paths.assets.watch, ['assets']
 
-  bundle = watchify paths.scripts.source
+  bundle = watchify
+    entries: [paths.scripts.source]
+    extensions: ['.coffee']
 
   bundle.on 'update', ->
     build = bundle.bundle(debug: not production)
