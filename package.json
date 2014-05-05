@@ -34,7 +34,7 @@
     "vinyl-source-stream": "~0.1.1",
     "coffeeify": "~0.6.0",
     "gulp": "~3.6.0",
-    "watchify": "~0.6.3",
+    "watchify": "~0.8.3",
     "ecstatic": "~0.5.1"
   },
   "browser": {},
