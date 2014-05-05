@@ -1,6 +1,7 @@
 # Project template for [gulp.js](http://gulpjs.com/)
+<img width="114px" height="257px" align="right" src="https://raw.githubusercontent.com/gulpjs/artwork/master/gulp-2x.png"/>
 
-## What it does
+### What it does
 * [Jade](jade-lang.com) files to HTML
 * [Stylus](http://learnboost.github.io/stylus) files to CSS
 * [CoffeeScript](http://coffeescript.org/) files to Javascript through [browserify](http://browserify.org/)
@@ -18,7 +19,7 @@
  npm start
  open http://localhost:9001 in your browser
 ````
-## Commands
+## CLI Commands
 * npm install
     * Installs server-side dependencies from NPM and client-side dependencies from Bower
 * npm start
@@ -30,22 +31,24 @@ Minification, uglification and other tasks you're expected to run before deployi
 
     NODE_ENV=production npm run build
 
+## Development guidelines
+* **public** - directory should be dedicated only to compiled/copied files from **src** - directory.
+  It should be possible to delete directory completely and after **npm start** or **npm run build** everything should be as they were before the deletation.
+* All backend dependencies should be installed with **npm**. Browser dependencies should be installed with **bower** or with **npm**.
 
-## Adding 3rd party libraries
+### Adding 3rd party libraries
 **Note**: If the package you are looking for can be found in NPM it's much easier to install it from there. After installing packages from NPM they can be required without any of the following instructions.
 
     bower install jquery --save
 
-Now to use jQuery in your frontend code, you'll need to add jQuery to "browser" and "browserify-shim" sections of your package.json. Your package.json should be something like this:
+Now to use jQuery in your frontend code, you'll need to add jQuery to "browser" section of your package.json. Your package.json should be something like this:
 
     ...
 
     "browser": {
       "jquery": "./bower_components/jquery/dist/jquery.js"
     },
-    "browserify-shim": {
-      "jquery": "$"
-    },
+    "browserify-shim": {},
     "browserify": {
       "transform": [ "coffeeify", "browserify-shim" ]
     }
@@ -55,11 +58,13 @@ Now your should be able to require jQuery in your coffee files
 
     $ = require 'jquery'
 
-## Using JavaScript instead of CoffeeScript
+For non-CommonJS compatible modules you have to use browserify-shim. Read more about it [here](https://github.com/thlorenz/browserify-shim).
+
+### Using JavaScript instead of CoffeeScript
 Remove coffeeify transform from package.json file (browserify.transform field) 
 ``````
 "browserify": {
- "transform": ["browserify-shim"]
+  "transform": ["browserify-shim"]
 }
 ``````
 
@@ -72,10 +77,5 @@ paths =
 
 You also can change the directory name to scripts or what ever.
 
-## Development guidelines
-* **public** - directory should be dedicated only to compiled/copied files from **src** - directory.
-  It should be possible to delete directory completely and after **npm start** or **npm run build** everything should be as they were before the deletation.
-* All backend dependencies should be installed with **npm**. Browser dependencies should be installed with **bower**.
-
-## Enable LiveReload
+### Enable LiveReload
 Install [LiveReload for Chrome](https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei?hl=en)
