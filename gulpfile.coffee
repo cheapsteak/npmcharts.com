@@ -11,7 +11,7 @@ streamify  = require 'gulp-streamify'
 rename     = require 'gulp-rename'
 uglify     = require 'gulp-uglify'
 coffeeify  = require 'coffeeify'
-nodeStatic = require 'node-static'
+ecstatic   = require 'ecstatic'
 lr         = require 'tiny-lr'
 livereload = require 'gulp-livereload'
 plumber    = require 'gulp-plumber'
@@ -83,13 +83,10 @@ gulp.task 'assets', ->
     .src paths.assets.source
     .pipe gulp.dest paths.assets.destination
 
-gulp.task "server", ->
-  staticFiles = new nodeStatic.Server './public'
-  require('http').createServer (req, res) ->
-    req.addListener 'end', ->
-      staticFiles.serve req, res
-    req.resume()
-  .listen 9001
+gulp.task 'server', ->
+  require('http')
+    .createServer ecstatic root: __dirname + '/public'
+    .listen 9001
 
 gulp.task "watch", ->
   reloadServer.listen 35729

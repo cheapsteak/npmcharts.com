@@ -22,7 +22,6 @@
     "gulp-util": "~2.2.9",
     "gulp-stylus": "0.0.9",
     "gulp-jade": "~0.3.0",
-    "node-static": "~0.7.3",
     "gulp-minify-css": "~0.2.0",
     "tiny-lr": "0.0.5",
     "gulp-livereload": "~0.2.0",
@@ -35,7 +34,8 @@
     "vinyl-source-stream": "~0.1.1",
     "coffeeify": "~0.6.0",
     "gulp": "~3.6.0",
-    "watchify": "~0.6.3"
+    "watchify": "~0.6.3",
+    "ecstatic": "~0.5.1"
   },
   "browser": {},
   "browserify-shim": {},
