@@ -12,11 +12,9 @@ rename     = require 'gulp-rename'
 uglify     = require 'gulp-uglify'
 coffeeify  = require 'coffeeify'
 ecstatic   = require 'ecstatic'
-lr         = require 'tiny-lr'
 livereload = require 'gulp-livereload'
 plumber    = require 'gulp-plumber'
 prefix     = require 'gulp-autoprefixer'
-reloadServer = lr()
 
 production = process.env.NODE_ENV is 'production'
 
@@ -64,7 +62,7 @@ gulp.task 'templates', ->
     .pipe(jade(pretty: not production))
     .on 'error', handleError
     .pipe gulp.dest paths.templates.destination
-    .pipe livereload(reloadServer)
+    .pipe livereload()
 
 gulp.task 'styles', ->
   styles = gulp
@@ -76,7 +74,7 @@ gulp.task 'styles', ->
   styles = styles.pipe(CSSmin()) if production
 
   styles.pipe gulp.dest paths.styles.destination
-    .pipe livereload reloadServer
+    .pipe livereload()
 
 gulp.task 'assets', ->
   gulp
@@ -89,7 +87,7 @@ gulp.task 'server', ->
     .listen 9001
 
 gulp.task "watch", ->
-  reloadServer.listen 35729
+  livereload.listen()
 
   gulp.watch paths.templates.watch, ['templates']
   gulp.watch paths.styles.watch, ['styles']
@@ -107,7 +105,7 @@ gulp.task "watch", ->
 
     build
       .pipe gulp.dest paths.scripts.destination
-      .pipe(livereload(reloadServer))
+      .pipe(livereload())
 
   .emit 'update'
 
