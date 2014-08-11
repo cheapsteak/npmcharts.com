@@ -6,7 +6,8 @@
   "scripts": {
     "prepublish": "bower install",
     "start": "gulp",
-    "build": "gulp build"
+    "build": "gulp build",
+    "test": "karma start test/karma.conf.js"
   },
   "keywords": [
     "gulp",
@@ -35,7 +36,11 @@
     "vinyl-source-stream": "~0.1.1",
     "coffeeify": "~0.6.0",
     "gulp": "~3.6.0",
-    "watchify": "~0.6.3"
+    "watchify": "~0.6.3",
+    "karma": "~0.12.21",
+    "karma-jasmine": "~0.1.5",
+    "karma-chrome-launcher": "~0.1.4",
+    "karma-coffee-preprocessor": "~0.2.1"
   },
   "browser": {},
   "browserify-shim": {},
