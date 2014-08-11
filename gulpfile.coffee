@@ -76,7 +76,7 @@ gulp.task 'styles', ->
 
   styles = styles.pipe(CSSmin()) if production
   styles = styles.pipe gulp.dest paths.styles.destination
-  styles = stypes.pipe livereload() unless production
+  styles = styles.pipe livereload() unless production
   styles
 
 gulp.task 'assets', ->
