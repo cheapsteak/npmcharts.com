@@ -57,12 +57,15 @@ gulp.task 'scripts', ->
     .pipe gulp.dest paths.scripts.destination
 
 gulp.task 'templates', ->
-  gulp
+  pipeline = gulp
     .src paths.templates.source
     .pipe(jade(pretty: not production))
     .on 'error', handleError
     .pipe gulp.dest paths.templates.destination
-    .pipe livereload()
+
+  pipeline = pipeline.pipe livereload() unless production
+
+  pipeline
 
 gulp.task 'styles', ->
   styles = gulp
@@ -72,9 +75,9 @@ gulp.task 'styles', ->
     .pipe prefix 'last 2 versions', 'Chrome 34', 'Firefox 28', 'iOS 7'
 
   styles = styles.pipe(CSSmin()) if production
-
-  styles.pipe gulp.dest paths.styles.destination
-    .pipe livereload()
+  styles = styles.pipe gulp.dest paths.styles.destination
+  styles = stypes.pipe livereload() unless production
+  styles
 
 gulp.task 'assets', ->
   gulp
