@@ -33,7 +33,7 @@ Minification, uglification and other tasks you're expected to run before deployi
 
 ## Development guidelines
 * **public** - directory should be dedicated only to compiled/copied files from **src** - directory.
-  It should be possible to delete directory completely and after **npm start** or **npm run build** everything should be as they were before the deletation.
+  It should be possible to delete directory completely and after **npm start** or **npm run build** everything should be as they were before the deletion.
 * All backend dependencies should be installed with **npm**. Browser dependencies should be installed with **bower** or with **npm**.
 
 ### Adding 3rd party libraries
