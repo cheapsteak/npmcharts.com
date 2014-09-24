@@ -41,34 +41,33 @@ Minification, uglification and other tasks you're expected to run before deployi
 
     bower install jquery --save
 
-Now to use jQuery in your frontend code, you'll need to add jQuery to "browser" section of your package.json. Your package.json should be something like this:
-
-    ...
-
-    "browser": {
-      "jquery": "./bower_components/jquery/dist/jquery.js"
-    },
-    "browserify-shim": {},
-    "browserify": {
-      "transform": [ "coffeeify", "browserify-shim" ]
-    }
-    ...
-
 Now your should be able to require jQuery in your coffee files
 
     $ = require 'jquery'
 
-For non-CommonJS compatible modules you have to use browserify-shim. Read more about it [here](https://github.com/thlorenz/browserify-shim).
+If this does not work, you may need to add the pakcage manually and shim it, like
+
+    ...
+
+    "browser": {
+      "tunkki": "./bower_components/tunkki/dist/tunkki.js"
+    },
+    "browserify-shim": {
+      "tunkki": "tunkki"
+    }
+    ...
+
+Read more about it [here](https://github.com/thlorenz/browserify-shim).
 
 ### Using JavaScript instead of CoffeeScript
-Remove coffeeify transform from package.json file (browserify.transform field) 
+Remove coffeeify transform from package.json file (browserify.transform field)
 ``````
 "browserify": {
   "transform": ["browserify-shim"]
 }
 ``````
 
-and change the ".coffee" extension to ".js" from gulpfile.coffee 
+and change the ".coffee" extension to ".js" from gulpfile.coffee
 ``````
 paths =
   scripts:
