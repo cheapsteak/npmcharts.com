@@ -15,7 +15,6 @@
     "gulp",
     "template"
   ],
-  "author": "",
   "dependencies": {
     "coffee-script": "~1.7.1"
   },
@@ -41,13 +40,17 @@
     "gulp": "~3.8.1",
     "watchify": "~0.10.2",
     "ecstatic": "~0.5.3",
-    "gulp-minify-css": "~0.3.5"
+    "gulp-minify-css": "~0.3.5",
+    "deamdify": "^0.1.1",
+    "debowerify": "^0.8.1"
   },
   "browser": {},
   "browserify-shim": {},
   "browserify": {
     "transform": [
       "coffeeify",
+      "debowerify",
+      "deamdify",
       "browserify-shim"
     ]
   }
