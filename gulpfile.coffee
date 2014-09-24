@@ -10,13 +10,10 @@ source     = require 'vinyl-source-stream'
 streamify  = require 'gulp-streamify'
 rename     = require 'gulp-rename'
 uglify     = require 'gulp-uglify'
-coffeeify  = require 'coffeeify'
 ecstatic   = require 'ecstatic'
 livereload = require 'gulp-livereload'
 plumber    = require 'gulp-plumber'
 prefix     = require 'gulp-autoprefixer'
-debowerify = require 'debowerify'
-deamdify   = require 'deamdify'
 
 production = process.env.NODE_ENV is 'production'
 
