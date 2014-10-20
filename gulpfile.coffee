@@ -69,7 +69,9 @@ gulp.task 'templates', ->
 gulp.task 'styles', ->
   styles = gulp
     .src paths.styles.source
-    .pipe(stylus({set: ['include css']}))
+    .pipe stylus
+      'include css': true
+
     .on 'error', handleError
     .pipe prefix 'last 2 versions', 'Chrome 34', 'Firefox 28', 'iOS 7'
 
