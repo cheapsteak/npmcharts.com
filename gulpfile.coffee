@@ -88,7 +88,7 @@ gulp.task 'assets', ->
 
 gulp.task 'server', ->
   require('http')
-    .createServer ecstatic root: path.join(__dirname, '/public')
+    .createServer ecstatic root: path.join(__dirname, 'public')
     .listen 9001
 
 gulp.task 'watch', ->
