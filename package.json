@@ -38,6 +38,7 @@
     "gulp-util": "~3.0.1",
     "karma": "~0.12.21",
     "karma-chrome-launcher": "~0.1.4",
+    "karma-cli": "0.0.4",
     "karma-coffee-preprocessor": "~0.2.1",
     "karma-jasmine": "~0.2.2",
     "pretty-hrtime": "~0.2.2",
