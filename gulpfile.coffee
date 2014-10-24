@@ -61,7 +61,7 @@ gulp.task 'templates', ->
     .on 'error', handleError
     .pipe gulp.dest paths.templates.destination
 
-  pipeline = pipeline.pipe livereload() unless production
+  pipeline = pipeline.pipe livereload(auto: false) unless production
 
   pipeline
 
@@ -76,7 +76,7 @@ gulp.task 'styles', ->
 
   styles = styles.pipe(CSSmin()) if production
   styles = styles.pipe gulp.dest paths.styles.destination
-  styles = styles.pipe livereload() unless production
+  styles = styles.pipe livereload(auto: false) unless production
   styles
 
 gulp.task 'assets', ->
@@ -120,4 +120,4 @@ gulp.task 'no-js', ['templates', 'styles', 'assets']
 gulp.task 'build', ['scripts', 'no-js']
 # scripts and watch conflict and will produce invalid js upon first run
 # which is why the no-js task exists.
-gulp.task 'default', ['no-js', 'watch', 'server']
+gulp.task 'default', ['watch', 'no-js', 'server']
