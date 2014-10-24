@@ -12,6 +12,8 @@ uglify     = require 'gulp-uglify'
 ecstatic   = require 'ecstatic'
 livereload = require 'gulp-livereload'
 prefix     = require 'gulp-autoprefixer'
+chalk      = require 'chalk'
+prettyTime = require 'pretty-hrtime'
 
 production = process.env.NODE_ENV is 'production'
 
@@ -105,6 +107,8 @@ gulp.task 'watch', ->
     fullPaths: true
 
   bundle.on 'update', ->
+    gutil.log "Starting '#{chalk.cyan 'rebundle'}'..."
+    start = process.hrtime()
     build = bundle.bundle()
       .on 'error', handleError
 
@@ -113,6 +117,7 @@ gulp.task 'watch', ->
     build
       .pipe gulp.dest paths.scripts.destination
       .pipe(livereload())
+    gutil.log "Finished '#{chalk.cyan 'rebundle'}' after #{chalk.magenta prettyTime process.hrtime start}"
 
   .emit 'update'
 
