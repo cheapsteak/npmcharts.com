@@ -43,8 +43,9 @@ gulp.task 'scripts', ->
   bundle = browserify
     entries: [paths.scripts.source]
     extensions: ['.coffee']
+    debug: not production
 
-  build = bundle.bundle(debug: not production)
+  build = bundle.bundle()
     .on 'error', handleError
     .pipe source paths.scripts.filename
 
@@ -88,19 +89,23 @@ gulp.task 'server', ->
     .createServer ecstatic root: __dirname + '/public'
     .listen 9001
 
-gulp.task "watch", ->
+gulp.task 'watch', ->
   livereload.listen()
 
   gulp.watch paths.templates.watch, ['templates']
   gulp.watch paths.styles.watch, ['styles']
   gulp.watch paths.assets.watch, ['assets']
 
-  bundle = watchify
+  bundle = watchify browserify
     entries: [paths.scripts.source]
     extensions: ['.coffee']
+    debug: not production
+    cache: {}
+    packageCache: {}
+    fullPaths: true
 
   bundle.on 'update', ->
-    build = bundle.bundle(debug: not production)
+    build = bundle.bundle()
       .on 'error', handleError
 
       .pipe source paths.scripts.filename
@@ -111,5 +116,8 @@ gulp.task "watch", ->
 
   .emit 'update'
 
-gulp.task "build", ['scripts', 'templates', 'styles', 'assets']
-gulp.task "default", ["build", "watch", "server"]
+gulp.task 'no-js', ['templates', 'styles', 'assets']
+gulp.task 'build', ['scripts', 'no-js']
+# scripts and watch conflict and will produce invalid js upon first run
+# which is why the no-js task exists.
+gulp.task 'default', ['no-js', 'watch', 'server']
