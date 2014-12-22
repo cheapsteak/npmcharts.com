@@ -17,9 +17,10 @@ watchify   = require 'watchify'
 
 production = process.env.NODE_ENV is 'production'
 
-paths =
+config =
   scripts:
     source: './src/coffee/main.coffee'
+    extensions: ['.coffee']
     destination: './public/js/'
     filename: 'bundle.js'
   templates:
@@ -43,25 +44,25 @@ handleError = (err) ->
 gulp.task 'scripts', ->
 
   bundle = browserify
-    entries: [paths.scripts.source]
-    extensions: ['.coffee']
+    entries: [config.scripts.source]
+    extensions: config.scripts.extensions
     debug: not production
 
   build = bundle.bundle()
     .on 'error', handleError
-    .pipe source paths.scripts.filename
+    .pipe source config.scripts.filename
 
   build.pipe(streamify(uglify())) if production
 
   build
-    .pipe gulp.dest paths.scripts.destination
+    .pipe gulp.dest config.scripts.destination
 
 gulp.task 'templates', ->
   pipeline = gulp
-    .src paths.templates.source
+    .src config.templates.source
     .pipe(jade(pretty: not production))
     .on 'error', handleError
-    .pipe gulp.dest paths.templates.destination
+    .pipe gulp.dest config.templates.destination
 
   pipeline = pipeline.pipe livereload(auto: false) unless production
 
@@ -69,7 +70,7 @@ gulp.task 'templates', ->
 
 gulp.task 'styles', ->
   styles = gulp
-    .src paths.styles.source
+    .src config.styles.source
     .pipe stylus
       'include css': true
 
@@ -77,14 +78,14 @@ gulp.task 'styles', ->
     .pipe prefix 'last 2 versions', 'Chrome 34', 'Firefox 28', 'iOS 7'
 
   styles = styles.pipe(CSSmin()) if production
-  styles = styles.pipe gulp.dest paths.styles.destination
+  styles = styles.pipe gulp.dest config.styles.destination
   styles = styles.pipe livereload(auto: false) unless production
   styles
 
 gulp.task 'assets', ->
   gulp
-    .src paths.assets.source
-    .pipe gulp.dest paths.assets.destination
+    .src config.assets.source
+    .pipe gulp.dest config.assets.destination
 
 gulp.task 'server', ->
   require('http')
@@ -94,13 +95,13 @@ gulp.task 'server', ->
 gulp.task 'watch', ->
   livereload.listen()
 
-  gulp.watch paths.templates.watch, ['templates']
-  gulp.watch paths.styles.watch, ['styles']
-  gulp.watch paths.assets.watch, ['assets']
+  gulp.watch config.templates.watch, ['templates']
+  gulp.watch config.styles.watch, ['styles']
+  gulp.watch config.assets.watch, ['assets']
 
   bundle = watchify browserify
-    entries: [paths.scripts.source]
-    extensions: ['.coffee']
+    entries: [config.scripts.source]
+    extensions: config.scripts.extensions
     debug: not production
     cache: {}
     packageCache: {}
@@ -112,10 +113,10 @@ gulp.task 'watch', ->
     build = bundle.bundle()
       .on 'error', handleError
 
-      .pipe source paths.scripts.filename
+      .pipe source config.scripts.filename
 
     build
-      .pipe gulp.dest paths.scripts.destination
+      .pipe gulp.dest config.scripts.destination
       .pipe(livereload())
     gutil.log "Finished '#{chalk.cyan 'rebundle'}' after #{chalk.magenta prettyTime process.hrtime start}"
 

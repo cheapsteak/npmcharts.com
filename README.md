@@ -19,6 +19,9 @@
  npm start
  open http://localhost:9001 in your browser
 ````
+### Enable LiveReload
+Install [LiveReload for Chrome](https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei?hl=en)
+
 ## CLI Commands
 * npm install
     * Installs server-side dependencies from NPM and client-side dependencies from Bower
@@ -36,45 +39,23 @@ Minification, uglification and other tasks you're expected to run before deployi
   It should be possible to delete directory completely and after **npm start** or **npm run build** everything should be as they were before the deletion.
 * All backend dependencies should be installed with **npm**. Browser dependencies should be installed with **bower** or with **npm**.
 
-### Adding 3rd party libraries
-**Note**: If the package you are looking for can be found in NPM it's much easier to install it from there. After installing packages from NPM they can be required without any of the following instructions.
-
-    bower install jquery --save
-
-Now your should be able to require jQuery in your coffee files
-
-    $ = require 'jquery'
-
-If this does not work, you may need to add the pakcage manually and shim it, like
-
-    ...
-
-    "browser": {
-      "tunkki": "./bower_components/tunkki/dist/tunkki.js"
-    },
-    "browserify-shim": {
-      "tunkki": "tunkki"
-    }
-    ...
-
-Read more about it [here](https://github.com/thlorenz/browserify-shim).
-
 ### Using JavaScript instead of CoffeeScript
 Remove coffeeify transform from package.json file (browserify.transform field)
-``````
-"browserify": {
-  "transform": ["browserify-shim"]
-}
-``````
+```diff
+    "transform": [
+-     "coffeeify",
+      "debowerify",
+      "deamdify"
+    ]
+```
 
 and change the ".coffee" extension to ".js" from gulpfile.coffee
-``````
-paths =
+```diff
+config =
   scripts:
-    source: './src/coffee/main.js'
-`````
-
+-   source: './src/coffee/main.coffee'
+-   extensions: ['.coffee']
++   source: './src/js/main.js'
++   extensions: ['.js']
+```
 You also can change the directory name to scripts or what ever.
-
-### Enable LiveReload
-Install [LiveReload for Chrome](https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei?hl=en)
