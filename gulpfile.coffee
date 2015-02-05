@@ -10,6 +10,7 @@ path       = require 'path'
 prefix     = require 'gulp-autoprefixer'
 prettyTime = require 'pretty-hrtime'
 source     = require 'vinyl-source-stream'
+sourcemaps = require 'gulp-sourcemaps'
 streamify  = require 'gulp-streamify'
 stylus     = require 'gulp-stylus'
 uglify     = require 'gulp-uglify'
@@ -71,6 +72,7 @@ gulp.task 'templates', ->
 gulp.task 'styles', ->
   styles = gulp
     .src config.styles.source
+    .pipe sourcemaps.init()
     .pipe stylus
       'include css': true
 
@@ -78,7 +80,9 @@ gulp.task 'styles', ->
     .pipe prefix 'last 2 versions', 'Chrome 34', 'Firefox 28', 'iOS 7'
 
   styles = styles.pipe(CSSmin()) if production
-  styles = styles.pipe gulp.dest config.styles.destination
+  styles = styles
+    .pipe sourcemaps.write('.')
+    .pipe gulp.dest config.styles.destination
   styles = styles.pipe livereload(auto: false) unless production
   styles
 
