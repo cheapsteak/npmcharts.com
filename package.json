@@ -43,7 +43,7 @@
     "karma-jasmine": "~0.2.2",
     "pretty-hrtime": "~0.2.2",
     "vinyl-source-stream": "~1.0.0",
-    "watchify": "~2.0.0"
+    "watchify": "~2.3.0"
   },
   "browserify": {
     "transform": [
