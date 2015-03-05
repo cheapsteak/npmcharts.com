@@ -1,11 +1,11 @@
 browserify   = require 'browserify'
+browserSync  = require 'browser-sync'
 chalk        = require 'chalk'
 CSSmin       = require 'gulp-minify-css'
 ecstatic     = require 'ecstatic'
 gulp         = require 'gulp'
 gutil        = require 'gulp-util'
 jade         = require 'gulp-jade'
-browserSync  = require 'browser-sync'
 path         = require 'path'
 prefix       = require 'gulp-autoprefixer'
 prettyTime   = require 'pretty-hrtime'
@@ -92,8 +92,8 @@ gulp.task 'assets', ->
 gulp.task 'server', ->
   browserSync
     port:      9001
-    server: 
-      baseDir: './public'    
+    server:
+      baseDir: './public'
 
 gulp.task 'watch', ->
   gulp.watch config.templates.watch, ['templates']
