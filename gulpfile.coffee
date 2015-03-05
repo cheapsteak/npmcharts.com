@@ -3,6 +3,7 @@ browserSync  = require 'browser-sync'
 chalk        = require 'chalk'
 CSSmin       = require 'gulp-minify-css'
 ecstatic     = require 'ecstatic'
+filter       = require 'gulp-filter'
 gulp         = require 'gulp'
 gutil        = require 'gulp-util'
 jade         = require 'gulp-jade'
@@ -81,7 +82,12 @@ gulp.task 'styles', ->
   styles = styles.pipe(CSSmin()) if production
   styles = styles.pipe(sourcemaps.write '.') unless production
   styles = styles.pipe gulp.dest config.styles.destination
-  styles = styles.pipe browserSync.reload(stream: true) unless production
+
+  unless production
+    styles = styles
+      .pipe filter '**/*.css'
+      .pipe browserSync.reload(stream: true)
+
   styles
 
 gulp.task 'assets', ->
