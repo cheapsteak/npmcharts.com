@@ -7,6 +7,7 @@ filter       = require 'gulp-filter'
 gulp         = require 'gulp'
 gutil        = require 'gulp-util'
 jade         = require 'gulp-jade'
+notify       = require 'gulp-notify'
 path         = require 'path'
 prefix       = require 'gulp-autoprefixer'
 prettyTime   = require 'pretty-hrtime'
@@ -41,6 +42,9 @@ config =
 handleError = (err) ->
   gutil.log err
   gutil.beep()
+  notify
+    .onError title: 'Compile Error', message: '<%= error.message %>'
+    .apply this, Array::slice.call(arguments)
   this.emit 'end'
 
 gulp.task 'scripts', ->
