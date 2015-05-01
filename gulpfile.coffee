@@ -101,7 +101,8 @@ gulp.task 'assets', ->
 
 gulp.task 'server', ->
   browserSync
-    port:      9001
+    open: false
+    port: 9001
     server:
       baseDir: './public'
 
