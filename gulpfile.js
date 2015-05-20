@@ -3,7 +3,6 @@
 var browserify = require('browserify');
 var browserSync = require('browser-sync');
 var duration = require('gulp-duration');
-var ecstatic = require('ecstatic');
 var gulp = require('gulp');
 var gutil = require('gulp-util');
 var jade = require('gulp-jade');
