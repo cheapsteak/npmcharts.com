@@ -4,7 +4,7 @@
 ### What it does
 * [Jade](http://jade-lang.com) files to HTML
 * [Stylus](http://learnboost.github.io/stylus) files to CSS
-* [CoffeeScript](http://coffeescript.org/) files to Javascript through [browserify](http://browserify.org/)
+* [ES6+ JavaScript](babeljs.io) files to ES5 Javascript through [browserify](http://browserify.org/)
     * You are able to use 'require' in your client-side code
 * Serves your static files to localhost:9001
 * Reloads your browser with LiveReload when files change
@@ -18,7 +18,7 @@
  npm install
  npm start
  open http://localhost:9001 in your browser
-````
+```
 
 ## CLI Commands
 * npm install
@@ -28,6 +28,7 @@
 * npm run build
     * Builds everything
 
+# Production build
 Minification, uglification and other tasks you're expected to run before deploying your product can be made by running the build command with env variable NODE_ENV set to "production"
 
     NODE_ENV=production npm run build
@@ -37,23 +38,6 @@ Minification, uglification and other tasks you're expected to run before deployi
   It should be possible to delete directory completely and after **npm start** or **npm run build** everything should be as they were before the deletion.
 * All backend dependencies should be installed with **npm**. Browser dependencies should be installed with **bower** or with **npm**.
 
-### Using JavaScript instead of CoffeeScript
-Remove coffeeify transform from package.json file (browserify.transform field)
-```diff
-    "transform": [
--     "coffeeify",
-      "debowerify",
-      "deamdify"
-    ]
-```
-
-and change the ".coffee" extension to ".js" from gulpfile.coffee
-```diff
-config =
-  scripts:
--   source: './src/coffee/main.coffee'
--   extensions: ['.coffee']
-+   source: './src/js/main.js'
-+   extensions: ['.js']
-```
-You also can change the directory name to scripts or what ever.
+# FAQ
+### I want to use CoffeeScript instead of JavaScript
+Check out the [coffee branch](https://github.com/leonidas/gulp-project-template/tree/coffee)

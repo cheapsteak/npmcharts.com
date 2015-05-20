@@ -6,7 +6,7 @@ var duration = require('gulp-duration');
 var gulp = require('gulp');
 var gutil = require('gulp-util');
 var jade = require('gulp-jade');
-var notify = require('gulp-notify');
+var notifier = require('node-notifier');
 var prefix = require('gulp-autoprefixer');
 var source = require('vinyl-source-stream');
 var sourcemaps = require('gulp-sourcemaps');
@@ -19,9 +19,9 @@ var production = process.env.NODE_ENV === 'production';
 
 var config = {
   scripts: {
-    source: './src/coffee/main.coffee',
-    extensions: ['.coffee'],
+    source: './src/js/main.js',
     destination: './public/js/',
+    extensions: ['.jsx'],
     filename: 'bundle.js'
   },
   templates: {
@@ -52,7 +52,7 @@ var browserifyConfig = {
 function handleError(err) {
   gutil.log(err);
   gutil.beep();
-  notify({
+  notifier.notify({
     title: 'Compile Error',
     message: err.message
   });
