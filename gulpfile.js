@@ -1,3 +1,4 @@
+/*eslint "no-var":0 */
 'use strict';
 
 var browserify = require('browserify');
@@ -15,6 +16,7 @@ var stylus = require('gulp-stylus');
 var uglify = require('gulp-uglify');
 var watchify = require('watchify');
 
+/*eslint "no-process-env":0 */
 var production = process.env.NODE_ENV === 'production';
 
 var config = {
