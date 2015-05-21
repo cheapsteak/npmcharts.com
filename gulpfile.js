@@ -65,9 +65,10 @@ gulp.task('scripts', function() {
     .on('error', handleError)
     .pipe(source(config.scripts.filename));
 
-  if (production) {
+  if(production) {
     pipeline = pipeline.pipe(streamify(uglify()));
   }
+
   return pipeline.pipe(gulp.dest(config.scripts.destination));
 });
 
@@ -91,7 +92,7 @@ gulp.task('templates', function() {
 gulp.task('styles', function() {
   var pipeline = gulp.src(config.styles.source);
 
-  if (!production) {
+  if(!production) {
     pipeline = pipeline.pipe(sourcemaps.init());
   }
 
@@ -102,13 +103,13 @@ gulp.task('styles', function() {
   .on('error', handleError)
   .pipe(prefix('last 2 versions', 'Chrome 34', 'Firefox 28', 'iOS 7'));
 
-  if (!production) {
+  if(!production) {
     pipeline = pipeline.pipe(sourcemaps.write('.'));
   }
 
   pipeline = pipeline.pipe(gulp.dest(config.styles.destination));
 
-  if (production) {
+  if(production) {
     return pipeline;
   }
 
