@@ -1,6 +1,8 @@
 # Project template for [gulp.js](http://gulpjs.com/)
 <img width="114px" height="257px" align="right" src="https://raw.githubusercontent.com/gulpjs/artwork/master/gulp-2x.png"/>
 
+[ ![Codeship Status for leonidas/gulp-project-template](https://codeship.com/projects/07620890-e45d-0132-b176-5e88bc3b0df8/status?branch=master)](https://codeship.com/projects/81833)
+
 ### What it does
 * [Jade](http://jade-lang.com) files to HTML
 * [Stylus](http://learnboost.github.io/stylus) files to CSS
