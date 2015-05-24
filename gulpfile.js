@@ -8,7 +8,11 @@ var gulp = require('gulp');
 var gutil = require('gulp-util');
 var jade = require('gulp-jade');
 var notifier = require('node-notifier');
+var path = require('path');
 var prefix = require('gulp-autoprefixer');
+var replace = require('gulp-replace');
+var rev = require('gulp-rev');
+var rimraf = require('rimraf');
 var source = require('vinyl-source-stream');
 var sourcemaps = require('gulp-sourcemaps');
 var streamify = require('gulp-streamify');
@@ -20,6 +24,7 @@ var watchify = require('watchify');
 var production = process.env.NODE_ENV === 'production';
 
 var config = {
+  destination: './public',
   scripts: {
     source: './src/js/main.js',
     destination: './public/js/',
@@ -29,7 +34,8 @@ var config = {
   templates: {
     source: './src/jade/*.jade',
     watch: './src/jade/*.jade',
-    destination: './public/'
+    destination: './public/',
+    revision: './public/**/*.html'
   },
   styles: {
     source: './src/stylus/style.styl',
@@ -39,6 +45,11 @@ var config = {
   assets: {
     source: './src/assets/**/*.*',
     watch: './src/assets/**/*.*',
+    destination: './public/'
+  },
+  revision: {
+    source: ['./public/**/*.css', './public/**/*.js'],
+    base: path.join(__dirname, 'public'),
     destination: './public/'
   }
 };
@@ -130,7 +141,7 @@ gulp.task('server', function() {
     open: false,
     port: 9001,
     server: {
-      baseDir: './public'
+      baseDir: config.destination
     }
   });
 });
@@ -155,5 +166,29 @@ gulp.task('watch', function() {
 
 var buildTasks = ['templates', 'styles', 'assets'];
 
-gulp.task('build', buildTasks.concat(['scripts']));
+gulp.task('revision', buildTasks.concat(['scripts']), function() {
+  return gulp.src(config.revision.source, {base: config.revision.base})
+    .pipe(rev())
+    .pipe(gulp.dest(config.revision.destination))
+    .pipe(rev.manifest())
+    .pipe(gulp.dest('./'));
+});
+
+gulp.task('replace-revision-references', ['revision', 'templates'], function() {
+  var revisions = require('./rev-manifest.json');
+
+  var pipeline = gulp.src(config.templates.revision);
+
+  pipeline = Object.keys(revisions).reduce(function(stream, key) {
+    return stream.pipe(replace(key, revisions[key]));
+  }, pipeline);
+
+  return pipeline.pipe(gulp.dest(config.templates.destination));
+});
+
+gulp.task('build', function() {
+  rimraf.sync(config.destination);
+  gulp.start(buildTasks.concat(['scripts', 'revision', 'replace-revision-references']));
+});
+
 gulp.task('default', buildTasks.concat(['watch', 'server']));
