@@ -23,7 +23,6 @@
     "browser-sync": "^2.7.2",
     "browserify": "^10.2.1",
     "chai": "^3.0.0",
-    "deamdify": "^0.1.1",
     "gulp": "~3.8.1",
     "gulp-autoprefixer": "1.0.1",
     "gulp-duration": "0.0.0",
@@ -44,8 +43,7 @@
   },
   "browserify": {
     "transform": [
-      "babelify",
-      "deamdify"
+      "babelify"
     ]
   }
 }
