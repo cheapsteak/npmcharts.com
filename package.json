@@ -9,7 +9,7 @@
     "prepublish": "bower install",
     "start": "gulp",
     "build": "gulp build",
-    "test": "karma start test/karma.conf.js"
+    "test": "mocha src/**/__tests__/*.js --compilers js:babel/register --require test/test-helper"
   },
   "keywords": [
     "gulp",
@@ -19,10 +19,12 @@
     "lodash": "^3.9.1"
   },
   "devDependencies": {
+    "babel": "^5.6.14",
     "babelify": "^6.1.1",
     "bower": "~1.3.5",
     "browser-sync": "^2.7.2",
     "browserify": "^10.2.1",
+    "chai": "^3.0.0",
     "deamdify": "^0.1.1",
     "debowerify": "~0.9.1",
     "gulp": "~3.8.1",
@@ -36,10 +38,8 @@
     "gulp-stylus": "~2.0.0",
     "gulp-uglify": "~1.0.1",
     "gulp-util": "~3.0.1",
-    "karma": "~0.12.21",
-    "karma-chrome-launcher": "~0.1.4",
-    "karma-cli": "0.0.4",
-    "karma-jasmine": "~0.2.2",
+    "jsdom": "^5.6.0",
+    "mocha": "^2.2.5",
     "node-notifier": "^4.2.1",
     "rimraf": "^2.3.4",
     "vinyl-source-stream": "~1.0.0",
