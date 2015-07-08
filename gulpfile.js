@@ -26,20 +26,20 @@ var production = process.env.NODE_ENV === 'production';
 var config = {
   destination: './public',
   scripts: {
-    source: './src/js/main.js',
+    source: './src/main.js',
     destination: './public/js/',
     extensions: ['.jsx'],
     filename: 'bundle.js'
   },
   templates: {
-    source: './src/jade/*.jade',
-    watch: './src/jade/*.jade',
+    source: './src/*.jade',
+    watch: './src/*.jade',
     destination: './public/',
     revision: './public/**/*.html'
   },
   styles: {
-    source: './src/stylus/style.styl',
-    watch: './src/stylus/*.styl',
+    source: './src/style.styl',
+    watch: './src/**/*.styl',
     destination: './public/css/'
   },
   assets: {

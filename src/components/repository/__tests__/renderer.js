@@ -1,5 +1,5 @@
 /* globals beforeEach, describe, it */
-import {render} from '../renderer';
+import {render} from '../';
 import {expect} from 'chai';
 
 const REPO_DATA = {

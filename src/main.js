@@ -1,7 +1,7 @@
 'use strict';
 
 import {getCommits, getRepo} from './services/github';
-import {render} from './utils/renderer';
+import {render} from './components/repository';
 
 Promise.all([getRepo(), getCommits()])
 .then(([repository, commits]) => {
