@@ -8,7 +8,7 @@
 * [Stylus](http://learnboost.github.io/stylus) files to CSS
 * [ES6+ JavaScript](https://babeljs.io) files to ES5 Javascript through [browserify](http://browserify.org/)
     * You are able to use 'require' in your client-side code
-* Uses [BrowserSync](http://www.browsersync.io/) to serves your static files to localhost:9001 and to automatically reload your browser when files change.
+* Uses [BrowserSync](http://www.browsersync.io/) to serve your static files to localhost:9001 and to automatically reload your browser when files change.
 
 ## Getting things up and running
 - Install [Node.js](http://nodejs.org)
