@@ -51,8 +51,14 @@ All dependencies are meant to be installed with **bower** or with **npm**.
 * [eslint](http://eslint.org/)
     * When used as an editor plugin (for example. [SublimeLinter](http://sublimelinter.readthedocs.org/en/latest/) + [SublimeLinter-eslint](https://github.com/roadhump/SublimeLinter-eslint)), gives you immediate feedback about your code and  can find bugs, potential problem areas, poor coding styles and stylistic issues.
 
+---
 
 ## FAQ
 
 ### I want to use CoffeeScript instead of JavaScript
 Check out the [coffee branch](https://github.com/leonidas/gulp-project-template/tree/coffee)
+
+## Useful resources
+* [Browserify handbook](https://github.com/substack/browserify-handbook)
+  * [avoiding ../../../../../../..](https://github.com/substack/browserify-handbook#avoiding-)
+* [MindBEMding – getting your head ’round BEM syntax](http://csswizardry.com/2013/01/mindbemding-getting-your-head-round-bem-syntax/)
