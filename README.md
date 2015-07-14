@@ -23,7 +23,7 @@
 
 ## CLI Commands
 * npm install
-    * Installs server-side dependencies from NPM and client-side dependencies from Bower
+    * Installs server-side dependencies from npm
 * npm start
     * Compiles your files, starts watching files for changes, serves static files to port 9001
 * npm run build
@@ -41,10 +41,10 @@ Minification, uglification and other tasks you're expected to run before deployi
   It should be possible to delete directory completely and after **npm start** or **npm run build** everything should be as they were before the deletion.
 
 #### Dependencies
-All dependencies are meant to be installed with **bower** or with **npm**.
-* JavaScript-files from both **bower_components** and **node_modules** can be *require()*'d in client-side modules.
-* CSS files can be [imported](https://learnboost.github.io/stylus/docs/import.html) from **bower_components** and **node_modules** using relative path from the stylus file to the css file e.g `@import '../../bower_components/bootstrap/dist/css/bootstrap.css'`
-* You can either create a new gulp task for copying other assets from directories mentioned above or use an array as a value for [assets sources](https://github.com/leonidas/gulp-project-template/blob/master/gulpfile.js#L38) e.g `source: ['./src/assets/**/*.*', 'bower_components/bootstrap/fonts*/*.*']` *(notice the asterisk after 'fonts'? It makes gulp copy the whole directory instead of just the files inside of it)*
+All dependencies are meant to be installed with **npm**.
+* JavaScript-files from **node_modules** can be *require()*'d in client-side modules.
+* CSS files can be [imported](https://learnboost.github.io/stylus/docs/import.html) from **node_modules** using relative path from the stylus file to the css file e.g `@import '../../node_modules/bootstrap/dist/css/bootstrap.css'`
+* You can either create a new gulp task for copying other assets from directories mentioned above or use an array as a value for [assets sources](https://github.com/leonidas/gulp-project-template/blob/master/gulpfile.js#L38) e.g `source: ['./src/assets/**/*.*', 'node_modules/bootstrap/fonts*/*.*']` *(notice the asterisk after 'fonts'? It makes gulp copy the whole directory instead of just the files inside of it)*
 
 ## Suggested development tools
 
