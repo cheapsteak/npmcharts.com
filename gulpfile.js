@@ -140,6 +140,8 @@ gulp.task('server', function() {
   return browserSync({
     open: false,
     port: 9001,
+    notify: false,
+    ghostMode: false,
     server: {
       baseDir: config.destination
     }
