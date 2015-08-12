@@ -19,6 +19,7 @@ var streamify = require('gulp-streamify');
 var stylus = require('gulp-stylus');
 var uglify = require('gulp-uglify');
 var watchify = require('watchify');
+var watch = require('gulp-watch');
 
 /*eslint "no-process-env":0 */
 var production = process.env.NODE_ENV === 'production';
@@ -149,9 +150,12 @@ gulp.task('server', function() {
 });
 
 gulp.task('watch', function() {
-  gulp.watch(config.templates.watch, ['templates']);
-  gulp.watch(config.styles.watch, ['styles']);
-  gulp.watch(config.assets.watch, ['assets']);
+
+  ['templates', 'styles', 'assets'].forEach(function(watched) {
+    watch(config[watched].watch, function() {
+      gulp.start(watched);
+    });
+  });
 
   var bundle = watchify(browserify(browserifyConfig));
 
