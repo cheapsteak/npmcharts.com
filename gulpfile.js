@@ -25,6 +25,7 @@ var watch = require('gulp-watch');
 var production = process.env.NODE_ENV === 'production';
 
 var config = {
+  source: './src',
   destination: './public',
   scripts: {
     source: './src/main.js',
@@ -112,6 +113,7 @@ gulp.task('styles', function() {
 
   pipeline = pipeline.pipe(stylus({
     'include css': true,
+    paths: ['node_modules', path.join(__dirname, config.source)],
     compress: production
   }))
   .on('error', handleError)
