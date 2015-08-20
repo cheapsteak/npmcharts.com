@@ -14,6 +14,8 @@ var replace = require('gulp-replace');
 var rev = require('gulp-rev');
 var rimraf = require('rimraf');
 var source = require('vinyl-source-stream');
+var exorcist = require('exorcist');
+var transform  = require('vinyl-transform');
 var sourcemaps = require('gulp-sourcemaps');
 var streamify = require('gulp-streamify');
 var stylus = require('gulp-stylus');
@@ -82,6 +84,10 @@ gulp.task('scripts', function() {
 
   if(production) {
     pipeline = pipeline.pipe(streamify(uglify()));
+  } else {
+    pipeline = pipeline.pipe(transform(function() {
+      return exorcist(config.scripts.destination + config.scripts.filename + '.map');
+    }))
   }
 
   return pipeline.pipe(gulp.dest(config.scripts.destination));
@@ -166,7 +172,11 @@ gulp.task('watch', function() {
       .on('error', handleError)
       .pipe(source(config.scripts.filename));
 
-    build.pipe(gulp.dest(config.scripts.destination))
+    build
+    .pipe(transform(function() {
+      return exorcist(config.scripts.destination + config.scripts.filename + '.map');
+    }))
+    .pipe(gulp.dest(config.scripts.destination))
     .pipe(duration('Rebundling browserify bundle'))
     .pipe(browserSync.reload({stream: true}));
   }).emit('update');

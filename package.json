@@ -23,6 +23,7 @@
     "browser-sync": "^2.7.2",
     "browserify": "^10.2.1",
     "chai": "^3.0.0",
+    "exorcist": "^0.4.0",
     "gulp": "~3.8.1",
     "gulp-autoprefixer": "1.0.1",
     "gulp-duration": "0.0.0",
@@ -40,6 +41,7 @@
     "node-notifier": "^4.2.1",
     "rimraf": "^2.3.4",
     "vinyl-source-stream": "~1.0.0",
+    "vinyl-transform": "^1.0.0",
     "watchify": "^3.2.1"
   },
   "browserify": {
