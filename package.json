@@ -15,7 +15,13 @@
     "template"
   ],
   "dependencies": {
-    "lodash": "^3.9.1"
+    "d3": "^3.5.6",
+    "lodash": "^3.10.1",
+    "moment": "^2.10.6",
+    "nvd3": "^1.8.1",
+    "vue": "^1.0.0-alpha.3",
+    "vue-router": "^0.6.0",
+    "whatwg-fetch": "^0.9.0"
   },
   "devDependencies": {
     "babel": "^5.6.14",
@@ -46,7 +52,12 @@
   },
   "browserify": {
     "transform": [
-      ["babelify", {"stage": 0}]
+      [
+        "babelify",
+        {
+          "stage": 0
+        }
+      ]
     ]
   }
 }

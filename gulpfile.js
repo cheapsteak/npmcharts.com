@@ -30,7 +30,7 @@ var config = {
   source: './src',
   destination: './public',
   scripts: {
-    source: './src/main.js',
+    source: './src/index.js',
     destination: './public/js/',
     extensions: ['.jsx'],
     filename: 'bundle.js'
