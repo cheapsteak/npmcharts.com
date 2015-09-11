@@ -14,9 +14,9 @@ Vue.config.debug = true;
 var {default: packageInput, packages} = require('./packages/packages.js');
 
 const App = Vue.extend({
-  components: {
-    'package-input': packageInput
-  },
+  // components: {
+  //   'package-input': packageInput
+  // },
   data () {
     return { packages };
   },
@@ -28,18 +28,18 @@ const App = Vue.extend({
   ready () {
     window.aaa = this;
   },
-  methods: {
-    addPackage (packageName) {
-      if (this.$route.params && this.$route.params.packages) {
-        this.$route.router.go('/compare/' + this.$route.params.packages + ',' + packageName);
-      } else {
-        this.$route.router.go('/compare/' + packageName);
-      }
-    },
-    clearPackages () {
-      this.$route.router.go('/compare/');
-    }
-  }
+  // methods: {
+  //   addPackage (packageName) {
+  //     if (this.$route.params && this.$route.params.packages) {
+  //       this.$route.router.go('/compare/' + this.$route.params.packages + ',' + packageName);
+  //     } else {
+  //       this.$route.router.go('/compare/' + packageName);
+  //     }
+  //   },
+  //   clearPackages () {
+  //     this.$route.router.go('/compare/');
+  //   }
+  // }
   // watch: {
     // packages (packages) {
     //   this.$route.router.go('/compare/' + packages.join(','));

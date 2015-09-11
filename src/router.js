@@ -8,10 +8,10 @@ const router = module.exports = new VueRouter();
 
 router.map({
   '/': {
-    component: require('./compare/compare.js')
+    component: require('./home/home.js')
   },
   '/compare/:packages': {
-    component: require('./compare/compare.js')
+    component: require('./home/home.js')
   }
 });
 

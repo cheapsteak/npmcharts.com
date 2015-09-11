@@ -21,7 +21,7 @@ export default Vue.extend({
     }
   },
   template: `
-    <legend v-if="moduleNames && palette" bind-modules="moduleNames" bind-palette="palette"></legend>
+    // <legend v-if="moduleNames && palette" bind-modules="moduleNames" bind-palette="palette"></legend>
   `,
   data () {
     return {
@@ -32,26 +32,5 @@ export default Vue.extend({
   },
   ready () {
     console.log('compare ready');
-  },
-  components: {
-    legend: Vue.extend({
-      props: {
-        modules: Array,
-        palette: Array
-      },
-      template: `
-        <div class="legend">
-          <div class="module" v-for="module in modules" bind-style="{color: palette[$index]}" on-click="onModuleClicked(module)">
-            <div class="nub" bind-style="{backgroundColor: palette[$index]}"></div>
-            {{module}}
-          </div>
-        </div>
-      `,
-      methods: {
-        onModuleClicked (module) {
-          removePackage(module);
-        }
-      }
-    })
   }
 });

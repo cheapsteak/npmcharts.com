@@ -4,10 +4,12 @@ html
     title Compare npm packages
     link(rel='stylesheet', href='css/style.css')
   body
-    package-input (bind-on-submit="addPackage")
-    button(on-click="clearPackages") clear
+    //- package-input (bind-on-submit="addPackage")
+    //- button(on-click="clearPackages") clear
 
-    div#chart.with-3d-shadow.with-transitions(v-show="$.child && $.child.showChart", v-class="")
-      svg
-    router-view(ref="child")
+    //- legend(v-if="moduleNames && palette" bind-modules="moduleNames" bind-palette="palette")
+
+    //- div#chart.with-3d-shadow.with-transitions(class="")
+    //-   svg
+    router-view
     script(src='js/bundle.js')
