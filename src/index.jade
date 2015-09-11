@@ -1,9 +1,13 @@
 doctype html
 html
   head
-    title Gulp template
+    title Compare npm packages
     link(rel='stylesheet', href='css/style.css')
   body
-    div#chart.with-3d-shadow.with-transitions
+    package-input (bind-on-submit="addPackage")
+    button(on-click="clearPackages") clear
+
+    div#chart.with-3d-shadow.with-transitions(v-show="$.child && $.child.showChart", v-class="")
       svg
+    router-view(ref="child")
     script(src='js/bundle.js')
