@@ -1,7 +1,7 @@
 import npmData from '../services/downloads.js';
 import {graph} from '../graph/graph.js';
 // import {removePackage} from '../packages/packages.js';
-import config from '../config.js';
+import config from '../../config.js';
 
 const palette = config.palette;
 
@@ -17,7 +17,7 @@ export default Vue.extend({
       const packageNames = to.params.packages ? to.params.packages.split(',') : _.sample(config.presetPackages);
       npmData.fetch(...packageNames)
         .then(() => {
-          next({moduleNames: npmData.moduleNames, moduleData: npmData.modules});
+          next({moduleNames: npmData.moduleNames, moduleData: npmData.modules, isPreset: !to.params.packages});
         })
     }
   },
@@ -25,28 +25,34 @@ export default Vue.extend({
     return {
       moduleNames: null,
       moduleData: null,
-      palette
+      palette,
+      noWeekends: true,
+      isPreset: undefined
     };
   },
   ready () {
     window.hhh = this;
-    // graph.init();
   },
   template: `
     <main>
-      <div class="side-panel">
+      <div class="info-panel">
         <package-input bind-on-submit="addPackage"></package-input>
-        <button on-click="clearPackages">clear</button>
+        <button on-click="clearPackages" bind-disabled="isUsingPresetData">clear</button>
+        <label><input type="checkbox" v-model="noWeekends"/>no weekends</label>
+        gulp vs grunt
       </div>
-      <graph class="chart" v-if="moduleNames" bind-module-names="moduleNames" bind-module-data="moduleData">
-        <legend slot="legend" v-if="moduleNames && palette" bind-modules="moduleNames" bind-palette="palette"></legend>
+      <legend slot="legend" v-if="moduleNames && palette" bind-modules="moduleNames" bind-palette="palette" bind-on-module-clicked="removePackage"></legend>
+      <graph class="chart" bind-class="{'is-preset': isPreset}" v-if="moduleNames" bind-module-names="moduleNames" bind-module-data="moduleData" bind-no-weekends="noWeekends">
       </graph>
     </main>
+    <footer>
+      Created by Chang Wang
+    </footer>
     `,
-    components: {
-      'package-input': packageInput,
-      graph: require('../graph/graph.js'),
-      legend: require('../legend/legend.js')
+    computed: {
+      isUsingPresetData () {
+        return !(this.$route.params && this.$route.params.packages);
+      }
     },
     methods: {
       addPackage (packageName) {
@@ -58,6 +64,15 @@ export default Vue.extend({
       },
       clearPackages () {
         this.$route.router.go('/compare/');
+      },
+      removePackage (packageName) {
+        removePackage(packageName);
+        this.$route.router.go('/compare/' + packages.join(','));
       }
+    },
+    components: {
+      'package-input': packageInput,
+      graph: require('../graph/graph.js'),
+      legend: require('../legend/legend.js')
     }
 });

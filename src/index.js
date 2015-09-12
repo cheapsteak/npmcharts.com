@@ -20,11 +20,6 @@ const App = Vue.extend({
   data () {
     return { packages };
   },
-  computed: {
-    isUsingPresetData () {
-      return !(this.$route.params && this.$route.params.packages);
-    }
-  },
   ready () {
     window.aaa = this;
   },

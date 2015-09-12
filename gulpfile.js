@@ -120,7 +120,8 @@ gulp.task('styles', function() {
   pipeline = pipeline.pipe(stylus({
     'include css': true,
     paths: ['node_modules', path.join(__dirname, config.source)],
-    compress: production
+    compress: production,
+    define: {'palette': require('./config.js').palette}
   }))
   .on('error', handleError)
   .pipe(prefix('last 2 versions', 'Chrome 34', 'Firefox 28', 'iOS 7'));

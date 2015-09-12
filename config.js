@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   presetPackages: [
     ['node-sass', 'less', 'stylus'],
     ['lodash', 'underscore'],

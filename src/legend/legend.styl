@@ -5,9 +5,33 @@
     justify-content: center
     align-items: center
     margin-left: 0.5em
+    cursor: pointer
+    for color, i in palette
+      &:nth-child({i + 1}n)
+        .nub:before, .nub:after
+          background-color: unquote(color)
     .nub
-      $radius = 0.8em
-      width: $radius
-      height: $radius
-      border-radius: 50%
-      margin-right: 0.2em
+      position: relative
+      &:before, &:after
+        content: ' '
+        display: block
+        $radius = 0.8em
+        width: $radius
+        height: $radius
+        border-radius: 50%
+        margin-right: 0.2em
+        transition: all 0.15s
+      &:after
+        position: absolute
+        top: 0
+        bottom: 0
+        margin-top: auto
+        margin-bottom: auto
+    &:hover
+      .nub
+        &:before
+          border-radius: 0
+          transform: rotateZ(45deg) scaleX(0.3) scaleY(1.4)
+        &:after
+          border-radius: 0
+          transform: rotateZ(-45deg) scaleX(0.3) scaleY(1.4)

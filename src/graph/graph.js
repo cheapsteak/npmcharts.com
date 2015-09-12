@@ -2,8 +2,8 @@ import d3 from 'd3';
 import nv from 'nvd3';
 import moment from 'moment';
 
-const {palette} = require('../config.js');
-const margin = {top: 30, right: 40, bottom: 30, left: 30};
+const {palette} = require('../../config.js');
+// const margin = {top: 30, right: 40, bottom: 30, left: 30};
 // this can't go in the data of the component, observing it changes it.
 let svg;
 
@@ -43,7 +43,10 @@ export default Vue.extend({
   },
   ready () {
     window.ggg = this;
-    const margin = {top: 30, right: 40, bottom: 30, left: 30};
+    // const margin = {top: 30, right: 40, bottom: 30, left: 30};
+    // const sidePanel = document.querySelector('.side-panel');
+    // const margin = this.margin = {top: 30, right: 40, bottom: 30, left: sidePanel.offsetWidth + sidePanel.getBoundingClientRect().left + 30};
+    const margin = this.margin = {top: 30, right: 40, bottom: 30, left: 30};
     svg =  d3.select('#chart svg');
     const chart = this.chart;
     nv.addGraph(() => {
@@ -114,7 +117,7 @@ export default Vue.extend({
         .call(chart)
       chart.x2Axis.tickValues(data[0].downloads.map(item => item.day).filter(date => date.getDate() === 1))
       chart.update()
-      svg.select(".nv-y.nv-axis").attr("transform", "translate(" + nv.utils.availableWidth(null, svg, margin) + ",0)")
+      svg.select(".nv-y.nv-axis").attr("transform", "translate(" + nv.utils.availableWidth(null, svg, this.margin) + ",0)")
       svg.select('.nv-context .nv-y.nv-axis').remove()
     }
   }

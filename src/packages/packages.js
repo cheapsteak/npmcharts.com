@@ -17,7 +17,7 @@ export default Vue.extend({
     onSubmit: Function
   },
   template: `
-    <input el="textbox" on-keyup-enter="submit($$.textbox.value)">
+    <input $$.textbox on-keyup-enter="submit($$.textbox.value)">
   `,
   methods: {
     submit (val) {
