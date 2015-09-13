@@ -6,12 +6,19 @@ $nubRadius = 7px
   padding: 10px
   .date
     font-weight: 600
-    text-indent: $nubRadius
-    margin-bottom: 8px
+    th:first-child
+      text-align: right
   .modules
-    display: flex
-    flex-direction: column
-    align-items: flex-start
+    // display: flex
+    // flex-direction: column
+    // align-items: flex-start
+    display: table  
+    .module
+      display: table-row
+      & > div
+        display: table-cell
+        &:last-child
+          padding-left: 8px
   .module
     display: flex
     justify-content: center
@@ -22,12 +29,23 @@ $nubRadius = 7px
       &:nth-child({i + 1}n)
         .nub:before, .nub:after
           background-color: unquote(color)
-    .nub
+    .name-wrapper
+      text-align: right
+    .name
       position: relative
+      display: inline-block
+      text-indent: $nubRadius + 3px
+    .nub
+      $radius = $nubRadius
+      position: absolute
+      top: 0
+      bottom: 0
+      margin-top: auto
+      margin-bottom: auto
+      height: $radius
       &:before, &:after
         content: ' '
         display: block
-        $radius = $nubRadius
         width: $radius
         height: $radius
         border-radius: 50%
