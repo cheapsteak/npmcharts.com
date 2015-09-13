@@ -63,7 +63,14 @@ export default Vue.extend({
 
       chart.x2Axis
         .showMaxMin(false)
-        .tickFormat(d => d3.time.format('%b %Y')(new Date(d)))
+        .tickFormat(d => {
+          const date = moment(d);
+          if (date.format('DDD') === '1') {
+            return date.format('YYYY');
+          } else if (date.format('D') === '1') {
+            return date.format('MMM');
+          }
+        })
 
       chart.yAxis
         .orient('right')
@@ -172,7 +179,7 @@ export default Vue.extend({
           if (
             !(d3.event.sourceEvent instanceof WheelEvent)
             || newStart <= this.moduleData[0].downloads[0].day.getTime()
-            || newStart > end - 7 * 1000*60*60*10) {
+            || end - newStart <= 3 * 1000*60*60*24*7) {
             return;
           }
           chart.brushExtent([newStart, end]);
