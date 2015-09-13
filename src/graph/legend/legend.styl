@@ -1,5 +1,17 @@
+$nubRadius = 7px
+
 .legend
   display: flex
+  flex-direction: column
+  padding: 10px
+  .date
+    font-weight: 500
+    text-indent: $nubRadius
+    margin-bottom: 8px
+  .modules
+    display: flex
+    flex-direction: column
+    align-items: flex-start
   .module
     display: flex
     justify-content: center
@@ -15,7 +27,7 @@
       &:before, &:after
         content: ' '
         display: block
-        $radius = 0.8em
+        $radius = $nubRadius
         width: $radius
         height: $radius
         border-radius: 50%
@@ -31,7 +43,7 @@
       .nub
         &:before
           border-radius: 0
-          transform: rotateZ(45deg) scaleX(0.3) scaleY(1.4)
+          transform: rotateZ(45deg) scaleX(0.2) scaleY(1.3)
         &:after
           border-radius: 0
-          transform: rotateZ(-45deg) scaleX(0.3) scaleY(1.4)
+          transform: rotateZ(-45deg) scaleX(0.2) scaleY(1.3)

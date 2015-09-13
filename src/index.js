@@ -4,6 +4,7 @@ import 'whatwg-fetch';
 import 'babel/polyfill';
 import _ from 'lodash';
 import Vue from 'vue';
+import moment from 'moment';
 
 window._ = _;
 
@@ -13,33 +14,10 @@ Vue.config.debug = true;
 
 var {default: packageInput, packages} = require('./packages/packages.js');
 
-const App = Vue.extend({
-  // components: {
-  //   'package-input': packageInput
-  // },
-  data () {
-    return { packages };
-  },
-  ready () {
-    window.aaa = this;
-  },
-  // methods: {
-  //   addPackage (packageName) {
-  //     if (this.$route.params && this.$route.params.packages) {
-  //       this.$route.router.go('/compare/' + this.$route.params.packages + ',' + packageName);
-  //     } else {
-  //       this.$route.router.go('/compare/' + packageName);
-  //     }
-  //   },
-  //   clearPackages () {
-  //     this.$route.router.go('/compare/');
-  //   }
-  // }
-  // watch: {
-    // packages (packages) {
-    //   this.$route.router.go('/compare/' + packages.join(','));
-    // }
-  // }
+Vue.filter('formatDate', function (date, format) {
+  return moment(date).format(format);
 });
+
+const App = Vue.extend({});
 
 router.start(App, 'body');

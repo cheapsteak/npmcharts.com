@@ -3,7 +3,6 @@ import nv from 'nvd3';
 import moment from 'moment';
 
 const {palette} = require('../../config.js');
-// const margin = {top: 30, right: 40, bottom: 30, left: 30};
 // this can't go in the data of the component, observing it changes it.
 let svg;
 
@@ -18,7 +17,7 @@ export default Vue.extend({
   },
   template: `
     <div id="chart" class="with-3d-shadow with-transitions">
-      <slot name="legend"></slot>
+      <legend v-if="legendData" bind-modules="legendData.modules" bind-date="legendData.date"></legend>
       <svg></svg>
     </div>
   `,
@@ -26,7 +25,8 @@ export default Vue.extend({
     return {
       chart: nv.models.lineWithFocusChart(),
       svg: null,
-      useLog: false
+      useLog: false,
+      legendData: null
     }
   },
   watch: {
@@ -43,10 +43,7 @@ export default Vue.extend({
   },
   ready () {
     window.ggg = this;
-    // const margin = {top: 30, right: 40, bottom: 30, left: 30};
-    // const sidePanel = document.querySelector('.side-panel');
-    // const margin = this.margin = {top: 30, right: 40, bottom: 30, left: sidePanel.offsetWidth + sidePanel.getBoundingClientRect().left + 30};
-    const margin = this.margin = {top: 30, right: 40, bottom: 30, left: 30};
+    const margin = this.margin = {top: 0, right: 26, bottom: 30, left: 0};
     svg =  d3.select('#chart svg');
     const chart = this.chart;
     nv.addGraph(() => {
@@ -56,13 +53,14 @@ export default Vue.extend({
         .color(palette)
         .xScale(d3.time.scale())
         .useInteractiveGuideline(true)
+      chart.interactiveLayer.tooltip.enabled(false);
 
-        // debugger
-      chart.tooltip.enabled(false);
+      chart.interactiveLayer.tooltip.fixedTop(100);
+      chart.interactiveLayer.tooltip.position({left: 0});
 
       chart.xAxis
         .showMaxMin(false)
-        .tickFormat(d => d3.time.format('%e %b %Y')(new Date(d)))
+        .tickFormat(d => d3.time.format('%e %b')(new Date(d)))
 
       chart.x2Axis
         .showMaxMin(false)
@@ -77,9 +75,6 @@ export default Vue.extend({
         .showMaxMin(false)
         .tickFormat(d3.format('s'))
 
-      chart.tooltip.valueFormatter(d => d3.format(',')(d), d => d3.time.format('%b %Y')(new Date(d)));
-      chart.interactiveLayer.tooltip.valueFormatter(d => d3.format(',')(d), d => d3.time.format('%b %Y')(new Date(d)));
-
       // focus on an area
       chart.brushExtent([moment().subtract(3, 'month').toDate(), moment().toDate()])
 
@@ -92,7 +87,7 @@ export default Vue.extend({
     });
   },
   methods: {
-    allow(entry) {
+    allow (entry) {
       const conditions = [
         !this.noWeekends || [0, 6].indexOf(entry.day.getDay()) === -1
       ];
@@ -108,17 +103,55 @@ export default Vue.extend({
         ]
       }];
     },
-    render() {
+    render () {
       const chart = this.chart;
-      const data = this.moduleData;
+      const processedData = this.processForD3(this.moduleData);
       svg
-        .data([this.processForD3(data)])
+        .data([processedData])
         .transition().duration(500)
         .call(chart)
-      chart.x2Axis.tickValues(data[0].downloads.map(item => item.day).filter(date => date.getDate() === 1))
-      chart.update()
-      svg.select(".nv-y.nv-axis").attr("transform", "translate(" + nv.utils.availableWidth(null, svg, this.margin) + ",0)")
-      svg.select('.nv-context .nv-y.nv-axis').remove()
+      this.legendData = this.getDataAtDate(processedData[0].values.slice(-1)[0].x);
+      this.applyOverrides(processedData);
+    },
+    applyOverrides (processedData) {
+      const chart = this.chart;
+      chart.x2Axis.tickValues(this.moduleData[0].downloads.map(item => item.day).filter(date => date.getDate() === 1))
+      chart.update();
+
+      svg.select(".nv-y.nv-axis").attr("transform", "translate(" + nv.utils.availableWidth(null, svg, this.margin) + ",0)");
+      svg.select('.nv-context .nv-y.nv-axis').remove();
+
+      var prevMousemove = chart.interactiveLayer.dispatch.on('elementMousemove');
+      chart.interactiveLayer.dispatch.on('elementMousemove', (e) => {
+          prevMousemove.call(chart.interactiveLayer, e);
+          const date = moment(e.pointXValue).hours(0).minutes(0).seconds(0).milliseconds(0).toDate();
+          try {
+            this.$set('legendData', this.getDataAtDate(date));
+          } catch (e) {
+            console.warn(`error retrieving data for ${date}. Probably moused in from the side`)
+          }
+      });
+
+      var prevMouseout = chart.interactiveLayer.dispatch.on('elementMouseout');
+      chart.interactiveLayer.dispatch.on('elementMouseout', (e) => {
+        prevMouseout.call(chart.interactiveLayer, e);
+        this.legendData = this.getDataAtDate(processedData[0].values.slice(-1)[0].x);
+      });
+    },
+    getDataAtDate (date) {
+      return {
+        date: date,
+        modules: this.moduleData.map( (module, i) => {
+          return {
+            color: palette[i%palette.length],
+            name: module.name,
+            downloads: _.find(module.downloads, entry => entry.day.getTime() === date.getTime()).count
+          }
+        })
+      };
     }
+  },
+  components: {
+    legend: require('./legend/legend.js')
   }
 });

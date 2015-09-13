@@ -1,9 +1,12 @@
+@import 'legend/legend.styl'
+
 .nv-guideline
   display: none
-
+.nvd3 .nv-axis.nv-x path.domain
+  stroke-opacity: 0.75
 .chart
-  &.is-preset
-    .nvd3 .nv-axis path
-      stroke: #D1D1D1
-    .nvd3 .nv-axis text
-      fill: #D1D1D1
+  .legend
+    position: absolute
+    left: 10px
+    top: 10px
+    background-color: rgba(white, 0.7)
