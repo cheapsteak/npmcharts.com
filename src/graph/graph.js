@@ -1,6 +1,7 @@
 import d3 from 'd3';
 import nv from 'nvd3';
 import moment from 'moment';
+import Hammer from 'hammerjs';
 
 const {palette} = require('../../config.js');
 // this can't go in the data of the component, observing it changes it.
@@ -16,7 +17,7 @@ export default Vue.extend({
     moduleData: Array
   },
   template: `
-    <div id="chart" class="with-3d-shadow with-transitions">
+    <div $$.chart id="chart" class="with-3d-shadow with-transitions">
       <legend v-if="legendData" bind-modules="legendData.modules" bind-date="legendData.date"></legend>
       <svg></svg>
     </div>
@@ -43,7 +44,7 @@ export default Vue.extend({
   },
   ready () {
     window.ggg = this;
-    const margin = this.margin = {top: 0, right: 26, bottom: 30, left: 0};
+    const margin = this.margin = {top: 0, right: 36, bottom: 30, left: 16};
     svg =  d3.select('#chart svg');
     const chart = this.chart;
     nv.addGraph(() => {
@@ -53,10 +54,8 @@ export default Vue.extend({
         .color(palette)
         .xScale(d3.time.scale())
         .useInteractiveGuideline(true)
-      chart.interactiveLayer.tooltip.enabled(false);
 
-      chart.interactiveLayer.tooltip.fixedTop(100);
-      chart.interactiveLayer.tooltip.position({left: 0});
+      chart.interactiveLayer.tooltip.enabled(false);
 
       chart.xAxis
         .showMaxMin(false)
@@ -85,6 +84,30 @@ export default Vue.extend({
       this.render();
       return chart;
     });
+
+    const updateChart = _.debounce(() => {
+      svg.call(this.chart);
+    }, 50);
+    this.hammerInstance = new Hammer(this.$$.chart);
+    this.hammerInstance.get('pinch').set({ enable: true });
+    this.hammerInstance.on('pinchin', e => {
+      const [currentStart, end] = chart.brushExtent().map(x => new Date(x).getTime());
+      const newStart = currentStart + Math.floor(e.distance * 1000*60*60*5);
+      if (newStart <= this.moduleData[0].downloads[0].day.getTime() || newStart > end - 7 * 1000*60*60*10) {
+        return;
+      }
+      chart.brushExtent([newStart, end]);
+      updateChart();
+    });
+    this.hammerInstance.on('pinchout', e => {
+      const [currentStart, end] = chart.brushExtent().map(x => new Date(x).getTime());
+      const newStart = currentStart - Math.floor(e.distance * 1000*60*60*5);
+      if (newStart <= this.moduleData[0].downloads[0].day.getTime() || newStart > end - 7 * 1000*60*60*10) {
+        return;
+      }
+      chart.brushExtent([newStart, end]);
+      updateChart();
+    });
   },
   methods: {
     allow (entry) {
@@ -110,10 +133,11 @@ export default Vue.extend({
         .data([processedData])
         .transition().duration(500)
         .call(chart)
-      this.legendData = this.getDataAtDate(processedData[0].values.slice(-1)[0].x);
-      this.applyOverrides(processedData);
+
+      this.legendData = this.getDataAtDate(this.chart.xAxis.domain()[1]);
+      this.applyOverrides();
     },
-    applyOverrides (processedData) {
+    applyOverrides () {
       const chart = this.chart;
       chart.x2Axis.tickValues(this.moduleData[0].downloads.map(item => item.day).filter(date => date.getDate() === 1))
       chart.update();
@@ -121,10 +145,46 @@ export default Vue.extend({
       svg.select(".nv-y.nv-axis").attr("transform", "translate(" + nv.utils.availableWidth(null, svg, this.margin) + ",0)");
       svg.select('.nv-context .nv-y.nv-axis').remove();
 
+      svg.call(d3.behavior.drag()
+        .on('drag', e => {
+          const {dx} = d3.event;
+          const [currentStart, currentEnd] = chart.brushExtent().map(x => new Date(x).getTime());
+          const [newStart, newEnd] = [currentStart, currentEnd].map(x => new Date(x - dx*1000*60*60*10))
+          if (
+            d3.event.sourceEvent.touches && d3.event.sourceEvent.touches.length === 2
+            || (newEnd >= this.moduleData[0].downloads.slice(-1)[0].day.getTime() || newStart <= this.moduleData[0].downloads[0].day.getTime())) {
+            return;
+          }
+          chart.brushExtent([newStart, newEnd]);
+          svg.call(this.chart)
+        })
+        .on('dragend', e => {
+          this.render();
+        })
+      );
+
+      svg.call(d3.behavior.zoom()
+        .on('zoom', e => {
+          const dy = d3.event.sourceEvent.deltaY;
+          const [currentStart, end] = chart.brushExtent().map(x => new Date(x).getTime());
+          const newStart = currentStart - Math.floor(dy* 1000*60*60*3);
+
+          if (
+            !(d3.event.sourceEvent instanceof WheelEvent)
+            || newStart <= this.moduleData[0].downloads[0].day.getTime()
+            || newStart > end - 7 * 1000*60*60*10) {
+            return;
+          }
+          chart.brushExtent([newStart, end]);
+          svg.call(this.chart)
+        })
+      );
+
+
       var prevMousemove = chart.interactiveLayer.dispatch.on('elementMousemove');
       chart.interactiveLayer.dispatch.on('elementMousemove', (e) => {
           prevMousemove.call(chart.interactiveLayer, e);
-          const date = moment(e.pointXValue).hours(0).minutes(0).seconds(0).milliseconds(0).toDate();
+          const date = e.pointXValue;
           try {
             this.$set('legendData', this.getDataAtDate(date));
           } catch (e) {
@@ -135,10 +195,11 @@ export default Vue.extend({
       var prevMouseout = chart.interactiveLayer.dispatch.on('elementMouseout');
       chart.interactiveLayer.dispatch.on('elementMouseout', (e) => {
         prevMouseout.call(chart.interactiveLayer, e);
-        this.legendData = this.getDataAtDate(processedData[0].values.slice(-1)[0].x);
+        this.legendData = this.getDataAtDate(this.chart.xAxis.domain()[1]);
       });
     },
     getDataAtDate (date) {
+      date = moment(date).hours(0).minutes(0).seconds(0).milliseconds(0).toDate();
       return {
         date: date,
         modules: this.moduleData.map( (module, i) => {
