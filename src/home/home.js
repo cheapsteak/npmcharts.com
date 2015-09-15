@@ -21,7 +21,7 @@ export default Vue.extend({
           .then(() => {
             next({moduleNames: npmData.moduleNames, moduleData: npmData.modules, isPreset: !to.params.packages});
           })
-      : next({moduleNames: [], moduleData: []});
+      : next({moduleNames: null, moduleData: null});
     }
   },
   data () {
