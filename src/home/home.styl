@@ -1,3 +1,9 @@
+.page-header
+  background: #F1F1F1
+  padding: 1em
+  .heading
+    color: #1288EF
+    cursor: pointer
 main
   width: 100%
   display: flex
@@ -12,32 +18,36 @@ main
     & > svg
       width: 100%
       flex-grow: 1
-  .info-panel
-    z-index: 2
-    background-color: rgba(white, 0.7)
+  .sample-matches
+    margin: 6px 16px 16px
+    .caption
+      display: inline
+      margin: 0
+      font-weight: 500
+      font-size: 11px
+      text-indent: 8px
+    .match
+      display: inline-block
+      list-style-type: disc
+      &.v-link-active
+        cursor: default
+      &:not(:last-child)
+        margin-right: 8px
+  .match
+    cursor: pointer
+    &:hover
+      text-shadow: 1px 1px 3px #D9E7EF
+  .package-name
+    font-weight: 500
+    transition: color 1s
+  .vs
+    font-size: 12px
+  .no-packages-selected
+    flex-grow: 1
     display: flex
-    flex-direction: row
-    margin-top: 10px
-    .sample-comparisons
-      .heading
-        margin: 0
-        font-size: 16px
-        text-indent: 8px
-      .group
-        display: inline-block
-        list-style-type: disc
-        cursor: pointer
-        &.v-link-active
-          cursor: default
-        &:not(:last-child)
-          margin-right: 8px
-        &:hover
-          text-shadow: 1px 1px 3px #D9E7EF
-        .package-name
-          font-weight: 500
-        .vs
-          font-size: 12px
-
+    flex-direction: column
+    align-items: center
+    justify-content: center
 footer
   padding: 1em 16px 0.5em
   display: flex

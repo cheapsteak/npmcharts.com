@@ -1,26 +1,27 @@
+<header class="page-header">
+  <h1 class="heading" v-link#="/">downloads charts for npm</h1>
+  <form>
+    <package-input bind-on-submit="addPackage"></package-input>
+    <button on-click="clearPackages" type="button" bind-disabled="!moduleData">clear</button>
+    <label><input type="checkbox" v-model="noWeekends"/>ignore weekends</label>
+  </form>
+</header>
 <main>
-  <div class="info-panel">
-    <form>
-      <package-input bind-on-submit="addPackage"></package-input>
-      <button on-click="clearPackages" bind-disabled="isUsingPresetData">clear</button>
-      <label><input type="checkbox" v-model="noWeekends"/>no weekends</label>
-    </form>
-    <div class="sample-comparisons">
-      <h2 class="heading">Sample pairings </h2>
-      <ul>
-        <li class="group" v-for="packages in presetPackages" v-link="'/compare/' + packages.join(',')">
-          &bull;
-          <template v-for="package in packages">
-            <span class="vs" v-if="$index !==0"> vs </span><span
-              class="package-name"
-              bind-style="{
-                color: moduleNames && moduleNames.indexOf(package) > -1 ? palette[moduleNames.indexOf(package) % palette.length] : ''
-              }"
-              >{{package}}</span>
-          </template>
-        </li>
-      </ul>
-    </div>
+  <div class="sample-matches">
+    <div class="caption">examples:</div>
+    <ul class="matches">
+      <li class="match" v-for="packages in presetPackages" v-link="'/compare/' + packages.join(',')">
+        &bull;
+        <template v-for="package in packages">
+          <span class="vs" v-if="$index !==0"> vs </span><span
+            class="package-name"
+            bind-style="{
+              color: moduleNames && moduleNames.indexOf(package) > -1 ? palette[moduleNames.indexOf(package) % palette.length] : ''
+            }"
+            >{{package}}</span>
+        </template>
+      </li>
+    </ul>
   </div>
   <graph
     class="chart"
@@ -31,11 +32,25 @@
     bind-is-preset="isPreset"
   >
   </graph>
+  <div class="no-packages-selected" v-if="!moduleData">
+    <p>No packages selected.</p>
+    <p>Why not try
+      <span class="match" v-for="packages in [presetPackages[Math.floor(Math.random() * presetPackages.length)]]" v-link="'/compare/' + packages.join(',')">
+        <template v-for="package in packages">
+          <span class="vs" v-if="$index !==0"> vs </span><span
+            class="package-name"
+            bind-style="{
+              color: palette[$index % palette.length]
+            }"
+            >{{package}}</span>
+        </template>
+      </span>?
+    </p>
+  </div>
 </main>
 <footer>
   <div class="about">
     <span class="copyright">Chang Wang &copy; 2015</span>
-    <span>@CheapSteak</span>
   </div>
   <small class="disclaimer">npm is a trademark of npm, Inc.</small>
 </footer>
