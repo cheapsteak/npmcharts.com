@@ -18,8 +18,5 @@ router.map({
   }
 });
 
-// router.redirect({'/compare': '/'})
-// router.alias({'/compare': '/compare/?clear'})
-
 // for debugging
 window.router = router;

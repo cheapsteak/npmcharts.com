@@ -136,6 +136,7 @@ export default Vue.extend({
     render () {
       const chart = this.chart;
       const processedData = this.processForD3(this.moduleData);
+      chart.yScale(this.useLog ? d3.scale.log() : d3.scale.linear());
       svg
         .data([processedData])
         .transition().duration(500)

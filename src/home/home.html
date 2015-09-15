@@ -6,6 +6,7 @@
       <label><input type="checkbox" v-model="noWeekends"/>no weekends</label>
     </form>
     <div class="sample-comparisons">
+      <h2 class="heading">Sample pairings </h2>
       <ul>
         <li class="group" v-for="packages in presetPackages" v-link="'/compare/' + packages.join(',')">
           &bull;
@@ -32,6 +33,9 @@
   </graph>
 </main>
 <footer>
-  <p class="copyright">Chang Wang &copy; 2015</p>
+  <div class="about">
+    <span class="copyright">Chang Wang &copy; 2015</span>
+    <span>@CheapSteak</span>
+  </div>
   <small class="disclaimer">npm is a trademark of npm, Inc.</small>
 </footer>
