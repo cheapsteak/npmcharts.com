@@ -18,7 +18,7 @@ export default Vue.extend({
   },
   template: `
     <div $$.chart id="chart" class="with-3d-shadow with-transitions">
-      <legend v-if="legendData" bind-modules="legendData.modules" bind-date="legendData.date"></legend>
+      <legend v-if="moduleData.length && legendData" bind-modules="legendData.modules" bind-date="legendData.date"></legend>
       <svg></svg>
     </div>
   `,
@@ -145,6 +145,9 @@ export default Vue.extend({
       this.applyOverrides();
     },
     applyOverrides () {
+      if (!this.moduleData.length) {
+        return;
+      }
       const chart = this.chart;
       chart.x2Axis.tickValues(this.moduleData[0].downloads.map(item => item.day).filter(date => date.getDate() === 1))
       chart.update();
@@ -195,7 +198,7 @@ export default Vue.extend({
           try {
             this.$set('legendData', this.getDataAtDate(date));
           } catch (e) {
-            console.warn(`error retrieving data for ${date}. Probably moused in from the side`)
+            console.warn(`error retrieving data for ${date}`)
           }
       });
 

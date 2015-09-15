@@ -30,6 +30,7 @@
     "browser-sync": "^2.7.2",
     "browserify": "^10.2.1",
     "chai": "^3.0.0",
+    "connect-modrewrite": "^0.8.2",
     "exorcist": "^0.4.0",
     "gulp": "~3.8.1",
     "gulp-autoprefixer": "1.0.1",
@@ -47,18 +48,9 @@
     "mocha": "^2.2.5",
     "node-notifier": "^4.2.1",
     "rimraf": "^2.3.4",
+    "stringify": "^3.1.0",
     "vinyl-source-stream": "~1.0.0",
     "vinyl-transform": "^1.0.0",
     "watchify": "^3.2.1"
-  },
-  "browserify": {
-    "transform": [
-      [
-        "babelify",
-        {
-          "stage": 0
-        }
-      ]
-    ]
   }
 }

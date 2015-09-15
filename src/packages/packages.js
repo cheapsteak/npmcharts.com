@@ -21,12 +21,21 @@ export default Vue.extend({
     onSubmit: Function
   },
   template: `
-    <input $$.textbox on-keyup-enter="submit($$.textbox.value)">
+    <input $$.textbox on-keyup-enter="submit($$.textbox.value)" on-keyup="validate">
+    <button class="add" bind-disabled="!valid">add</button>
   `,
+  data () {
+    return {
+      valid: false
+    };
+  },
   methods: {
     submit (val) {
       this.onSubmit(val);
       this.$$.textbox.value = '';
+    },
+    validate () {
+      this.valid = this.$$.textbox.value !== ""
     }
   }
 })

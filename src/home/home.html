@@ -1,0 +1,37 @@
+<main>
+  <div class="info-panel">
+    <form>
+      <package-input bind-on-submit="addPackage"></package-input>
+      <button on-click="clearPackages" bind-disabled="isUsingPresetData">clear</button>
+      <label><input type="checkbox" v-model="noWeekends"/>no weekends</label>
+    </form>
+    <div class="sample-comparisons">
+      <ul>
+        <li class="group" v-for="packages in presetPackages" v-link="'/compare/' + packages.join(',')">
+          &bull;
+          <template v-for="package in packages">
+            <span class="vs" v-if="$index !==0"> vs </span><span
+              class="package-name"
+              bind-style="{
+                color: moduleNames && moduleNames.indexOf(package) > -1 ? palette[moduleNames.indexOf(package) % palette.length] : ''
+              }"
+              >{{package}}</span>
+          </template>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <graph
+    class="chart"
+    v-if="moduleNames"
+    bind-module-names="moduleNames"
+    bind-module-data="moduleData"
+    bind-no-weekends="noWeekends"
+    bind-is-preset="isPreset"
+  >
+  </graph>
+</main>
+<footer>
+  <p class="copyright">Chang Wang &copy; 2015</p>
+  <small class="disclaimer">npm is a trademark of npm, Inc.</small>
+</footer>

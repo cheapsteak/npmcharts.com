@@ -22,6 +22,9 @@ var stylus = require('gulp-stylus');
 var uglify = require('gulp-uglify');
 var watchify = require('watchify');
 var watch = require('gulp-watch');
+var babelify = require('babelify');
+var stringify = require('stringify');
+var modRewrite = require('connect-modrewrite');
 
 /*eslint "no-process-env":0 */
 var production = process.env.NODE_ENV === 'production';
@@ -76,8 +79,15 @@ function handleError(err) {
   return this.emit('end');
 }
 
+var browserifyAppBundle = function () {
+  return browserify(browserifyConfig)
+    .transform(stringify(['.html', '.svg', '.vue', '.template', '.tmpl']))
+    .transform(babelify.configure({stage: 0}))
+    // .transform(envify)
+};
+
 gulp.task('scripts', function() {
-  var pipeline = browserify(browserifyConfig)
+  var pipeline = browserifyAppBundle()
     .bundle()
     .on('error', handleError)
     .pipe(source(config.scripts.filename));
@@ -153,7 +163,12 @@ gulp.task('server', function() {
     notify: false,
     ghostMode: false,
     server: {
-      baseDir: config.destination
+      baseDir: config.destination,
+      middleware: [
+        modRewrite([
+          '^[^\\.]*$ /index.html [L]'
+        ])
+      ]
     }
   });
 });
@@ -166,7 +181,7 @@ gulp.task('watch', function() {
     });
   });
 
-  var bundle = watchify(browserify(browserifyConfig));
+  var bundle = watchify(browserifyAppBundle());
 
   bundle.on('update', function() {
     var build = bundle.bundle()

@@ -4,14 +4,13 @@ $nubRadius = 7px
   display: flex
   flex-direction: column
   padding: 10px
+  @media (max-width: 500px)
+    font-size: 11px
   .date
     font-weight: 600
     th:first-child
       text-align: right
   .modules
-    // display: flex
-    // flex-direction: column
-    // align-items: flex-start
     display: table  
     .module
       display: table-row
@@ -36,18 +35,18 @@ $nubRadius = 7px
       display: inline-block
       text-indent: $nubRadius + 3px
     .nub
-      $radius = $nubRadius
+      $nubRadius
       position: absolute
       top: 0
       bottom: 0
       margin-top: auto
       margin-bottom: auto
-      height: $radius
+      height: $nubRadius
       &:before, &:after
         content: ' '
         display: block
-        width: $radius
-        height: $radius
+        width: $nubRadius
+        height: $nubRadius
         border-radius: 50%
         margin-right: 0.2em
         transition: all 0.15s
