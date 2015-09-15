@@ -21,8 +21,8 @@ export default Vue.extend({
     onSubmit: Function
   },
   template: `
-    <input $$.textbox on-keyup-enter="submit($$.textbox.value)" on-keyup="validate">
-    <button class="add" bind-disabled="!valid">add</button>
+    <input $$.textbox on-keyup="validate">
+    <button class="add" bind-disabled="!valid" on-click="submit($$.textbox.value, $event)">add</button>
   `,
   data () {
     return {
@@ -30,12 +30,13 @@ export default Vue.extend({
     };
   },
   methods: {
-    submit (val) {
+    submit (val, e) {
       this.onSubmit(val);
       this.$$.textbox.value = '';
+      e && e.preventDefault() && e.stopPropagation();
     },
     validate () {
-      this.valid = this.$$.textbox.value !== ""
+      this.valid = this.$$.textbox.value !== "";
     }
   }
 })
