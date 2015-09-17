@@ -1,8 +1,9 @@
 <header class="page-header">
-  <h1 class="heading"><span class="link-home" v-link#="/">downloads charts for&nbsp;npm</span> <p class="sub-heading">compare packages and spot trends</p></h1>
+  <h1 class="heading">
+    <a href="/" class="identity" v-link#="/">npcharts</a>
+    <p class="sub-heading">compare npm packages and spot&nbsp;download&nbsp;trends</p></h1>
   <form>
     <package-input class="package-input" bind-on-submit="addPackage"></package-input>
-    <!-- <button on-click="clearPackages" type="button" bind-disabled="!moduleData">clear</button> -->
     <label class="ignore-weekends"><input type="checkbox" v-model="noWeekends"/>ignore weekends</label>
   </form>
 </header>

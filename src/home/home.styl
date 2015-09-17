@@ -4,19 +4,33 @@
   border-bottom: 1px solid #ccc;
   box-sizing: border-box
   .heading
-    line-height: 0.7
+    line-height: 0.8
+    margin-top: 10px
+    .identity
+      font-size: 14px
+      font-size: 35px
+      margin-bottom: 2px
+      font-weight: 600
+      color: #333
+      text-decoration: none
+      cursor: pointer
+      display: block
+      color: #1288EF
     .link-home
       color: #1288EF
-      cursor: pointer
+      font-size: 16px
+      font-weight: 600
       @media (max-width: $small)
         font-size: 22px
   .sub-heading
+    color: #8F9FBC
     margin: 0
     font-size: 16px
     display: inline-block
-    color: #8F9FBC
+    line-height: 1.2
     @media (max-width: $small)
-      font-size: 13px
+      font-size: 14px
+      margin-top: 6px
   .ignore-weekends
     font-size: 12px
     @media (max-width: $small)
@@ -64,6 +78,8 @@ main
         cursor: default
       &:not(:last-child)
         margin-right: 11px
+      &:nth-child(n+3)
+        display: none
   .match
     cursor: pointer
     &:hover:not(.v-link-active)
