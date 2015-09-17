@@ -78,8 +78,9 @@ main
         cursor: default
       &:not(:last-child)
         margin-right: 11px
-      &:nth-child(n+3)
-        display: none
+      @media (max-width: $small)
+        &:nth-child(n+3)
+          display: none
   .match
     cursor: pointer
     &:hover:not(.v-link-active)

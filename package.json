@@ -7,8 +7,7 @@
   "main": "gulpfile.js",
   "scripts": {
     "start": "gulp",
-    "build": "gulp build",
-    "test": "mocha src/**/__tests__/*.js --compilers js:babel/register --require test/test-helper"
+    "build": "gulp build"
   },
   "keywords": [
     "gulp",

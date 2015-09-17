@@ -1,4 +1,3 @@
-// import moment from 'moment';
 import {removePackage} from '../../packages/packages.js';
 
 export default Vue.extend({

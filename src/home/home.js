@@ -1,6 +1,5 @@
 import npmData from '../services/downloads.js';
 import {graph} from '../graph/graph.js';
-// import {removePackage} from '../packages/packages.js';
 import config from '../../config.js';
 
 const palette = config.palette;
@@ -29,6 +28,7 @@ export default Vue.extend({
       } else {
         document.title = "Compare and graph npm packages - " + to.params.packages.split(',').join(', ');
       }
+      ga('send', 'pageview');
       next();
     }
   },
