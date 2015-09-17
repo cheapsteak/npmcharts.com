@@ -84,6 +84,10 @@ export default Vue.extend({
       chart.brushExtent([moment().subtract(3, 'month').toDate(), moment().toDate()])
 
       nv.utils.windowResize(function () {
+        // too small, looks weird, probably from mobile keyboard coming onscreen
+        if (window.innerHeight < 300) {
+          return;
+        }
         chart.update();
         svg.select(".nv-y.nv-axis").attr("transform", "translate(" + nv.utils.availableWidth(null, svg, margin) + ",0)")
       });
