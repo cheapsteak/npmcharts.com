@@ -156,8 +156,18 @@ export default Vue.extend({
       svg.select(".nv-y.nv-axis").attr("transform", "translate(" + nv.utils.availableWidth(null, svg, this.margin) + ",0)");
       svg.select('.nv-context .nv-y.nv-axis').remove();
 
+      const focusChartRect = document.querySelector('.nv-context').getBoundingClientRect();
+
       svg.call(d3.behavior.drag()
         .on('drag', e => {
+          // ignore drags on the focus chart
+          const {clientX, clientY} = d3.event.sourceEvent.touches ? d3.event.sourceEvent.touches[0] : d3.event.sourceEvent;
+          if (clientX > focusChartRect.left
+            && clientX < focusChartRect.left + focusChartRect.width
+            && clientY > focusChartRect.top
+            && clientY < focusChartRect.top + focusChartRect.height) {
+            return;
+          }
           const {dx} = d3.event;
           const [currentStart, currentEnd] = chart.brushExtent().map(x => new Date(x).getTime());
           const [newStart, newEnd] = [currentStart, currentEnd].map(x => new Date(x - dx*1000*60*60*10))
