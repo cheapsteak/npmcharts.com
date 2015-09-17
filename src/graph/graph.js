@@ -43,7 +43,6 @@ export default Vue.extend({
     }
   },
   ready () {
-    window.ggg = this;
     const margin = this.margin = {top: 0, right: 36, bottom: 30, left: 16};
     svg =  d3.select('#chart svg');
     const chart = this.chart;

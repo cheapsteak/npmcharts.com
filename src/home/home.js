@@ -4,9 +4,6 @@ import config from '../../config.js';
 
 const palette = config.palette;
 
-window.graph = graph;
-window.npmData = npmData;
-
 var {default: packageInput, emitter: packageEvents, packages, removePackage} = require('../packages/packages.js');
 
 export default Vue.extend({
@@ -45,7 +42,6 @@ export default Vue.extend({
     };
   },
   ready () {
-    window.hhh = this;
     packageEvents.on('change', () => {
       this.$route.router.go('/compare/' + packages.join(','));
     });

@@ -17,6 +17,3 @@ router.map({
     component: require('./home/home.js')
   }
 });
-
-// for debugging
-window.router = router;
