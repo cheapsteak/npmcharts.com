@@ -21,12 +21,22 @@ export default Vue.extend({
           .then(() => {
             next({moduleNames: npmData.moduleNames, moduleData: npmData.modules, isPreset: !to.params.packages});
           })
-      : next({moduleNames: null, moduleData: null});
+      : next({moduleNames: null, moduleData: null, samplePreset: _.sample(this.presetPackages)});
+    },
+    activate ({to, next}) {
+      if (to.path === '/' || !to.params.packages) {
+        document.title = "Compare and graph npm packages";
+      } else {
+        document.title = "Compare and graph npm packages - " + to.params.packages.split(',').join(', ');
+      }
+      next();
     }
   },
+  template: require('./home.html'),
   data () {
     return {
       presetPackages: config.presetPackages,
+      samplePreset: [],
       moduleNames: null,
       moduleData: null,
       palette,
@@ -40,26 +50,20 @@ export default Vue.extend({
       this.$route.router.go('/compare/' + packages.join(','));
     });
   },
-  template: require('./home.html'),
-    computed: {
-      isUsingPresetData () {
-        return !(this.$route.params && this.$route.params.packages);
+  methods: {
+    addPackage (packageName) {
+      if (this.$route.params && this.$route.params.packages) {
+        this.$route.router.go('/compare/' + this.$route.params.packages + ',' + packageName);
+      } else {
+        this.$route.router.go('/compare/' + packageName);
       }
     },
-    methods: {
-      addPackage (packageName) {
-        if (this.$route.params && this.$route.params.packages) {
-          this.$route.router.go('/compare/' + this.$route.params.packages + ',' + packageName);
-        } else {
-          this.$route.router.go('/compare/' + packageName);
-        }
-      },
-      clearPackages () {
-        this.$route.router.go('/compare');
-      }
-    },
-    components: {
-      'package-input': packageInput,
-      graph: require('../graph/graph.js')
+    clearPackages () {
+      this.$route.router.go('/compare');
     }
+  },
+  components: {
+    'package-input': packageInput,
+    graph: require('../graph/graph.js')
+  }
 });

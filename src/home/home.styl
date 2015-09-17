@@ -1,13 +1,39 @@
 .page-header
-  background: #F1F1F1
   padding: 1em
+  background: #F1F1F1
+  border-bottom: 1px solid #ccc;
+  box-sizing: border-box
   .heading
-    color: #1288EF
-    cursor: pointer
+    line-height: 0.7
+    .link-home
+      color: #1288EF
+      cursor: pointer
+      @media (max-width: $small)
+        font-size: 22px
+  .sub-heading
+    margin: 0
+    font-size: 16px
+    display: inline-block
+    color: #8F9FBC
+    @media (max-width: $small)
+      font-size: 13px
+  .ignore-weekends
+    font-size: 12px
+    @media (max-width: $small)
+      font-size: 10px
+  .package-input
+    line-height: 1.5
+    text-indent: 4px
+  .add-package-btn
+    vertical-align: middle
+    padding: 4px 6px;
 main
   width: 100%
   display: flex
   flex-direction: column
+  transition: opacity 0.15s
+  &.loading
+    opacity: 0.3
   .chart
     position: relative
     flex-grow: 1
@@ -19,29 +45,35 @@ main
       width: 100%
       flex-grow: 1
   .sample-matches
-    margin: 6px 16px 16px
+    margin: 6px 16px 12px
+    @media (max-width: $small)
+      font-size: 12px
     .caption
       display: inline
       margin: 0
       font-weight: 500
       font-size: 11px
       text-indent: 8px
+    .matches
+      display: inline
+      margin-left: 4px
     .match
       display: inline-block
       list-style-type: disc
       &.v-link-active
         cursor: default
       &:not(:last-child)
-        margin-right: 8px
+        margin-right: 11px
   .match
     cursor: pointer
-    &:hover
+    &:hover:not(.v-link-active)
       text-shadow: 1px 1px 3px #D9E7EF
   .package-name
     font-weight: 500
     transition: color 1s
   .vs
     font-size: 12px
+    margin: 0 -1px
   .no-packages-selected
     flex-grow: 1
     display: flex
@@ -60,5 +92,5 @@ footer
       margin: 0
   .disclaimer
     font-size: 10px
-  @media (max-width: 600px)
+  @media (max-width: $small)
     padding: 5px 16px 4px

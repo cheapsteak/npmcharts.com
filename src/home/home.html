@@ -1,17 +1,16 @@
 <header class="page-header">
-  <h1 class="heading" v-link#="/">downloads charts for npm</h1>
+  <h1 class="heading"><span class="link-home" v-link#="/">downloads charts for&nbsp;npm</span> <p class="sub-heading">compare packages and spot trends</p></h1>
   <form>
-    <package-input bind-on-submit="addPackage"></package-input>
-    <button on-click="clearPackages" type="button" bind-disabled="!moduleData">clear</button>
-    <label><input type="checkbox" v-model="noWeekends"/>ignore weekends</label>
+    <package-input class="package-input" bind-on-submit="addPackage"></package-input>
+    <!-- <button on-click="clearPackages" type="button" bind-disabled="!moduleData">clear</button> -->
+    <label class="ignore-weekends"><input type="checkbox" v-model="noWeekends"/>ignore weekends</label>
   </form>
 </header>
-<main>
+<main bind-class="{loading: $loadingRouteData}">
   <div class="sample-matches">
-    <div class="caption">examples:</div>
+    <div class="caption">try:</div>
     <ul class="matches">
       <li class="match" v-for="packages in presetPackages" v-link="'/compare/' + packages.join(',')">
-        &bull;
         <template v-for="package in packages">
           <span class="vs" v-if="$index !==0"> vs </span><span
             class="package-name"
@@ -35,8 +34,8 @@
   <div class="no-packages-selected" v-if="!moduleData">
     <p>No packages selected.</p>
     <p>Why not try
-      <span class="match" v-for="packages in [presetPackages[Math.floor(Math.random() * presetPackages.length)]]" v-link="'/compare/' + packages.join(',')">
-        <template v-for="package in packages">
+      <span class="match" v-link="'/compare/' + samplePreset.join(',')">
+        <template v-for="package in samplePreset">
           <span class="vs" v-if="$index !==0"> vs </span><span
             class="package-name"
             bind-style="{
@@ -50,7 +49,7 @@
 </main>
 <footer>
   <div class="about">
-    <span class="copyright">Chang Wang &copy; 2015</span>
+    <span class="copyright">Created by Chang Wang</span>
   </div>
   <small class="disclaimer">npm is a trademark of npm, Inc.</small>
 </footer>
