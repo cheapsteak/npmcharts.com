@@ -12,21 +12,20 @@ export default Vue.extend({
     data ({ to, next, redirect }) {
       const packageNames = to.path === '/' ? _.sample(this.presetPackages) : to.params.packages && to.params.packages.split(',');
 
+      if (to.path === '/' || !to.params.packages) {
+        document.title = "Compare and graph npm packages";
+      } else {
+        document.title = "Compare and graph npm packages - " + to.params.packages.split(',').join(', ');
+      }
+
+      ga('send', 'pageview');
+
       packageNames
       ? npmData.fetch(packageNames, false)
           .then(() => {
             next({moduleNames: npmData.moduleNames, moduleData: npmData.modules, isPreset: !to.params.packages});
           })
       : next({moduleNames: null, moduleData: null, samplePreset: _.sample(this.presetPackages)});
-    },
-    activate ({to, next}) {
-      if (to.path === '/' || !to.params.packages) {
-        document.title = "Compare and graph npm packages";
-      } else {
-        document.title = "Compare and graph npm packages - " + to.params.packages.split(',').join(', ');
-      }
-      ga('send', 'pageview');
-      next();
     }
   },
   template: require('./home.html'),
