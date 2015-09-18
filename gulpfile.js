@@ -86,7 +86,6 @@ var browserifyAppBundle = function () {
   return browserify(browserifyConfig)
     .transform(stringify(['.html', '.svg', '.vue', '.template', '.tmpl']))
     .transform(babelify.configure({stage: 0}))
-    // .transform(envify)
 };
 
 gulp.task('scripts', function() {
