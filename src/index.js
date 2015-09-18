@@ -1,7 +1,7 @@
 'use strict';
 
 import 'whatwg-fetch';
-import 'babel/polyfill';
+import 'babelify/polyfill';
 import _ from 'lodash';
 import Vue from 'vue';
 import moment from 'moment';
