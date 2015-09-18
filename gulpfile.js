@@ -25,9 +25,12 @@ var watch = require('gulp-watch');
 var babelify = require('babelify');
 var stringify = require('stringify');
 var modRewrite = require('connect-modrewrite');
+var minimist = require('minimist');
+
+var argv = minimist(process.argv.slice(2));
 
 /*eslint "no-process-env":0 */
-var production = process.env.NODE_ENV === 'production';
+var production = process.env.NODE_ENV === 'production' || argv.production || argv.p;
 
 var config = {
   source: './src',
