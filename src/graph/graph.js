@@ -202,6 +202,9 @@ export default Vue.extend({
           chart.brushExtent([newStart, end]);
           svg.call(this.chart)
         })
+        .on('zoomend', e => {
+          this.applyOverrides();
+        })
       );
 
 
