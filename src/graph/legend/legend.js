@@ -1,4 +1,4 @@
-import {removePackage} from '../../packages/packages.js';
+import {setPackages} from '../../packages/packages.js';
 
 export default Vue.extend({
   props: {
@@ -13,7 +13,7 @@ export default Vue.extend({
           <th>{{date | formatDate 'MMMM Do'}}</th>
         </thead>
         <tbody>
-          <tr class="module" v-for="module in modules" track-by="name" bind-style="{color: module.color}" on-click="removePackage(module.name)">
+          <tr class="module" v-for="module in modules" track-by="name" bind-style="{color: module.color}" on-click="setPackages([module.name])">
             <td class="name-wrapper">
               <div class="name">
                 <div class="nub"></div>
@@ -27,6 +27,6 @@ export default Vue.extend({
     </div>
   `,
   methods: {
-    removePackage
+    setPackages
   }
 });

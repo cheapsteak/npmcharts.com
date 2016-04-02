@@ -11,13 +11,16 @@ $nubRadius = 7px
     th:first-child
       text-align: right
   .modules
-    display: table  
+    display: table
     .module
       display: table-row
       & > div
         display: table-cell
         &:last-child
           padding-left: 8px
+    &:hover
+      .module:not(:hover)
+        opacity: 0.5
   .module
     display: flex
     justify-content: center
@@ -26,7 +29,7 @@ $nubRadius = 7px
     cursor: pointer
     for color, i in palette
       &:nth-child({i + 1}n)
-        .nub:before, .nub:after
+        .nub
           background-color: unquote(color)
     .name-wrapper
       text-align: right
@@ -41,21 +44,12 @@ $nubRadius = 7px
       bottom: 0
       margin-top: auto
       margin-bottom: auto
+      width: $nubRadius
       height: $nubRadius
-      &:before, &:after
-        content: ' '
-        display: block
-        width: $nubRadius
-        height: $nubRadius
-        border-radius: 50%
-        margin-right: 0.2em
-        transition: all 0.15s
-      &:after
-        position: absolute
-        top: 0
-        bottom: 0
-        margin-top: auto
-        margin-bottom: auto
+      border-radius: 50%
+      margin-right: 0.2em
+      transition: all 0.15s
+      
     &:hover
       .nub
         &:before
