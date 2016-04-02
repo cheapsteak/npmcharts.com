@@ -15,3 +15,10 @@
   .nv-context .nv-axis.nv-x text
     @media (max-width: 550px)
       display: none
+  .nv-line
+    // select lines:
+    > g > .nv-groups > .nv-group
+      stroke-opacity: 0.2 !important
+    .nv-scatterWrap path
+      stroke-width: 0
+      fill-opacity: 1!important
