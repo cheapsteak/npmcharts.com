@@ -2,11 +2,27 @@ import d3 from 'd3';
 import nv from 'nvd3';
 import moment from 'moment';
 import Hammer from 'hammerjs';
+import _ from 'lodash';
 import { average, withinStdevs } from '../utils/stats.js';
 
 const {palette} = require('../../config.js');
 // this can't go in the data of the component, observing it changes it.
 let svg;
+
+// entries: [{day: Date, count: Number}]
+function filterEntries (entries, {showWeekends=false, showOutliers=true, outlierStdevs=4}) {
+  if (!showWeekends) {
+    entries = entries.filter(entry => [0, 6].indexOf(entry.day.getDay()) === -1)
+  }
+  if (!showOutliers) {
+    entries = entries.filter((entry, index, collection) => withinStdevs(entry.count, collection.map(entry =>  entry.count), outlierStdevs))
+  }
+  return entries;
+}
+
+const filterEntriesMemo = _.memoize(filterEntries, function resolver (){
+  return Array.prototype.slice.call(arguments, -1)[0];
+});
 
 export default Vue.extend({
   props: {
@@ -135,20 +151,14 @@ export default Vue.extend({
     });
   },
   methods: {
-    // entries: [{day: Date, count: Number}]
-    filterDownloads (entries) {
-      if (!this.showWeekends) {
-        entries = entries.filter(entry => [0, 6].indexOf(entry.day.getDay()) === -1)
-      }
-      if (!this.showOutliers) {
-        entries = entries.filter((entry, index, collection) => withinStdevs(entry.count, collection.map(entry =>  entry.count), this.outlierStdevs))
-      }
-      return entries;
-    },
     processForD3 (input) {
       return [for (module of input) {
         key: module.name,
-        values: this.filterDownloads(module.downloads)
+        values: filterEntriesMemo(module.downloads, {
+            showWeekends: this.showWeekends,
+            showOutliers: this.showOutliers,
+            outlierStdevs: this.outlierStdevs
+          }, [module.name, this.showWeekends, this.showOutliers, this.outlierStdevs].join(','))
           .map(downloads => ({
             x: downloads.day,
             y: downloads.count
