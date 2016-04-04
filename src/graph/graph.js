@@ -2,6 +2,7 @@ import d3 from 'd3';
 import nv from 'nvd3';
 import moment from 'moment';
 import Hammer from 'hammerjs';
+import { average, withinStdevs } from '../utils/stats.js';
 
 const {palette} = require('../../config.js');
 // this can't go in the data of the component, observing it changes it.
@@ -9,9 +10,17 @@ let svg;
 
 export default Vue.extend({
   props: {
-    noWeekends: {
+    showWeekends: {
       type: Boolean,
       default: true
+    },
+    showOutliers: {
+      type: Boolean,
+      default: false
+    },
+    outlierStdevs: {
+      type: Number,
+      default: 4
     },
     moduleNames: Array,
     moduleData: Array
@@ -35,7 +44,13 @@ export default Vue.extend({
       this.chart.yScale(val ? d3.scale.log() : d3.scale.linear());
       this.chart.update();
     },
-    noWeekends () {
+    showWeekends () {
+      this.render();
+    },
+    showOutliers () {
+      this.render();
+    },
+    outlierStdevs () {
       this.render();
     },
     moduleData () {
@@ -120,20 +135,24 @@ export default Vue.extend({
     });
   },
   methods: {
-    allow (entry) {
-      const conditions = [
-        !this.noWeekends || [0, 6].indexOf(entry.day.getDay()) === -1
-      ];
-      return _.every(conditions);
+    // entries: [{day: Date, count: Number}]
+    filterDownloads (entries) {
+      if (!this.showWeekends) {
+        entries = entries.filter(entry => [0, 6].indexOf(entry.day.getDay()) === -1)
+      }
+      if (!this.showOutliers) {
+        entries = entries.filter((entry, index, collection) => withinStdevs(entry.count, collection.map(entry =>  entry.count), this.outlierStdevs))
+      }
+      return entries;
     },
     processForD3 (input) {
       return [for (module of input) {
         key: module.name,
-        values: [
-          for (downloads of module.downloads)
-          if (this.allow(downloads))
-          {x: downloads.day, y: downloads.count}
-        ]
+        values: this.filterDownloads(module.downloads)
+          .map(downloads => ({
+            x: downloads.day,
+            y: downloads.count
+          }))
       }];
     },
     render () {

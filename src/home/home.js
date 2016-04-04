@@ -36,7 +36,8 @@ export default Vue.extend({
       moduleNames: null,
       moduleData: null,
       palette,
-      noWeekends: true,
+      showWeekends: false,
+      showOutliers: true,
       isPreset: undefined
     };
   },

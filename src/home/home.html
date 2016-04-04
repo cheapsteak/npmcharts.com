@@ -5,7 +5,11 @@
     <p class="sub-heading">compare npm packages and spot&nbsp;download&nbsp;trends</p></h1>
   <form>
     <package-input class="package-input" bind-on-submit="addPackage"></package-input>
-    <label class="ignore-weekends"><input type="checkbox" v-model="noWeekends"/>ignore weekends</label>
+    <div class="graph-config">
+      include: 
+      <label class="include-item"><input type="checkbox" v-model="showWeekends"/>weekends</label>
+      <label class="include-item"><input type="checkbox" v-model="showOutliers"/>outliers</label>
+    </div>
   </form>
 </header>
 <main bind-class="{loading: $loadingRouteData}">
@@ -29,7 +33,8 @@
     v-if="moduleNames"
     bind-module-names="moduleNames"
     bind-module-data="moduleData"
-    bind-no-weekends="noWeekends"
+    bind-show-weekends="showWeekends"
+    bind-show-outliers="showOutliers"
     bind-is-preset="isPreset"
   >
   </graph>
