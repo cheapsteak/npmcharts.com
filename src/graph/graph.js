@@ -9,13 +9,33 @@ const {palette} = require('../../config.js');
 // this can't go in the data of the component, observing it changes it.
 let svg;
 
+// returns N items closest to the given item in an array
+function getClosestNItems (item, index, array, N) {
+  const halfN = N / 2;
+  let beginning, end;
+  beginning = Math.max(index - halfN, 0);
+  end = Math.min(index + halfN, array.length)
+
+  if (index  < halfN) {
+    end += halfN - index
+  } else if (array.length - index < halfN) {
+    beginning -= halfN - (array.length - index)
+  }
+
+  return array.slice(beginning, end);
+}
+
 // entries: [{day: Date, count: Number}]
-function filterEntries (entries, {showWeekends=false, showOutliers=true, outlierStdevs=4}) {
+function filterEntries (entries, {showWeekends=false, showOutliers=true, outlierStdevs=5}) {
   if (!showWeekends) {
     entries = entries.filter(entry => [0, 6].indexOf(entry.day.getDay()) === -1)
   }
   if (!showOutliers) {
-    entries = entries.filter((entry, index, collection) => withinStdevs(entry.count, collection.map(entry =>  entry.count), outlierStdevs))
+    entries = entries.filter((entry, index, array) => {
+      const sample = getClosestNItems(entry, index, array, 90).map(entry => entry.count);
+
+      return withinStdevs(entry.count, sample, outlierStdevs)
+    })
   }
   return entries;
 }
