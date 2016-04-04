@@ -36,8 +36,37 @@
   .graph-config
     font-size: 12px
     float: right
+    display: inline-flex
+    align-items: center
+    .outliers-explanation
+      display: inline-flex
+      margin-left: 0.3em
+      position: relative
+      padding-top: 3px
+      padding-bottom: 3px
+      cursor: help
+      &:not(:hover)
+        .icon-help
+          fill: #8BA5DB
+        .explanation-text
+          display: none
+      .icon-help
+        width: 12px
+        height: 12px
+        fill: #AFAFAF
+      .explanation-text
+        position: absolute
+        right: 0
+        top: 2em
+        width: 16em
+        padding: 1em
+        background: #fff
+        border-radius: 3px
+        border: 1px solid #EDEDED
   .include-item
     user-select: none
+    margin-left: 0.3em
+    cursor: pointer
     @media (max-width: $small)
       font-size: 10px
   .package-input
