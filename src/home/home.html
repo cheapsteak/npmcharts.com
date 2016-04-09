@@ -23,7 +23,11 @@
   <div class="sample-matches">
     <div class="caption">try:</div>
     <ul class="matches">
-      <li class="match" v-for="packages in presetPackages" v-link="'/compare/' + packages.join(',')">
+      <li
+        v-for="packages in presetPackages"
+        v-link="'/compare/' + packages.join(',')"
+        class="match"
+      >
         <template v-for="package in packages">
           <span class="vs" v-if="$index !==0"> vs </span><span
             class="package-name"

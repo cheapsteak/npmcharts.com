@@ -63,7 +63,11 @@ export default Vue.extend({
   },
   template: `
     <div v-el:chart id="chart" class="with-3d-shadow with-transitions">
-      <legend v-if="moduleData.length && legendData" :modules="legendData.modules" :date="legendData.date"></legend>
+      <legend
+        v-if="moduleData.length && legendData"
+        :modules="legendData.modules"
+        :date="legendData.date">
+      </legend>
       <svg></svg>
     </div>
   `,
