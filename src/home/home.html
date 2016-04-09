@@ -38,11 +38,11 @@
   <graph
     class="chart"
     v-if="moduleNames"
-    bind-module-names="moduleNames"
-    bind-module-data="moduleData"
-    bind-show-weekends="showWeekends"
-    bind-show-outliers="showOutliers"
-    bind-is-preset="isPreset"
+    :module-names="moduleNames"
+    :module-data="moduleData"
+    :show-weekends="showWeekends"
+    :show-outliers="showOutliers"
+    :is-preset="isPreset"
   >
   </graph>
   <div class="no-packages-selected" v-if="!moduleData">
