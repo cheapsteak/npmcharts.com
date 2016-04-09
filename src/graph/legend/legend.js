@@ -18,7 +18,7 @@ export default Vue.extend({
             v-for="module in modules"
             track-by="name"
             :style="{color: module.color}"
-            on-click="setPackages([module.name])"
+            @click="setPackages([module.name])"
           >
             <td class="name-wrapper">
               <div class="name">
