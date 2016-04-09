@@ -1,8 +1,9 @@
 <header class="page-header">
   <h1 class="heading">
-    <a href="/" class="identity" v-link#="/">npmcharts</a>
+    <a href="/" class="identity" v-link="{ path: '/'}">npmcharts</a>
     <iframe class="github-btn" src="https://ghbtns.com/github-btn.html?user=cheapsteak&repo=npmcharts.com&type=star" frameborder="0" scrolling="0" width="170px" height="20px"></iframe>
-    <p class="sub-heading">compare npm packages and spot&nbsp;download&nbsp;trends</p></h1>
+    <p class="sub-heading">compare npm packages and spot&nbsp;download&nbsp;trends</p>
+  </h1>
   <form>
     <package-input class="package-input" bind-on-submit="addPackage"></package-input>
     <div class="graph-config">
@@ -37,11 +38,11 @@
   <graph
     class="chart"
     v-if="moduleNames"
-    bind-module-names="moduleNames"
-    bind-module-data="moduleData"
-    bind-show-weekends="showWeekends"
-    bind-show-outliers="showOutliers"
-    bind-is-preset="isPreset"
+    :module-names="moduleNames"
+    :module-data="moduleData"
+    :show-weekends="showWeekends"
+    :show-outliers="showOutliers"
+    :is-preset="isPreset"
   >
   </graph>
   <div class="no-packages-selected" v-if="!moduleData">

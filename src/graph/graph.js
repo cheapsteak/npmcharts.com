@@ -62,7 +62,7 @@ export default Vue.extend({
     moduleData: Array
   },
   template: `
-    <div $$.chart id="chart" class="with-3d-shadow with-transitions">
+    <div v-el:chart id="chart" class="with-3d-shadow with-transitions">
       <legend v-if="moduleData.length && legendData" bind-modules="legendData.modules" bind-date="legendData.date"></legend>
       <svg></svg>
     </div>
@@ -149,7 +149,7 @@ export default Vue.extend({
     const updateChart = _.debounce(() => {
       svg.call(this.chart);
     }, 50);
-    this.hammerInstance = new Hammer(this.$$.chart);
+    this.hammerInstance = new Hammer(this.$els.chart);
     this.hammerInstance.get('pinch').set({ enable: true });
     this.hammerInstance.on('pinchin', e => {
       const [currentStart, end] = chart.brushExtent().map(x => new Date(x).getTime());

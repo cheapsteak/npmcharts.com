@@ -21,8 +21,10 @@ export default Vue.extend({
     onSubmit: Function
   },
   template: `
-    <input class="package-input" $$.textbox on-keyup="validate" placeholder="package name">
-    <button class="add-package-btn" bind-disabled="!valid" on-click="submit($$.textbox.value, $event)">add</button>
+    <span>
+      <input class="package-input" $$.textbox on-keyup="validate" placeholder="package name">
+      <button class="add-package-btn" bind-disabled="!valid" on-click="submit($$.textbox.value, $event)">add</button>
+    </span>
   `,
   data () {
     return {
