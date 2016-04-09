@@ -24,14 +24,14 @@ export default Vue.extend({
     <span>
       <input
         class="package-input"
-        $$.textbox
-        on-keyup="validate"
+        v-el:textbox
+        @keyup="validate"
         placeholder="package name"
       >
       <button
         class="add-package-btn"
-        bind-disabled="!valid"
-        on-click="submit($$.textbox.value, $event)"
+        :disabled="!valid"
+        @click="submit($els.textbox.value, $event)"
       >
         add
       </button>
@@ -44,12 +44,12 @@ export default Vue.extend({
   },
   methods: {
     submit (val, e) {
-      this.onSubmit(val);
-      this.$$.textbox.value = '';
       e && e.preventDefault() && e.stopPropagation();
+      this.onSubmit(val);
+      this.$els.textbox.value = '';
     },
     validate () {
-      this.valid = this.$$.textbox.value !== "";
+      this.valid = this.$els.textbox.value !== "";
     }
   }
 })

@@ -5,7 +5,7 @@
     <p class="sub-heading">compare npm packages and spot&nbsp;download&nbsp;trends</p>
   </h1>
   <form>
-    <package-input class="package-input" bind-on-submit="addPackage"></package-input>
+    <package-input class="package-input" :on-submit="addPackage"></package-input>
     <div class="graph-config">
       include: 
       <label class="include-item"><input type="checkbox" v-model="showWeekends"/>weekends</label>
@@ -19,7 +19,7 @@
     </div>
   </form>
 </header>
-<main bind-class="{loading: $loadingRouteData}">
+<main :class="{loading: $loadingRouteData}">
   <div class="sample-matches">
     <div class="caption">try:</div>
     <ul class="matches">
@@ -31,7 +31,7 @@
         <template v-for="package in packages">
           <span class="vs" v-if="$index !==0"> vs </span><span
             class="package-name"
-            bind-style="{
+            :style="{
               color: moduleNames && moduleNames.indexOf(package) > -1 ? palette[moduleNames.indexOf(package) % palette.length] : ''
             }"
             >{{package}}</span>
@@ -56,7 +56,7 @@
         <template v-for="package in samplePreset">
           <span class="vs" v-if="$index !==0"> vs </span><span
             class="package-name"
-            bind-style="{
+            :style="{
               color: palette[$index % palette.length]
             }"
             >{{package}}</span>
