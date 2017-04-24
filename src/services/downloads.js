@@ -29,7 +29,7 @@ export default (function () {
   async function batchFetchPackages(...packageNames) {
     const { scopedPackageNames, nonScopedPackageNames } = _.groupBy(packageNames, name => isScopedPackageName(name) ? 'scopedPackageNames' : 'nonScopedPackageNames');
     const [ scopedStats, nonScopedStats ] = [
-      await Promise.all(scopedPackageNames.map((packageName) => fetchPackages(packageName))),
+      await (scopedPackageNames && Promise.all(scopedPackageNames.map((packageName) => fetchPackages(packageName)))),
       await (nonScopedPackageNames && fetchPackages(...nonScopedPackageNames))
     ];
     return _.flatten(_.compact(_.concat(scopedStats, nonScopedStats)));
