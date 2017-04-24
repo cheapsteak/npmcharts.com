@@ -1,8 +1,7 @@
 <header class="page-header">
   <h1 class="heading">
     <a href="/" class="identity" v-link="{ path: '/'}">npmcharts</a>
-    <iframe class="github-btn" src="https://ghbtns.com/github-btn.html?user=cheapsteak&repo=npmcharts.com&type=star" frameborder="0" scrolling="0" width="170px" height="20px"></iframe>
-    <p class="sub-heading">compare npm packages and spot&nbsp;download&nbsp;trends</p>
+    <p class="sub-heading">compare npm downloads</p>
   </h1>
   <form>
     <package-input class="package-input" :on-submit="addPackage"></package-input>
@@ -68,6 +67,11 @@
 <footer>
   <div class="about">
     <a href="https://twitter.com/CheapSteak" target="_blank" class="created-by">Created by Chang Wang</a>
+  </div>
+  <div>
+    <a class="repo-link" href="https://github.com/cheapsteak/npmcharts.com/" target="_blank" title="Github Repo, star, fork, do what you will 😄">
+      <img src="/images/icon-github.svg" alt="Github Repo" width="16">
+    </a>
   </div>
   <small class="disclaimer">npm is a trademark of npm, Inc.</small>
 </footer>
