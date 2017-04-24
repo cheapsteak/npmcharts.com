@@ -3455,9 +3455,9 @@ number-is-nan@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/number-is-nan/-/number-is-nan-1.0.1.tgz#097b602b53422a522c1afb8790318336941a011d"
 
-nvd3@^1.8.1:
-  version "1.8.5"
-  resolved "https://registry.yarnpkg.com/nvd3/-/nvd3-1.8.5.tgz#94a0c98ff1c3366b721fa7a8705b3c6e9eaf6bb6"
+nvd3@1.8.3:
+  version "1.8.3"
+  resolved "https://registry.yarnpkg.com/nvd3/-/nvd3-1.8.3.tgz#bf9bca6cefabb6c129dd283bd842e683883dc310"
 
 oauth-sign@~0.8.1:
   version "0.8.2"
