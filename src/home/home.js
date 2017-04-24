@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import npmData from '../services/downloads.js';
 import {graph} from '../graph/graph.js';
 import config from '../../config.js';
@@ -56,7 +57,8 @@ export default Vue.extend({
     },
     clearPackages () {
       this.$route.router.go('/compare');
-    }
+    },
+    shuffle: _.shuffle,
   },
   components: {
     'package-input': packageInput,

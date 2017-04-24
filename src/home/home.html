@@ -24,7 +24,7 @@
     <div class="caption">try:</div>
     <ul class="matches">
       <li
-        v-for="packages in presetPackages"
+        v-for="packages in shuffle(presetPackages)"
         v-link="'/compare/' + packages.join(',')"
         class="match"
       >
