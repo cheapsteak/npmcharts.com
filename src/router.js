@@ -13,7 +13,7 @@ router.map({
   '/compare': {
     component: require('./home/home.js')
   },
-  '/compare/:packages': {
+  '/compare/*packages': {
     component: require('./home/home.js')
   }
 });
