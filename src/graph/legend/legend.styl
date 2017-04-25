@@ -18,6 +18,11 @@ $nubRadius = 7px
         display: table-cell
         &:last-child
           padding-left: 8px
+    .package-downloads-heading
+      min-width: 6em
+    .package-name-heading
+      text-indent: 10px
+      text-align: left
   .module
     display: flex
     justify-content: center
@@ -25,6 +30,8 @@ $nubRadius = 7px
     margin-left: 0.5em
     cursor: pointer
     .name-wrapper
+      text-align: left
+    .downloads
       text-align: right
     .name
       position: relative
@@ -41,6 +48,7 @@ $nubRadius = 7px
       transition: all 0.15s
       transform: scale(0)
       opacity: 0.5
+      right: -1.2em
       .before, .after
         display: block
         width: $nubRadius

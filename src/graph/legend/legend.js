@@ -9,8 +9,8 @@ export default Vue.extend({
     <div class="legend">
       <table class="modules">
         <thead class="date">
-          <th>{{date | formatDate 'dddd'}}</th>
-          <th>{{date | formatDate 'MMMM Do'}}</th>
+          <th class="package-downloads-heading">{{date | formatDate 'dddd'}}</th>
+          <th class="package-name-heading">{{date | formatDate 'MMMM Do'}}</th>
         </thead>
         <tbody>
           <tr
@@ -20,6 +20,7 @@ export default Vue.extend({
             :style="{color: module.color}"
             @click="removePackage(module.name)"
           >
+            <td class="downloads">{{module.downloads.toLocaleString()}}</td>
             <td class="name-wrapper">
               <div class="name">
                 <div class="nub" role="presentation">
@@ -29,7 +30,6 @@ export default Vue.extend({
                 {{module.name}}
               </div>
             </td>
-            <td class="downloads">{{module.downloads.toLocaleString()}}</td>
           </tr>
         </tbody>
       </table>
