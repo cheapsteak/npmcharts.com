@@ -286,7 +286,7 @@ export default Vue.extend({
           return {
             color: palette[i%palette.length],
             name: module.name,
-            downloads: _.find(module.downloads, entry => entry.day.getTime() === date.getTime()).count
+            downloads: _.get(_.find(module.downloads, entry => entry.day.getTime() === date.getTime()), 'count', 0)
           }
         })
       };
