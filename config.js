@@ -1,7 +1,7 @@
 module.exports = {
   presetPackages: [
     ['browserify', 'webpack'],
-    ['glamor','aphrodite','radium','uranium', 'glamorous'],
+    ['glamor','aphrodite','radium', 'glamorous'],
     ['lodash', 'underscore'],
     ['node-sass', 'less', 'stylus'],
     ['gulp', 'grunt'],
