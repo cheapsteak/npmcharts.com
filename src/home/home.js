@@ -14,9 +14,9 @@ export default Vue.extend({
       const packageNames = to.path === '/' ? _.sample(this.presetPackages) : to.params.packages && to.params.packages.split(',');
 
       if (to.path === '/' || !to.params.packages) {
-        document.title = "Compare and graph npm packages";
+        document.title = "npmcharts - compare and graph npm packages";
       } else {
-        document.title = "Compare and graph npm packages - " + to.params.packages.split(',').join(', ');
+        document.title = "npmcharts - compare and graph npm packages - " + to.params.packages.split(',').join(', ');
       }
 
       ga('send', 'pageview');
