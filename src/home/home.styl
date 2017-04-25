@@ -4,8 +4,10 @@ $unimportantFgColor = #5f809c
 $unimportantFgColorLight = #829bb0
 $bgcolor = #F1F1F1
 $popupTextColor = $fgColor
-$logoColor = #1288EF
+// $logoColor = #1288EF
+$logoColor = #d85151
 // $logoColor = #DA605C;
+$subheadingColor = #cc8d84
 $inputBg = #f9f9ff
 
 .page-header
@@ -38,7 +40,7 @@ $inputBg = #f9f9ff
       @media (max-width: $small)
         font-size: 22px
   .sub-heading
-    color: #8F9FBC
+    color: $subheadingColor
     margin: 0
     font-size: 16px
     display: block
@@ -125,6 +127,7 @@ main
       font-size: 12px
     .caption
       display: inline
+      color: $unimportantFgColor
       margin: 0
       font-weight: 500
       font-size: 11px
