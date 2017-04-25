@@ -27,7 +27,7 @@ export default Vue.extend({
             const moduleData = npmData.modules.map(x => ({
               ...x,
               // if most recent day has no download count, remove it
-              downloads: _.last(x.downloads).count === 0 ? _.initial(x.downloads) : downloads,
+              downloads: _.last(x.downloads).count === 0 ? _.initial(x.downloads) : x.downloads,
             }))
             next({moduleNames: npmData.moduleNames, moduleData, isPreset: !to.params.packages});
           })
