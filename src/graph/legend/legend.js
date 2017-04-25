@@ -22,7 +22,10 @@ export default Vue.extend({
           >
             <td class="name-wrapper">
               <div class="name">
-                <div class="nub"></div>
+                <div class="nub" role="presentation">
+                  <div class="before" :style="{ backgroundColor: module.color }"></div>
+                  <div class="after" :style="{ backgroundColor: module.color }"></div>
+                </div>
                 {{module.name}}
               </div>
             </td>
