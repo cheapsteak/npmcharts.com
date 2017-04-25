@@ -7,7 +7,7 @@ $popupTextColor = $fgColor
 // $logoColor = #1288EF
 $logoColor = #d85151
 // $logoColor = #DA605C;
-$subheadingColor = #cc8d84
+$subheadingColor = #9fb2c2
 $inputBg = #f9f9ff
 
 .page-header
@@ -23,10 +23,11 @@ $inputBg = #f9f9ff
     margin-bottom: 14px
     display: flex
     align-items: center
+    @media (max-width: $small)
+      flex-direction: column;
     .identity
       font-size: 14px
       font-size: 35px
-      margin-bottom: 2px
       font-weight: 600
       color: #333
       text-decoration: none
@@ -45,7 +46,8 @@ $inputBg = #f9f9ff
     font-size: 16px
     display: block
     line-height: 1.2
-    margin-left: 10px;
+    @media (min-width: $small)
+      margin-left: 10px;
     @media (max-width: $small)
       font-size: 14px
       margin-top: 6px
