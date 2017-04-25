@@ -15,7 +15,7 @@ export default Vue.extend({
         <tbody>
           <tr
             class="module"
-            v-for="module in modules"
+            v-for="module in modules | orderBy 'downloads' -1"
             track-by="name"
             :style="{color: module.color}"
             @click="removePackage(module.name)"
