@@ -27,12 +27,12 @@ export default (function () {
   }
 
   async function batchFetchPackages(...packageNames) {
-    const { scopedPackageNames, nonScopedPackageNames } = _.groupBy(packageNames, name => isScopedPackageName(name) ? 'scopedPackageNames' : 'nonScopedPackageNames');
-    const [ scopedStats, nonScopedStats ] = [
+    const { scopedPackageNames, globalPackageNames } = _.groupBy(packageNames, name => isScopedPackageName(name) ? 'scopedPackageNames' : 'globalPackageNames');
+    const [ scopedPackageStats, globalPackageStats ] = [
       await (scopedPackageNames && Promise.all(scopedPackageNames.map((packageName) => fetchPackages(packageName)))),
-      await (nonScopedPackageNames && fetchPackages(...nonScopedPackageNames))
+      await (globalPackageNames && fetchPackages(...globalPackageNames))
     ];
-    return _.flatten(_.compact(_.concat(scopedStats, nonScopedStats)));
+    return _.flatten(_.compact(_.concat(scopedPackageStats, globalPackageStats)));
   }
 
   let modules = {};
