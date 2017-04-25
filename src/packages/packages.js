@@ -27,6 +27,7 @@ export default Vue.extend({
         v-el:textbox
         @keyup="validate"
         placeholder="package name"
+        autofocus
       >
       <button
         class="add-package-btn"
