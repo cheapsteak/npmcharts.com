@@ -24,7 +24,12 @@ export default Vue.extend({
       packageNames
       ? npmData.fetch(packageNames, false)
           .then(() => {
-            next({moduleNames: npmData.moduleNames, moduleData: npmData.modules, isPreset: !to.params.packages});
+            const moduleData = npmData.modules.map(x => ({
+              ...x,
+              // if most recent day has no download count, remove it
+              downloads: _.last(x.downloads).count === 0 ? _.initial(x.downloads) : downloads,
+            }))
+            next({moduleNames: npmData.moduleNames, moduleData, isPreset: !to.params.packages});
           })
       : next({moduleNames: null, moduleData: null, samplePreset: _.sample(this.presetPackages)});
     }
