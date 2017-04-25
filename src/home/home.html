@@ -6,8 +6,8 @@
   <form>
     <package-input class="package-input" :on-submit="addPackage"></package-input>
     <div class="graph-config">
-      include: 
-      <label class="include-item"><input type="checkbox" v-model="showWeekends"/>weekends</label>
+      <label class="include-item"><input type="checkbox" v-model="showWeekends"/>include weekends</label>
+      <!--
       <label class="include-item"><input type="checkbox" v-model="showOutliers"/>outliers</label>
       <div class="outliers-explanation">
         <svg class="icon-help"><use xlink:href="#icon-help_outline"></use></svg>
@@ -15,6 +15,7 @@
           "Outliers" have download counts that fall outside 4 standard deviations from the mean of the download counts of the closet 90 days
         </div>
       </div>
+      -->
     </div>
   </form>
 </header>

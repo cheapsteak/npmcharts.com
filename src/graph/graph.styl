@@ -1,9 +1,19 @@
 @import 'legend/legend.styl'
 
+$lineColor = #f3f3f3;
+.nvd3 .nv-axis line
+  stroke: $lineColor;
+
 .nv-guideline
   display: none
-.nvd3 .nv-axis.nv-x path.domain
-  stroke-opacity: 0.75
+.nvd3
+  .nv-axis.nv-x, .nv-axis.nv-y
+    path.domain
+      stroke-opacity: 0.3
+      stroke: #8398a9
+  .tick text
+    fill: #8398a9
+
 .chart
   .legend
     position: absolute

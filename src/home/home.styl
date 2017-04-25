@@ -1,6 +1,17 @@
+// $bgcolor = #272B34
+$fgColor = #333
+$unimportantFgColor = #5f809c
+$unimportantFgColorLight = #829bb0
+$bgcolor = #F1F1F1
+$popupTextColor = $fgColor
+$logoColor = #1288EF
+// $logoColor = #DA605C;
+$inputBg = #f9f9ff
+
 .page-header
   padding: 1em
-  background: #F1F1F1
+  color: #fff
+  background: $bgcolor
   border-bottom: 1px solid #ccc
   box-sizing: border-box
   flex-shrink: 0
@@ -8,6 +19,8 @@
     line-height: 0.8
     margin-top: 10px
     margin-bottom: 14px
+    display: flex
+    align-items: center
     .identity
       font-size: 14px
       font-size: 35px
@@ -17,7 +30,7 @@
       text-decoration: none
       cursor: pointer
       display: inline-block
-      color: #1288EF
+      color: $logoColor
     .link-home
       color: #1288EF
       font-size: 16px
@@ -30,6 +43,7 @@
     font-size: 16px
     display: block
     line-height: 1.2
+    margin-left: 10px;
     @media (max-width: $small)
       font-size: 14px
       margin-top: 6px
@@ -38,6 +52,10 @@
     float: right
     display: inline-flex
     align-items: center
+    opacity: 0.6
+    transition: opacity 0.2s ease
+    &:hover
+      opacity: 1
     .outliers-explanation
       display: inline-flex
       margin-left: 0.3em
@@ -64,15 +82,21 @@
         background: #fff
         border-radius: 3px
         border: 1px solid #EDEDED
+        color: $popupTextColor
   .include-item
     user-select: none
     margin-left: 0.3em
     cursor: pointer
+    font-weight: 500
+    color: $unimportantFgColor
     @media (max-width: $small)
       font-size: 10px
   .package-input
     line-height: 1.5
     text-indent: 4px
+  input.package-input
+    background-color: $inputBg
+    border: 0
   .add-package-btn
     vertical-align: middle
     padding: 4px 6px;
@@ -108,6 +132,7 @@ main
     .matches
       display: inline
       margin-left: 4px
+      color: $unimportantFgColorLight
     .match
       display: inline-block
       list-style-type: disc
@@ -147,5 +172,11 @@ footer
       margin: 0
   .disclaimer
     font-size: 10px
+  .repo-link
+    opacity: 0.2
+    transition: opacity 0.2s ease
+    padding: 1em
+    &:hover
+      opacity: 0.6
   @media (max-width: $small)
     padding: 5px 16px 4px
