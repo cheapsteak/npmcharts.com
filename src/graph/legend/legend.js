@@ -36,6 +36,9 @@ export default Vue.extend({
     </div>
   `,
   methods: {
-    removePackage
+    removePackage (packageName) {
+      ga('send', 'event', 'legend', 'remove', packageName);
+      removePackage(packageName);
+    }
   }
 });

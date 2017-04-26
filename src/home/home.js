@@ -54,6 +54,7 @@ export default Vue.extend({
   },
   methods: {
     addPackage (packageName) {
+      ga('send', 'event', 'packageInput', 'add', packageName);
       if (this.$route.params && this.$route.params.packages) {
         this.$route.router.go('/compare/' + this.$route.params.packages + ',' + packageName);
       } else {
