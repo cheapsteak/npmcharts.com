@@ -133,9 +133,9 @@ main
     @media (max-width: $small)
       font-size: 12px
     .caption
-      display: inline
+      display: inline-block
       color: $unimportantFgColor
-      margin: 0
+      // margin: 0
       font-weight: 500
       font-size: 11px
       text-indent: 8px
@@ -202,19 +202,29 @@ footer
 .tweet-this-chart
   cursor: pointer
   color: #1da1f2
-  font-size: 12px
+  font-size: 11px
   font-weight: 500
-  float: right
   display: inline-block
-  padding: 3px 8px
+  padding: 4px 8px
+  margin-left: -4px
   text-decoration: none
   transition: all 0.2s
+  border-radius: 20px
   svg
     width: 12px
     height: auto
+  ~ .caption
+    transition: all 0.2s
+    margin-left: -12px
   &:hover
     transform: scale(1.05)
+    box-shadow: 0px 1px 2px 0px rgba(0,0,0,0.2)
     svg
       animation-name: swing
       animation-duration: 1s
       animation-fill-mode: both
+    ~ .caption
+      transform: translateX(4px)
+  &:active
+    box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.2)
+  
