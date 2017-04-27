@@ -210,21 +210,26 @@ footer
   text-decoration: none
   transition: all 0.2s
   border-radius: 20px
+  background-color: rgba(255,255,255,0)
+  position: relative
+  z-index: 1
   svg
     width: 12px
     height: auto
   ~ .caption
-    transition: all 0.2s
     margin-left: -12px
+  ~ .caption, ~ .matches
+    transition: all 0.2s
   &:hover
     transform: scale(1.05)
     box-shadow: 0px 1px 2px 0px rgba(0,0,0,0.2)
+    background-color: rgba(255,255,255,1)
     svg
       animation-name: swing
-      animation-duration: 1s
+      animation-duration: 1.3s
       animation-fill-mode: both
-    ~ .caption
-      transform: translateX(4px)
+    ~ .caption, ~ .matches
+      opacity: 0.3
   &:active
     box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.2)
   
