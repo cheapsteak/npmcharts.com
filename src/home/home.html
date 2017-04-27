@@ -23,6 +23,12 @@
 </header>
 <main :class="{loading: $loadingRouteData}">
   <div class="sample-matches">
+    <span
+      class="tweet-this-chart"
+      @click="handleClickTwitter"
+    >
+      <i v-html="twitterIcon"></i> this chart
+    </span>
     <div class="caption">try</div>
     <ul class="matches">
       <li

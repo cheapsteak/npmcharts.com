@@ -198,3 +198,23 @@ footer
       opacity: 0.6
   @media (max-width: $small)
     padding: 5px 16px 4px
+
+.tweet-this-chart
+  cursor: pointer
+  color: #1da1f2
+  font-size: 12px
+  font-weight: 500
+  float: right
+  display: inline-block
+  padding: 3px 8px
+  text-decoration: none
+  transition: all 0.2s
+  svg
+    width: 12px
+    height: auto
+  &:hover
+    transform: scale(1.05)
+    svg
+      animation-name: swing
+      animation-duration: 1s
+      animation-fill-mode: both

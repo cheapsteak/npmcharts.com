@@ -44,8 +44,17 @@ export default Vue.extend({
       palette,
       showWeekends: false,
       showOutliers: true,
-      isPreset: undefined
+      isPreset: undefined,
+      twitterIcon: require('../assets/images/icon-twitter.svg'),
     };
+  },
+  computed: {
+    shareUrl () {
+      return this.moduleNames && `http://npmcharts.com/compare/${this.moduleNames.join(',')}`;
+    },
+    twitterShareUrl () {
+      return this.shareUrl && `https://twitter.com/intent/tweet?url=${window.encodeURIComponent(this.shareUrl)}`;
+    },
   },
   ready () {
     packageEvents.on('change', () => {
@@ -63,6 +72,10 @@ export default Vue.extend({
     },
     clearPackages () {
       this.$route.router.go('/compare');
+    },
+    handleClickTwitter () {
+      ga('send', 'event', 'share', 'twitter', this.twitterShareUrl);
+      window.open(this.twitterShareUrl);
     },
     shuffle: _.shuffle,
   },
