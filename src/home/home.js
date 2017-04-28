@@ -45,6 +45,7 @@ export default Vue.extend({
       showWeekends: false,
       showOutliers: true,
       isPreset: undefined,
+      hoverCount: 0,
       twitterIcon: require('../assets/images/icon-twitter.svg'),
     };
   },
@@ -55,6 +56,16 @@ export default Vue.extend({
     twitterShareUrl () {
       return this.shareUrl && `https://twitter.com/intent/tweet?url=${window.encodeURIComponent(this.shareUrl)}`;
     },
+    twitterMessage () {
+      const hoverCount = this.hoverCount;
+      return hoverCount < 3
+        ? 'this chart'
+        : hoverCount < 6
+          ? 'neat eh?'
+          : hoverCount < 10
+            ? 'do iiiit'
+            : 'just click it already!'
+    }
   },
   ready () {
     packageEvents.on('change', () => {
@@ -76,6 +87,17 @@ export default Vue.extend({
     handleClickTwitter () {
       ga('send', 'event', 'share', 'twitter', this.twitterShareUrl);
       window.open(this.twitterShareUrl);
+    },
+    handleHoverTwitter () {
+      this.hoverCount++;
+      ga('send', 'event', 'hoverShare', 'twitter', this.twitterShareUrl, this.hoverCount);
+      
+    },
+    handleMouseEnterTwitter () {
+      this.twitterEventTimeout = setTimeout(this.handleHoverTwitter, 500)
+    },
+    handleMouseLeaveTwitter () {
+      clearTimeout(this.twitterEventTimeout);
     },
     shuffle: _.shuffle,
   },

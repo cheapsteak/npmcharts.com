@@ -26,8 +26,10 @@
     <span
       class="tweet-this-chart"
       @click="handleClickTwitter"
+      @mouseenter="handleMouseEnterTwitter"
+      @mouseleave="handleMouseLeaveTwitter"
     >
-      <i v-html="twitterIcon"></i> this chart
+      <i v-html="twitterIcon"></i> {{ twitterMessage }}
     </span>
     <div class="caption">or try</div>
     <ul class="matches">
