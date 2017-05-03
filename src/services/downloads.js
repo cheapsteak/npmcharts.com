@@ -10,13 +10,14 @@ export default (function () {
   const start = moment().subtract(1, 'year').format('YYYY-MM-DD');
 
   function processDownloads(json) {
-    return [for (module of (json.package ? [json] : _.values(json)))
-      {
+    const modules = (json.package ? [json] : _.values(json))
+      .filter(_.isObject);
+    return modules.map((module) => ({
         name: module.package,
         // replace '-' with '/' to fix problem with ES5 coercing it to UTC
         downloads: module.downloads
           .map(entry => ({day: new Date(entry.day.replace(/\-/g, '/')), count: entry.downloads}))
-      }];
+      }));
   }
 
   async function fetchPackages(...packageNames) {
