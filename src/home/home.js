@@ -81,7 +81,7 @@ export default Vue.extend({
       isPreset: undefined,
       hoverCount: 0,
       twitterIcon: require('../assets/images/icon-twitter.svg'),
-      shouldShowComments: !(JSON.parse(window.localStorage.getItem('shouldShowComments')) === false),
+      shouldShowComments: window.innerWidth >= 1000 && !(JSON.parse(window.localStorage.getItem('shouldShowComments')) === false),
     };
   },
   computed: {

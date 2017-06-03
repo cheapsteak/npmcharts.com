@@ -52,9 +52,11 @@ $inputBg = #f9f9ff
       font-size: 14px
       margin-top: 6px
   .comment-toggle-btn
-    color: #000
+    color: #747474
     float: right
     cursor: pointer
+    font-weight: bold
+    font-size: 12px;
   .graph-config
     font-size: 12px
     float: right
@@ -124,7 +126,11 @@ main
     opacity: 0.3
   &.showing-comments
     .chart-container
-      width: calc(100% - 380px);
+      @media (min-width: $small)
+        width: calc(100% - 320px)
+      @media (max-width: $small)
+        display: none
+
   .chart-container
     width: 100%;
     display: flex
