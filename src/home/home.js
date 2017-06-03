@@ -9,7 +9,7 @@ var {default: packageInput, emitter: packageEvents, packages, removePackage} = r
 
 const injectDisqus = () => {
   var d = document, s = d.createElement('script');
-  s.src = 'https://npmcharts.disqus.com/embed.js';
+  s.src = '//npmcharts.disqus.com/embed.js';
   s.setAttribute('data-timestamp', +new Date());
   (d.head || d.body).appendChild(s);
 
