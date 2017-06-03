@@ -41,7 +41,11 @@ export default Vue.extend({
   route: {
     waitForData: true,
     data ({ to, next, redirect }) {
-      const packageNames = to.path === '/' ? _.sample(this.presetPackages) : to.params.packages && to.params.packages.split(',');
+      const packageNames = (
+        to.path === '/' || !to.params.packages
+          ? _.sample(this.presetPackages)
+          : to.params.packages.split(',').map(packageName => window.decodeURIComponent(packageName))
+      );
 
       if (to.path === '/' || !to.params.packages) {
         document.title = "npmcharts - compare and graph npm packages";
