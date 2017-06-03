@@ -8,72 +8,80 @@
   <form>
     <package-input class="package-input" :on-submit="addPackage"></package-input>
     <div class="graph-config">
-      <label class="include-item"><input type="checkbox" v-model="showWeekends"/>include weekends</label>
-      <!--
-      <label class="include-item"><input type="checkbox" v-model="showOutliers"/>outliers</label>
-      <div class="outliers-explanation">
-        <svg class="icon-help"><use xlink:href="#icon-help_outline"></use></svg>
-        <div class="explanation-text">
-          "Outliers" have download counts that fall outside 4 standard deviations from the mean of the download counts of the closet 90 days
-        </div>
-      </div>
-      -->
+      <!--<label class="include-item"><input type="checkbox" v-model="showWeekends"/>include weekends</label>-->
+    </div>
+    <div class="comment-toggle-btn" @click="handleClickToggleComments">
+      {{ shouldShowComments ? 'Hide' : 'Show' }}
+      <span class="disqus-comment-count" :data-disqus-identifier="disqusIdentifier">
+        comments
+      </span>
     </div>
   </form>
 </header>
-<main :class="{loading: $loadingRouteData}">
-  <div class="sample-matches">
-    <span
-      class="tweet-this-chart"
-      @click="handleClickTwitter"
-      @mouseenter="handleMouseEnterTwitter"
-      @mouseleave="handleMouseLeaveTwitter"
-    >
-      <i v-html="twitterIcon"></i> {{ twitterMessage }}
-    </span>
-    <div class="caption">or try</div>
-    <ul class="matches">
-      <li
-        v-for="packages in shuffle(presetPackages)"
-        v-link="'/compare/' + packages.join(',')"
-        class="match"
+<main :class="{
+  loading: $loadingRouteData,
+  'showing-comments': shouldShowComments,
+}">
+  <div class="chart-container">
+    <div class="sample-matches">
+      <span
+        class="tweet-this-chart"
+        @click="handleClickTwitter"
+        @mouseenter="handleMouseEnterTwitter"
+        @mouseleave="handleMouseLeaveTwitter"
       >
-        <template v-for="package in packages">
-          <span class="vs" v-if="$index !==0"> vs </span><span
-            class="package-name"
-            :style="{
-              color: moduleNames && moduleNames.indexOf(package) > -1 ? palette[moduleNames.indexOf(package) % palette.length] : ''
-            }"
-            >{{package}}</span>
-        </template>
-      </li>
-    </ul>
+        <i v-html="twitterIcon"></i> {{ twitterMessage }}
+      </span>
+      <div class="caption">or try</div>
+      <ul class="matches">
+        <li
+          v-for="packages in shuffle(presetPackages)"
+          v-link="'/compare/' + packages.join(',')"
+          class="match"
+        >
+          <template v-for="package in packages">
+            <span class="vs" v-if="$index !==0"> vs </span><span
+              class="package-name"
+              :style="{
+                color: moduleNames && moduleNames.indexOf(package) > -1 ? palette[moduleNames.indexOf(package) % palette.length] : ''
+              }"
+              >{{package}}</span>
+          </template>
+        </li>
+      </ul>
+    </div>
+    <graph
+      class="chart"
+      v-if="moduleNames"
+      v-ref:graph
+      :module-names="moduleNames"
+      :module-data="moduleData"
+      :show-weekends="showWeekends"
+      :show-outliers="showOutliers"
+      :is-preset="isPreset"
+    >
+    </graph>
+    <div class="no-packages-selected" v-if="!moduleData">
+      <p>No packages selected.</p>
+      <p>Why not try
+        <span class="match" v-link="'/compare/' + samplePreset.join(',')">
+          <template v-for="package in samplePreset">
+            <span class="vs" v-if="$index !==0"> vs </span><span
+              class="package-name"
+              :style="{
+                color: palette[$index % palette.length]
+              }"
+              >{{package}}</span>
+          </template>
+        </span>?
+      </p>
+    </div>
   </div>
-  <graph
-    class="chart"
-    v-if="moduleNames"
-    :module-names="moduleNames"
-    :module-data="moduleData"
-    :show-weekends="showWeekends"
-    :show-outliers="showOutliers"
-    :is-preset="isPreset"
-  >
-  </graph>
-  <div class="no-packages-selected" v-if="!moduleData">
-    <p>No packages selected.</p>
-    <p>Why not try
-      <span class="match" v-link="'/compare/' + samplePreset.join(',')">
-        <template v-for="package in samplePreset">
-          <span class="vs" v-if="$index !==0"> vs </span><span
-            class="package-name"
-            :style="{
-              color: palette[$index % palette.length]
-            }"
-            >{{package}}</span>
-        </template>
-      </span>?
-    </p>
-  </div>
+  <div
+    id="disqus_thread"
+    class="comment-container"
+    v-show="shouldShowComments"
+  ></div>
 </main>
 <footer>
   <div class="about">

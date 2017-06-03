@@ -7,6 +7,36 @@ const palette = config.palette;
 
 var {default: packageInput, emitter: packageEvents, packages, removePackage} = require('../packages/packages.js');
 
+const injectDisqus = () => {
+  var d = document, s = d.createElement('script');
+  s.src = 'https://npmcharts.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', +new Date());
+  (d.head || d.body).appendChild(s);
+
+  var d = document, s = d.createElement('script');
+  s.src = '//npmcharts.disqus.com/count.js';
+  s.setAttribute('data-timestamp', +new Date());
+  s.setAttribute('id', 'dsq-count-scr');
+  (d.head || d.body).appendChild(s);
+};
+
+const resetDisqus = (packages) => {
+  if (!packages) { return }
+  const sortedPackages = packages.slice().sort();
+  if (window.DISQUS && window.DISQUSWIDGETS) {
+    window.DISQUS.reset({
+      reload: true,
+      config: function () {  
+        this.page.identifier = sortedPackages.join(',')
+        this.page.url = 'http://npmcharts.com/compare/' + sortedPackages.join(',');
+      }
+    })
+    DISQUSWIDGETS.getCount({reset: true});
+  } else {
+    setTimeout(resetDisqus, 500)
+  }
+}
+
 export default Vue.extend({
   route: {
     waitForData: true,
@@ -32,7 +62,7 @@ export default Vue.extend({
             next({moduleNames: npmData.moduleNames, moduleData, isPreset: !to.params.packages});
           })
       : next({moduleNames: null, moduleData: null, samplePreset: _.sample(this.presetPackages)});
-    }
+    },
   },
   template: require('./home.html'),
   data () {
@@ -47,6 +77,7 @@ export default Vue.extend({
       isPreset: undefined,
       hoverCount: 0,
       twitterIcon: require('../assets/images/icon-twitter.svg'),
+      shouldShowComments: false,
     };
   },
   computed: {
@@ -65,16 +96,30 @@ export default Vue.extend({
           : hoverCount < 10
             ? 'do iiiit'
             : 'just click it already!'
-    }
+    },
+    disqusIdentifier () {
+      return (this.moduleNames || []).slice().sort().join(',');
+    },
+  },
+  watch: {
+    moduleNames (moduleNames, oldModuleNames) {
+      resetDisqus(moduleNames);
+    },
+    shouldShowComments () {
+      this.$refs.graph.render()
+    },
   },
   ready () {
+    injectDisqus()
     packageEvents.on('change', () => {
       this.$route.router.go('/compare/' + packages.join(','));
+      console.log('change', resetDisqus)
+      resetDisqus(packages);
     });
   },
   methods: {
     addPackage (packageName) {
-      ga('send', 'event', 'packageInput', 'add', packageName);
+      ga('send', 'event', 'packageInput', 'add', `${packageName} existing:${this.moduleNames}`);
       if (this.$route.params && this.$route.params.packages) {
         this.$route.router.go('/compare/' + this.$route.params.packages + ',' + packageName);
       } else {
@@ -83,6 +128,12 @@ export default Vue.extend({
     },
     clearPackages () {
       this.$route.router.go('/compare');
+    },
+    handleClickToggleComments () {
+      const eventAction = this.shouldShowComments ? 'close' : 'open';
+      const eventLabel = (this.moduleNames || []).slice().sort().join(',');
+      ga('send', 'event', 'comment toggle', eventAction, eventLabel);
+      this.shouldShowComments = !this.shouldShowComments;
     },
     handleClickTwitter () {
       ga('send', 'event', 'share', 'twitter', this.twitterShareUrl);
