@@ -81,7 +81,7 @@ export default Vue.extend({
       isPreset: undefined,
       hoverCount: 0,
       twitterIcon: require('../assets/images/icon-twitter.svg'),
-      shouldShowComments: false,
+      shouldShowComments: !(JSON.parse(window.localStorage.getItem('shouldShowComments')) === false),
     };
   },
   computed: {
@@ -138,6 +138,7 @@ export default Vue.extend({
       const eventLabel = (this.moduleNames || []).slice().sort().join(',');
       ga('send', 'event', 'comment toggle', eventAction, eventLabel);
       this.shouldShowComments = !this.shouldShowComments;
+      window.localStorage.setItem('shouldShowComments', this.shouldShowComments);
     },
     handleClickTwitter () {
       ga('send', 'event', 'share', 'twitter', this.twitterShareUrl);
