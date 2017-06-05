@@ -3,7 +3,7 @@
     <a href="/" class="identity" v-link="{ path: '/'}" title="npmcharts">
       <img src="/images/logo.svg" width="190" alt="npmcharts"/>
     </a>
-    <p class="sub-heading">compare npm downloads</p>
+    <p class="sub-heading">compare {{ isUsingPresetPackages ? 'npm downloads' : (moduleNames || []).join(', ') }}</p>
   </h1>
   <form class="header-controls-wrapper">
     <package-input
