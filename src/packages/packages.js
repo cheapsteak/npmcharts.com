@@ -18,7 +18,8 @@ export function setPackages (val, notify=true) {
 
 export default Vue.extend({
   props: {
-    onSubmit: Function
+    onSubmit: Function,
+    isUsingPresetPackages: Boolean,
   },
   template: `
     <span>
@@ -26,31 +27,38 @@ export default Vue.extend({
         class="package-input"
         v-el:textbox
         @keyup="validate"
-        placeholder="package name"
+        @keyup.enter="handleEnter"
+        placeholder="enter a package name"
         autofocus
       >
       <button
         class="add-package-btn"
-        :disabled="!valid"
-        @click="submit($els.textbox.value, $event)"
+        :disabled="!isValid"
+        @click="handleClickSubmit($event)"
       >
-        add
+        {{isUsingPresetPackages ? 'set' : 'add'}}
       </button>
     </span>
   `,
   data () {
     return {
-      valid: false
+      isValid: false
     };
   },
   methods: {
-    submit (val, e) {
+    handleClickSubmit (e) {
       e && e.preventDefault() && e.stopPropagation();
-      this.onSubmit(val);
+      this.submit();
+    },
+    submit (val) {
+      this.onSubmit(this.$els.textbox.value);
       this.$els.textbox.value = '';
     },
+    handleEnter () {
+      this.isValid && this.submit();
+    },
     validate () {
-      this.valid = this.$els.textbox.value !== "";
+      this.isValid = this.$els.textbox.value !== "";
     }
   }
 })

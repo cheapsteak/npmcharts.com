@@ -63,7 +63,7 @@ export default Vue.extend({
               // if most recent day has no download count, remove it
               downloads: _.last(x.downloads).count === 0 ? _.initial(x.downloads) : x.downloads,
             }))
-            next({moduleNames: npmData.moduleNames, moduleData, isPreset: !to.params.packages});
+            next({moduleNames: npmData.moduleNames, moduleData, isUsingPresetPackages: !to.params.packages});
           })
       : next({moduleNames: null, moduleData: null, samplePreset: _.sample(this.presetPackages)});
     },
@@ -78,7 +78,7 @@ export default Vue.extend({
       palette,
       showWeekends: false,
       showOutliers: true,
-      isPreset: undefined,
+      isUsingPresetPackages: undefined,
       hoverCount: 0,
       twitterIcon: require('../assets/images/icon-twitter.svg'),
       shouldShowComments: window.innerWidth >= 1000 && !(JSON.parse(window.localStorage.getItem('shouldShowComments')) === false),

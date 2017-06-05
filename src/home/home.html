@@ -6,7 +6,11 @@
     <p class="sub-heading">compare npm downloads</p>
   </h1>
   <form class="header-controls-wrapper">
-    <package-input class="package-input" :on-submit="addPackage"></package-input>
+    <package-input
+      class="package-input"
+      :on-submit="addPackage"
+      :is-using-preset-packages="isUsingPresetPackages"
+    ></package-input>
     <div class="graph-config">
       <!--<label class="include-item"><input type="checkbox" v-model="showWeekends"/>include weekends</label>-->
     </div>
@@ -58,7 +62,6 @@
       :module-data="moduleData"
       :show-weekends="showWeekends"
       :show-outliers="showOutliers"
-      :is-preset="isPreset"
     >
     </graph>
     <div class="no-packages-selected" v-if="!moduleData">
