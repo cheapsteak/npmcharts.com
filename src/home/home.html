@@ -12,7 +12,9 @@
       :is-using-preset-packages="isUsingPresetPackages"
     ></package-input>
     <div class="graph-config">
-      <!--<label class="include-item"><input type="checkbox" v-model="showWeekends"/>include weekends</label>-->
+
+      <label class="include-item"><input type="checkbox" v-model="showWeekends"/>include weekends</label>
+
     </div>
     <div class="comment-toggle-btn" @click="handleClickToggleComments">
       {{ shouldShowComments ? 'hide' : 'show' }}

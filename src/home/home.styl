@@ -51,10 +51,11 @@ $inputBg = #f9f9ff
     @media (max-width: $small)
       font-size: 14px
       margin-top: 6px
+      text-align: center
   .header-controls-wrapper
     display: flex
     flex-direction: row
-    align-items: baseline
+    align-items: flex-end
   .comment-toggle-btn
     color: #747474
     cursor: pointer
@@ -63,11 +64,13 @@ $inputBg = #f9f9ff
     margin-left: auto
   .graph-config
     font-size: 12px
-    float: right
     display: inline-flex
     align-items: center
     opacity: 0.6
     transition: opacity 0.2s ease
+    margin-left: 20px
+    @media (max-width: $small)
+      display: none
     &:hover
       opacity: 1
     .outliers-explanation
