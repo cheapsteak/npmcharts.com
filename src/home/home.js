@@ -49,6 +49,7 @@ export default Vue.extend({
 
       if (to.path === '/' || !to.params.packages) {
         document.title = "npmcharts - compare and graph npm packages";
+        this.isUsingPresetPackages = true;
       } else {
         document.title = "npmcharts - compare and graph npm packages - " + to.params.packages.split(',').join(', ');
       }
