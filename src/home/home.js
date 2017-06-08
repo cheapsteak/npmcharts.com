@@ -48,10 +48,10 @@ export default Vue.extend({
       );
 
       if (to.path === '/' || !to.params.packages) {
-        document.title = "npmcharts - compare and graph npm packages";
+        document.title = "Compare download stats for npm packages - npmcharts";
         this.isUsingPresetPackages = true;
       } else {
-        document.title = "npmcharts - compare and graph npm packages - " + to.params.packages.split(',').join(', ');
+        document.title = "Compare downloads for " + to.params.packages.split(',').join(', ') + " - npmcharts";
       }
 
       ga('send', 'pageview');
