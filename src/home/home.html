@@ -3,7 +3,21 @@
     <a href="/" class="identity" v-link="{ path: '/'}" title="npmcharts">
       <img src="/images/logo.svg" width="190" alt="npmcharts"/>
     </a>
-    <p class="sub-heading">compare {{ isUsingPresetPackages ? 'npm downloads' : (moduleNames || []).join(', ') }}</p>
+    <p class="sub-heading">
+      compare 
+      <template v-if="isUsingPresetPackages">
+        npm downloads
+      </template>
+      <a
+        v-else
+        class="package-linkout"
+        v-for="moduleName in moduleNames"
+        title="Open {{ moduleName }}'s npm page"
+        :href="'https://www.npmjs.com/package/'+moduleName"
+        target="_blank"
+      >{{ moduleName }}</a>
+
+    </p>
   </h1>
   <form class="header-controls-wrapper">
     <package-input

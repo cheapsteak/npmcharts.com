@@ -41,7 +41,8 @@ $inputBg = #f9f9ff
       @media (max-width: $small)
         font-size: 22px
   .sub-heading
-    color: $subheadingColor
+    &, & a
+      color: $subheadingColor
     margin: 0
     font-size: 16px
     display: block
@@ -260,4 +261,28 @@ footer
       opacity: 0.3
   &:active
     box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.2)
-  
+
+.package-linkout
+  cursor: pointer
+  position: relative
+  text-decoration: none
+  &:before
+    content: '\f14c'
+    font: normal normal normal 14px/1 FontAwesome
+    position: absolute
+    right: 0
+    top: -4px
+    font-size: 10px
+    opacity: 0
+    transition: 0.2s ease
+    transform: translateX(-3px) translateY(3px)
+  &:hover
+    text-decoration: underline
+    &:before
+      opacity: 0.9
+      transform: translateX(0) translateY(0)
+  &:not(:last-child):after
+    content: ', '
+    position: absolute
+  & + .package-linkout
+    margin-left: 0.5em
