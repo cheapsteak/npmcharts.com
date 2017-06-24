@@ -209,10 +209,10 @@ export default Vue.extend({
       chart.x2Axis.tickValues(this.moduleData[0].downloads.map(item => item.day).filter(date => date.getDate() === 1))
       chart.update();
 
-      svg.select(".nv-y.nv-axis").attr("transform", "translate(" + nv.utils.availableWidth(null, svg, this.margin) + ",0)");
-      svg.select('.nv-context .nv-y.nv-axis').remove();
 
-      const focusChartRect = document.querySelector('.nv-context').getBoundingClientRect();
+      svg.select(".nv-y.nv-axis").attr("transform", "translate(" + nv.utils.availableWidth(null, svg, this.margin) + ",0)");
+
+      const focusChartRect = document.querySelector('.nv-focus').getBoundingClientRect();
 
       svg.call(d3.behavior.drag()
         .on('drag', e => {
