@@ -214,6 +214,7 @@ export default Vue.extend({
 
       const focusChartRect = document.querySelector('.nv-focus').getBoundingClientRect();
 
+      // mousewheel zoom
       svg.call(d3.behavior.zoom()
         .on('zoom', e => {
           const dy = d3.event.sourceEvent.deltaY;
@@ -234,7 +235,7 @@ export default Vue.extend({
         })
       );
 
-
+      // Update legend on mousemove
       var prevMousemove = chart.interactiveLayer.dispatch.on('elementMousemove');
       chart.interactiveLayer.dispatch.on('elementMousemove', (e) => {
           prevMousemove.call(chart.interactiveLayer, e);
@@ -246,6 +247,7 @@ export default Vue.extend({
           }
       });
 
+      // Reset legend data to current date's when mouse leaves interactiveLayer
       var prevMouseout = chart.interactiveLayer.dispatch.on('elementMouseout');
       chart.interactiveLayer.dispatch.on('elementMouseout', (e) => {
         prevMouseout.call(chart.interactiveLayer, e);
