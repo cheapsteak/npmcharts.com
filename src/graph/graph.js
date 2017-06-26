@@ -214,32 +214,6 @@ export default Vue.extend({
 
       const focusChartRect = document.querySelector('.nv-focus').getBoundingClientRect();
 
-      svg.call(d3.behavior.drag()
-        .on('drag', e => {
-          // ignore drags on the focus chart
-          const {clientX, clientY} = d3.event.sourceEvent.touches ? d3.event.sourceEvent.touches[0] : d3.event.sourceEvent;
-          if (clientX > focusChartRect.left
-            && clientX < focusChartRect.left + focusChartRect.width
-            && clientY > focusChartRect.top
-            && clientY < focusChartRect.top + focusChartRect.height) {
-            return;
-          }
-          const {dx} = d3.event;
-          const [currentStart, currentEnd] = chart.brushExtent().map(x => new Date(x).getTime());
-          const [newStart, newEnd] = [currentStart, currentEnd].map(x => new Date(x - dx*1000*60*60*10))
-          if (
-            d3.event.sourceEvent.touches && d3.event.sourceEvent.touches.length === 2
-            || (newEnd >= this.moduleData[0].downloads.slice(-1)[0].day.getTime() || newStart <= this.moduleData[0].downloads[0].day.getTime())) {
-            return;
-          }
-          chart.brushExtent([newStart, newEnd]);
-          svg.call(this.chart)
-        })
-        .on('dragend', e => {
-          this.render();
-        })
-      );
-
       svg.call(d3.behavior.zoom()
         .on('zoom', e => {
           const dy = d3.event.sourceEvent.deltaY;
