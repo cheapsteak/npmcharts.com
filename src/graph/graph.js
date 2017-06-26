@@ -214,6 +214,7 @@ export default Vue.extend({
 
       const focusChartRect = document.querySelector('.nv-context').getBoundingClientRect();
 
+      // drag to scroll (mobile)
       svg.call(d3.behavior.drag()
         .on('drag', e => {
           // ignore drags on the focus chart
