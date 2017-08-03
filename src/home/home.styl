@@ -10,49 +10,56 @@ $logoColor = #d85151
 $subheadingColor = #9fb2c2
 $inputBg = #f9f9ff
 
+.heading
+  line-height: 0.8
+  margin-top: 14px
+  margin-bottom: 0
+  display: flex
+  align-items: center
+  position: absolute
+  z-index: 100
+  @media (min-width: $small)
+    padding-top: 10px
+    padding-left: 30px
+  @media (max-width: $small)
+    flex-direction: column
+    width: 100%
+  .identity
+    font-size: 14px
+    font-size: 35px
+    font-weight: 600
+    color: #333
+    text-decoration: none
+    cursor: pointer
+    display: inline-block
+    color: $logoColor
+  .link-home
+    color: #1288EF
+    font-size: 16px
+    font-weight: 600
+    @media (max-width: $small)
+      font-size: 22px
+.sub-heading
+  &, & a
+    color: $subheadingColor
+  margin: 0
+  font-size: 16px
+  display: block
+  line-height: 1.2
+  @media (min-width: $small)
+    margin-left: 10px;
+  @media (max-width: $small)
+    font-size: 14px
+    margin-top: 6px
+    text-align: center
+    display: none
 .page-header
-  padding: 1em
+  padding: 0.5em 1em
   color: #fff
   background: $bgcolor
   border-bottom: 1px solid #ccc
   box-sizing: border-box
   flex-shrink: 0
-  .heading
-    line-height: 0.8
-    margin-top: 10px
-    margin-bottom: 14px
-    display: flex
-    align-items: center
-    @media (max-width: $small)
-      flex-direction: column;
-    .identity
-      font-size: 14px
-      font-size: 35px
-      font-weight: 600
-      color: #333
-      text-decoration: none
-      cursor: pointer
-      display: inline-block
-      color: $logoColor
-    .link-home
-      color: #1288EF
-      font-size: 16px
-      font-weight: 600
-      @media (max-width: $small)
-        font-size: 22px
-  .sub-heading
-    &, & a
-      color: $subheadingColor
-    margin: 0
-    font-size: 16px
-    display: block
-    line-height: 1.2
-    @media (min-width: $small)
-      margin-left: 10px;
-    @media (max-width: $small)
-      font-size: 14px
-      margin-top: 6px
-      text-align: center
   .header-controls-wrapper
     display: flex
     flex-direction: row
@@ -141,47 +148,47 @@ main
     & > svg
       width: 100%
       flex-grow: 1
-  .sample-matches
-    margin: 6px 16px 12px
-    @media (max-width: $small)
-      font-size: 12px
-    .caption
-      display: inline-block
-      color: $unimportantFgColor
-      // margin: 0
-      font-weight: 500
-      font-size: 11px
-      text-indent: 8px
-    .matches
-      display: inline
-      margin-left: 4px
-      color: $unimportantFgColorLight
-    .match
-      display: inline-block
-      list-style-type: disc
-      &.v-link-active
-        cursor: default
-      &:not(:last-child)
-        margin-right: 11px
-      @media (max-width: $small)
-        &:nth-child(n+3)
-          display: none
-  .match
-    cursor: pointer
-    &:hover:not(.v-link-active)
-      text-shadow: 1px 1px 3px #D9E7EF
-  .package-name
-    font-weight: 500
-    transition: color 1s
-  .vs
+.sample-matches
+  @media (max-width: $small)
     font-size: 12px
-    margin: 0 -1px
-  .no-packages-selected
-    flex-grow: 1
-    display: flex
-    flex-direction: column
-    align-items: center
-    justify-content: center
+  .caption
+    display: inline-block
+    color: $unimportantFgColor
+    // margin: 0
+    font-weight: 500
+    font-size: 11px
+    text-indent: 8px
+  .matches
+    display: inline
+    margin-left: 4px
+    color: $unimportantFgColorLight
+    font-size: 11px
+  .match
+    display: inline
+    list-style-type: disc
+    &.v-link-active
+      cursor: default
+    &:not(:last-child)
+      margin-right: 0.5em
+    @media (max-width: $small)
+      &:nth-child(n+3)
+        display: none
+.match
+  cursor: pointer
+  &:hover:not(.v-link-active)
+    text-shadow: 1px 1px 3px #D9E7EF
+.package-name
+  font-weight: 500
+  transition: color 1s
+.vs
+  font-size: 12px
+  margin: 0 -1px
+.no-packages-selected
+  flex-grow: 1
+  display: flex
+  flex-direction: column
+  align-items: center
+  justify-content: center
 footer
   padding: 1em 16px 0.5em
   display: flex

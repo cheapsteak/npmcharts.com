@@ -7,36 +7,6 @@ const palette = config.palette;
 
 var {default: packageInput, emitter: packageEvents, packages, removePackage} = require('../packages/packages.js');
 
-const injectDisqus = () => {
-  var d = document, s = d.createElement('script');
-  s.src = '//npmcharts.disqus.com/embed.js';
-  s.setAttribute('data-timestamp', +new Date());
-  (d.head || d.body).appendChild(s);
-
-  var d = document, s = d.createElement('script');
-  s.src = '//npmcharts.disqus.com/count.js';
-  s.setAttribute('data-timestamp', +new Date());
-  s.setAttribute('id', 'dsq-count-scr');
-  (d.head || d.body).appendChild(s);
-};
-
-const resetDisqus = (packages) => {
-  if (!packages) { return }
-  const sortedPackages = packages.slice().sort();
-  if (window.DISQUS && window.DISQUSWIDGETS) {
-    window.DISQUS.reset({
-      reload: true,
-      config: function () {  
-        this.page.identifier = sortedPackages.join(',')
-        this.page.url = 'http://npmcharts.com/compare/' + sortedPackages.join(',');
-      }
-    })
-    DISQUSWIDGETS.getCount({reset: true});
-  } else {
-    setTimeout(resetDisqus, 500)
-  }
-}
-
 export default Vue.extend({
   route: {
     waitForData: true,
@@ -82,7 +52,6 @@ export default Vue.extend({
       isUsingPresetPackages: undefined,
       hoverCount: 0,
       twitterIcon: require('../assets/images/icon-twitter.svg'),
-      shouldShowComments: window.innerWidth >= 1000 && !(JSON.parse(!!window.localStorage.getItem('shouldShowComments'))),
     };
   },
   computed: {
@@ -103,11 +72,6 @@ export default Vue.extend({
             : 'just click it already!'
     },
   },
-  watch: {
-    shouldShowComments () {
-      this.$refs.graph.render()
-    },
-  },
   ready () {
     packageEvents.on('change', () => {
       this.$route.router.go('/compare/' + packages.join(','));
@@ -124,13 +88,6 @@ export default Vue.extend({
     },
     clearPackages () {
       this.$route.router.go('/compare');
-    },
-    handleClickToggleComments () {
-      const eventAction = this.shouldShowComments ? 'close' : 'open';
-      const eventLabel = (this.moduleNames || []).slice().sort().join(',');
-      ga('send', 'event', 'comment toggle', eventAction, eventLabel);
-      this.shouldShowComments = !this.shouldShowComments;
-      window.localStorage.setItem('shouldShowComments', this.shouldShowComments);
     },
     handleClickTwitter () {
       ga('send', 'event', 'share', 'twitter', this.twitterShareUrl);
