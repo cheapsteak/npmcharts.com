@@ -51,7 +51,7 @@ export default Vue.extend({
         document.title = "Compare download stats for npm packages - npmcharts";
         this.isUsingPresetPackages = true;
       } else {
-        document.title = "Compare downloads for " + to.params.packages.split(',').join(', ') + " - npmcharts";
+        document.title = "Compare npm downloads for " + to.params.packages.split(',').join(', ') + " - npmcharts";
       }
 
       ga('send', 'pageview');
