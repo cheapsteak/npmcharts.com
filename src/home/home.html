@@ -30,17 +30,10 @@
       <label class="include-item"><input type="checkbox" v-model="showWeekends"/>include weekends</label>
 
     </div>
-    <div class="comment-toggle-btn" @click="handleClickToggleComments">
-      {{ shouldShowComments ? 'hide' : 'show' }}
-      <span class="disqus-comment-count" :data-disqus-identifier="disqusIdentifier">
-        comments
-      </span>
-    </div>
   </form>
 </header>
 <main :class="{
   loading: $loadingRouteData,
-  'showing-comments': shouldShowComments,
 }">
   <div class="chart-container">
     <div class="sample-matches">
@@ -96,11 +89,6 @@
       </p>
     </div>
   </div>
-  <div
-    id="disqus_thread"
-    class="comment-container"
-    v-show="shouldShowComments"
-  ></div>
 </main>
 <footer>
   <div class="about">

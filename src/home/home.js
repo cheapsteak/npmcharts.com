@@ -82,7 +82,7 @@ export default Vue.extend({
       isUsingPresetPackages: undefined,
       hoverCount: 0,
       twitterIcon: require('../assets/images/icon-twitter.svg'),
-      shouldShowComments: window.innerWidth >= 1000 && !(JSON.parse(window.localStorage.getItem('shouldShowComments')) === false),
+      shouldShowComments: window.innerWidth >= 1000 && !(JSON.parse(!!window.localStorage.getItem('shouldShowComments'))),
     };
   },
   computed: {
@@ -102,24 +102,15 @@ export default Vue.extend({
             ? 'do iiiit'
             : 'just click it already!'
     },
-    disqusIdentifier () {
-      return (this.moduleNames || []).slice().sort().join(',');
-    },
   },
   watch: {
-    moduleNames (moduleNames, oldModuleNames) {
-      resetDisqus(moduleNames);
-    },
     shouldShowComments () {
       this.$refs.graph.render()
     },
   },
   ready () {
-    injectDisqus()
     packageEvents.on('change', () => {
       this.$route.router.go('/compare/' + packages.join(','));
-      console.log('change', resetDisqus)
-      resetDisqus(packages);
     });
   },
   methods: {
