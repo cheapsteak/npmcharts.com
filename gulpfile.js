@@ -53,8 +53,8 @@ var config = {
     destination: './public/css/'
   },
   assets: {
-    source: './src/assets/**/*.*',
-    watch: './src/assets/**/*.*',
+    source: './src/assets/**/*',
+    watch: './src/assets/**/*',
     destination: './public/'
   },
   revision: {
