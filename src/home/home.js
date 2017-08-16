@@ -112,6 +112,10 @@ export default Vue.extend({
     packageEvents.on('change', () => {
       this.$route.router.go('/compare/' + packages.join(','));
     });
+    setTimeout(() =>
+      window.prerenderReady = true,
+      1000
+    );
   },
   methods: {
     addPackage (packageName) {
