@@ -6,14 +6,19 @@
   "license": "MIT",
   "main": "gulpfile.js",
   "scripts": {
-    "start": "gulp",
-    "build": "gulp build"
+    "start": "npm-run-all --sequential build:frontend start:server",
+    "start:server": "cd server && npm start",
+    "dev:frontend": "gulp",
+    "dev:server": "cd server && npm run dev",
+    "dev": "npm-run-all --parallel dev:*",
+    "build:frontend": "gulp build"
   },
   "keywords": [
     "gulp",
     "template"
   ],
   "dependencies": {
+    "array-to-sentence": "^1.1.0",
     "d3": "^3.5.6",
     "hammerjs": "^2.0.4",
     "is-scoped": "^1.0.0",
@@ -44,6 +49,7 @@
     "gulp-watch": "^4.3.4",
     "minimist": "^1.2.0",
     "node-notifier": "^4.2.1",
+    "npm-run-all": "^4.0.2",
     "rimraf": "^2.3.4",
     "stringify": "^3.1.0",
     "vinyl-source-stream": "~1.0.0",
