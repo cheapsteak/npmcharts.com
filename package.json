@@ -6,7 +6,7 @@
   "license": "MIT",
   "main": "gulpfile.js",
   "scripts": {
-    "production": "npm run build:frontend && PORT=3896 pm2 start ecosystem.config.js --env production",
+    "production": "NODE_ENV=production npm run build:frontend && PORT=3896 pm2 start ecosystem.config.js --env production",
     "stop:production": "pm2 stop npmcharts",
     "start": "npm-run-all --sequential dev:frontend start:server",
     "start:server": "cd server && npm run start",
