@@ -69,7 +69,8 @@ var browserifyConfig = {
   extensions: config.scripts.extensions,
   debug: !production,
   cache: {},
-  packageCache: {}
+  packageCache: {},
+  fullPaths: !production,
 };
 
 function handleError(err) {
