@@ -40,13 +40,10 @@ export default (function () {
 
   return {
     get modules() {
-      return [for (module of _.values(_.pick(modules, packages))) {
+      return _.values(_.pick(modules, packages)).map(module => ({
         name: module.name,
-        downloads: [
-          for (entry of module.downloads)
-          entry
-        ]
-      }];
+        downloads: module.downloads,
+      }));
     },
     get moduleNames () {
       return packages;
