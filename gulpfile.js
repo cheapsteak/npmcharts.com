@@ -69,7 +69,8 @@ var browserifyConfig = {
   extensions: config.scripts.extensions,
   debug: !production,
   cache: {},
-  packageCache: {}
+  packageCache: {},
+  fullPaths: !production,
 };
 
 function handleError(err) {
@@ -85,7 +86,10 @@ function handleError(err) {
 var browserifyAppBundle = function () {
   return browserify(browserifyConfig)
     .transform(stringify(['.html', '.svg', '.vue', '.template', '.tmpl']))
-    .transform(babelify.configure({stage: 0}))
+    .transform(babelify.configure(Object.assign({
+      global: true,
+      ignore: /\/node_modules\/(?!is-scoped|scoped-regex\/)/,
+    }, require('./.babelrc.js'))))
 };
 
 gulp.task('scripts', function() {
@@ -95,7 +99,8 @@ gulp.task('scripts', function() {
     .pipe(source(config.scripts.filename));
 
   if(production) {
-    pipeline = pipeline.pipe(streamify(uglify()));
+    pipeline = pipeline
+      .pipe(streamify(uglify().on('error', function (err) { gutil.log(gutil.colors.red('[Error]'), err.toString()); })))
   } else {
     pipeline = pipeline.pipe(transform(function() {
       return exorcist(config.scripts.destination + config.scripts.filename + '.map');

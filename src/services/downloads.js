@@ -2,7 +2,7 @@ import _ from 'lodash';
 import moment from 'moment';
 
 import {packages, setPackages} from '../packages/packages.js'
-import isScopedPackageName from 'is-scoped';
+import isScopedPackageName from '../utils/is-scoped-package';
 
 export default (function () {
   const DATE_FORMAT = 'YYYY-MM-DD';
@@ -40,13 +40,10 @@ export default (function () {
 
   return {
     get modules() {
-      return [for (module of _.values(_.pick(modules, packages))) {
+      return _.values(_.pick(modules, packages)).map(module => ({
         name: module.name,
-        downloads: [
-          for (entry of module.downloads)
-          entry
-        ]
-      }];
+        downloads: module.downloads
+      }));
     },
     get moduleNames () {
       return packages;
