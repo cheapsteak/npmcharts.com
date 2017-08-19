@@ -176,7 +176,7 @@ export default Vue.extend({
   },
   methods: {
     processForD3 (input) {
-      return input.map(module => ({
+      return [for (module of input) {
         key: module.name,
         values: filterEntriesMemo(module.downloads, {
             showWeekends: this.showWeekends,
@@ -187,7 +187,7 @@ export default Vue.extend({
             x: downloads.day,
             y: downloads.count
           }))
-      }));
+      }];
     },
     render () {
       const chart = this.chart;
