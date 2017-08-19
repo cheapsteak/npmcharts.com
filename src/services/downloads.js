@@ -2,7 +2,9 @@ import _ from 'lodash';
 import moment from 'moment';
 
 import {packages, setPackages} from '../packages/packages.js'
-import isScopedPackageName from 'is-scoped';
+import isScopedPackageName from '../utils/isScopedPackageName';
+
+console.log(isScopedPackageName)
 
 export default (function () {
   const DATE_FORMAT = 'YYYY-MM-DD';
