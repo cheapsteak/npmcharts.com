@@ -96,7 +96,7 @@ gulp.task('scripts', function() {
     .pipe(source(config.scripts.filename));
 
   if(production) {
-    pipeline = pipeline.pipe(streamify(uglify()));
+    pipeline = pipeline.pipe(streamify(uglify().on('error', function (err) { gutil.log(gutil.colors.red('[Error]'), err.toString()); })));
   } else {
     pipeline = pipeline.pipe(transform(function() {
       return exorcist(config.scripts.destination + config.scripts.filename + '.map');
