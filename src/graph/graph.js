@@ -1,9 +1,9 @@
 import d3 from 'd3';
 import nv from 'nvd3';
-import moment from 'moment';
 import Hammer from 'hammerjs';
 import _ from 'lodash';
 import { average, withinStdevs } from '../utils/stats.js';
+import { format as formatDate, subMonths, startOfDay } from 'date-fns';
 
 const {palette} = require('../../config.js');
 // this can't go in the data of the component, observing it changes it.
@@ -123,11 +123,10 @@ export default Vue.extend({
       chart.x2Axis
         .showMaxMin(false)
         .tickFormat(d => {
-          const date = moment(d);
-          if (date.format('DDD') === '1') {
-            return date.format('YYYY');
-          } else if (date.format('D') === '1') {
-            return date.format('MMM');
+          if (formatDate(d, 'DDD') === '1') {
+            return formatDate(d, 'YYYY');
+          } else if (formatDate(d, 'D') === '1') {
+            return formatDate(d, 'MMM');
           }
         })
 
@@ -141,7 +140,7 @@ export default Vue.extend({
         .tickFormat(d3.format('s'))
 
       // focus on an area
-      chart.brushExtent([moment().subtract(3, 'month').toDate(), moment().toDate()])
+      chart.brushExtent([subMonths(new Date(), 3), new Date()])
 
       nv.utils.windowResize(function () {
         // too small, looks weird, probably from mobile keyboard coming onscreen
@@ -287,7 +286,8 @@ export default Vue.extend({
       });
     },
     getDataAtDate (date) {
-      date = moment(date).hours(0).minutes(0).seconds(0).milliseconds(0).toDate();
+      date = startOfDay(date);
+
       return {
         date: date,
         modules: this.moduleData.map( (module, i) => {

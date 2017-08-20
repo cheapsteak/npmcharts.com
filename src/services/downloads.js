@@ -1,15 +1,13 @@
 import _ from 'lodash';
-import moment from 'moment';
+import { format as formatDate, subYears } from 'date-fns';
 
 import {packages, setPackages} from '../packages/packages.js'
 import isScopedPackageName from '../utils/isScopedPackageName';
 
-console.log(isScopedPackageName)
-
 export default (function () {
   const DATE_FORMAT = 'YYYY-MM-DD';
-  const end = moment().format(DATE_FORMAT);
-  const start = moment().subtract(1, 'year').format('YYYY-MM-DD');
+  const end = formatDate(new Date(), DATE_FORMAT);
+  const start = formatDate(subYears(new Date(), 1), DATE_FORMAT);
 
   function processDownloads(json) {
     const modules = (json.package ? [json] : _.values(json))

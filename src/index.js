@@ -4,7 +4,7 @@ import 'whatwg-fetch';
 import 'babelify/polyfill';
 import _ from 'lodash';
 import Vue from 'vue';
-import moment from 'moment';
+import { format as formatDate } from 'date-fns';
 
 window._ = _;
 
@@ -15,7 +15,7 @@ Vue.config.debug = true;
 var {default: packageInput, packages} = require('./packages/packages.js');
 
 Vue.filter('formatDate', function (date, format) {
-  return moment(date).format(format);
+  return formatDate(date, format);
 });
 
 const App = Vue.extend({});
