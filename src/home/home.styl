@@ -59,6 +59,7 @@ $inputBg = #f9f9ff
     align-items: flex-end
   .graph-config
     font-size: 12px
+    color: $unimportantFgColor
     display: inline-flex
     align-items: center
     opacity: 0.6
@@ -66,6 +67,9 @@ $inputBg = #f9f9ff
     margin-left: 20px
     @media (max-width: $small)
       display: none
+    label
+      cursor: pointer
+      margin-right: 0.5em
     &:hover
       opacity: 1
     .outliers-explanation
@@ -98,9 +102,6 @@ $inputBg = #f9f9ff
   .include-item
     user-select: none
     margin-left: 0.3em
-    cursor: pointer
-    font-weight: 500
-    color: $unimportantFgColor
     display: flex
     align-items: center
     @media (max-width: $small)

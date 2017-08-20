@@ -79,6 +79,7 @@ export default Vue.extend({
       palette,
       showWeekends: false,
       showOutliers: true,
+      isMinimalMode: false,
       isUsingPresetPackages: undefined,
       hoverCount: 0,
       twitterIcon: require('../assets/images/icon-twitter.svg'),
@@ -106,6 +107,15 @@ export default Vue.extend({
   watch: {
     shouldShowComments () {
       this.$refs.graph.render()
+    },
+    isMinimalMode (isMinimalMode) {
+      console.log('isminimalmode', isMinimalMode);
+      if (isMinimalMode) {
+        document.body.classList.add('minimal');
+      } else {
+        document.body.classList.remove('minimal');
+      }
+      this.$refs.graph.render();
     },
   },
   ready () {
