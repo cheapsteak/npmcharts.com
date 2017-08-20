@@ -66,7 +66,12 @@ export default Vue.extend({
       <legend
         v-if="moduleData.length && legendData"
         :modules="legendData.modules"
-        :date="legendData.date">
+        :date="legendData.date"
+        @package-focus="handlePackageFocus"
+        @package-blur="handlePackageBlur"
+        @legend-blur="handleLegendBlur"
+        @legend-focus="handleLegendFocus"
+      >
       </legend>
       <svg></svg>
     </div>
@@ -293,7 +298,21 @@ export default Vue.extend({
           }
         })
       };
-    }
+    },
+    handlePackageFocus (moduleName) {
+      svg.selectAll('.nv-series--focused').classed('nv-series--focused', false);
+      svg.selectAll(`.nv-series-${this.moduleNames.indexOf(moduleName)}`).classed('nv-series--focused', true);
+    },
+    handlePackageBlur (moduleName) {
+      svg.selectAll(`.nv-series-${this.moduleNames.indexOf(moduleName)}`).classed('nv-series--focused', false);
+    },
+    handleLegendFocus () {
+      svg.selectAll('.nv-focus .nv-groups').classed('nv-groups--focused', true);
+    },
+    handleLegendBlur () {
+      svg.selectAll('.nv-series--focused').classed('nv-series--focused', false);
+      svg.selectAll('.nv-focus .nv-groups').classed('nv-groups--focused', false)
+    },
   },
   components: {
     legend: require('./legend/legend.js')

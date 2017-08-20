@@ -29,17 +29,33 @@ $lineColor = #f3f3f3;
     @media (max-width: 550px)
       display: none
 
-.nv-focus
-  .nv-line > g > .nv-groups > .nv-group
-    stroke-opacity: 0.35 !important
-    // stroke-opacity: 0 !important
-  .nv-scatterWrap path
-    stroke-width: 0
-    fill-opacity: 1!important
+#chart
+  .nv-focus
+    .nv-point, .nv-line
+      transition: stroke-opacity 0.12s, fill-opacity 0.12s, stroke-width 0.12s;
+  .nv-focus
+    .nv-groups
+      &:not(.nv-groups--focused)
+        > .nv-group
+          .nv-line
+            stroke-opacity: 0.35 !important
+      &.nv-groups--focused
+        > .nv-group:not(.nv-series--focused)
+          .nv-line
+            stroke-opacity: 0.1 !important
+          .nv-point
+            fill-opacity: 0.1 !important
+        > .nv-series--focused
+          stroke-opacity: 0.35 !important
+          .nv-line
+            stroke-width: 2.5px
+    .nv-scatterWrap .nv-point
+      stroke-width: 0
+      fill-opacity: 1
 
-.nv-context
-  .nv-line > g > .nv-groups > .nv-group
-    stroke-opacity: 0.7 !important
+  .nv-context
+    .nv-line > g > .nv-groups > .nv-group
+      stroke-opacity: 0.7 !important
 
-.nvd3 .nv-brushBackground rect
-  stroke-opacity: 0.3
+  .nvd3 .nv-brushBackground rect
+    stroke-opacity: 0.3
