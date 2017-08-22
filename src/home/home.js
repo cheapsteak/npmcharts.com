@@ -7,36 +7,6 @@ const palette = config.palette;
 
 var {default: packageInput, emitter: packageEvents, packages, removePackage} = require('../packages/packages.js');
 
-const injectDisqus = () => {
-  var d = document, s = d.createElement('script');
-  s.src = '//npmcharts.disqus.com/embed.js';
-  s.setAttribute('data-timestamp', +new Date());
-  (d.head || d.body).appendChild(s);
-
-  var d = document, s = d.createElement('script');
-  s.src = '//npmcharts.disqus.com/count.js';
-  s.setAttribute('data-timestamp', +new Date());
-  s.setAttribute('id', 'dsq-count-scr');
-  (d.head || d.body).appendChild(s);
-};
-
-const resetDisqus = (packages) => {
-  if (!packages) { return }
-  const sortedPackages = packages.slice().sort();
-  if (window.DISQUS && window.DISQUSWIDGETS) {
-    window.DISQUS.reset({
-      reload: true,
-      config: function () {  
-        this.page.identifier = sortedPackages.join(',')
-        this.page.url = 'http://npmcharts.com/compare/' + sortedPackages.join(',');
-      }
-    })
-    DISQUSWIDGETS.getCount({reset: true});
-  } else {
-    setTimeout(resetDisqus, 500)
-  }
-}
-
 export default Vue.extend({
   route: {
     waitForData: true,
