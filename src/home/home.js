@@ -24,7 +24,7 @@ export default Vue.extend({
         document.title = "Compare npm downloads for " + to.params.packages.split(',').join(', ') + " - npmcharts";
       }
 
-      ga('send', 'pageview');
+      setTimeout(() => ga('send', 'pageview'));
 
       packageNames
       ? npmData.fetch(packageNames, false)
