@@ -29,7 +29,7 @@
 
       <label class="include-item"><input type="checkbox" v-model="showWeekends"/>include weekends</label>
 
-      <label class="minimal-mode"><input type="checkbox" v-model="isMinimalMode"/>minimal mode</label>
+      <button class="minimal-mode" v-link="{ query: { minimal: true }}" >enter minimal mode</button>
 
     </div>
   </form>
