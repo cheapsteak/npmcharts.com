@@ -10,6 +10,7 @@ export default Vue.extend({
     removePackage (packageName) {
       ga('send', 'event', 'legend', 'remove', packageName);
       removePackage(packageName);
+      this.$emit('legend-blur');
     },
     handleMouseEnterLegend () {
       this.$emit('legend-focus');
