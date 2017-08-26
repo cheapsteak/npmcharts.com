@@ -4,12 +4,14 @@ const router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Compare download stats for npm packages - npmcharts' });
+  res.render('index', { title: 'Compare download trends of npm packages - npmcharts 📈' });
 });
 
 router.get('/compare/:packages*', function(req, res, next) {
   const packages = req.params.packages.split(',');
-  res.render('index', { title: "Compare npm downloads for " + arrayToSentence(packages) + " - npmcharts" });
+  res.render('index', {
+    title: "Compare npm downloads for " + arrayToSentence(packages) + " - npmcharts 📈"
+  });
 });
 
 module.exports = router;
