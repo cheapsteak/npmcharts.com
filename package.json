@@ -8,7 +8,7 @@
   "scripts": {
     "production": "NODE_ENV=production npm run build:frontend && PORT=3896 pm2 start ecosystem.config.js --env production",
     "stop:production": "pm2 stop npmcharts",
-    "start": "npm-run-all --sequential dev:frontend start:server",
+    "start": "npm run dev",
     "start:server": "cd server && npm run start",
     "dev:frontend": "gulp",
     "dev:server": "cd server && npm run dev",
