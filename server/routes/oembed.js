@@ -16,26 +16,14 @@ router.get('/', cors(), function(req, res, next) {
         provider_url: "https://npmcharts.com",
         width: width,
         height: height,
-        html: `<!DOCTYPE html>
-          <html>
-              <head>
-                  <meta charset="UTF-8">
-                  <style>
-                  html, body { padding: 0; margin: 0; }
-                  </style>
-              </head>
-              <body>
-                  <iframe
-                      style="width: 100%; overflow: hidden;"
-                      src="${embedUrl}"
-                      width="500"
-                      height="${height}"
-                      frameborder="0"
-                      scrolling="no"
-                  ></iframe>
-              </body>
-          </html>
-          `
+        html: `<iframe
+            style="width: 100%; overflow: hidden;"
+            src="${embedUrl}"
+            width="500"
+            height="${height}"
+            frameborder="0"
+            scrolling="no"
+        ></iframe>`,
     });
   } else {
     res
