@@ -23,7 +23,7 @@ router.get('/', cors(), function(req, res, next) {
             height="${height}"
             frameborder="0"
             scrolling="no"
-        ></iframe>`,
+        ></iframe>`.replace(/\s\s+/g, ' ')
     });
   } else {
     res
