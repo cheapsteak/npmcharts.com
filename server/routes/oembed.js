@@ -1,6 +1,4 @@
 const express = require('express');
-const arrayToSentence = require('array-to-sentence');
-const querystring = require("querystring");
 const router = express.Router();
 
 router.get('/', function(req, res, next) {
