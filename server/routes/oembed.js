@@ -1,7 +1,8 @@
 const express = require('express');
+const cors = require('cors');
 const router = express.Router();
 
-router.get('/', function(req, res, next) {
+router.get('/', cors(), function(req, res, next) {
   const incomingUrl = req.query.url;
   const embedUrl = incomingUrl+'?minimal';
   const width = req.query.maxwidth || 700;
