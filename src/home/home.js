@@ -34,9 +34,9 @@ export default Vue.extend({
               // if most recent day has no download count, remove it
               downloads: _.last(x.downloads).count === 0 ? _.initial(x.downloads) : x.downloads,
             }))
-            next({moduleNames: npmData.moduleNames, moduleData, isUsingPresetPackages: !to.params.packages});
+            next({isMinimalMode: to.query.minimal, moduleNames: npmData.moduleNames, moduleData, isUsingPresetPackages: !to.params.packages});
           })
-      : next({moduleNames: null, moduleData: null, samplePreset: _.sample(this.presetPackages)});
+      : next({isMinimalMode: to.query.minimal, moduleNames: null, moduleData: null, samplePreset: _.sample(this.presetPackages)});
     },
   },
   template: require('./home.html'),
