@@ -10,11 +10,6 @@ router.get('/', cors(), function(req, res, next) {
   const fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
   if (incomingUrl) {
     res.send({
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: {
         type: 'rich',
         version: '1.0',
         provider_name: 'npmcharts',
@@ -41,7 +36,6 @@ router.get('/', cors(), function(req, res, next) {
               </body>
           </html>
           `
-      }
     });
   } else {
     res
