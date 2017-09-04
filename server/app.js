@@ -21,6 +21,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../public'), {index: false}));
 
 app.use('/', require('./routes/index'));
+app.use('/oembed', require('./routes/oembed'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

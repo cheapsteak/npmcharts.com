@@ -20,6 +20,13 @@ html
     link(rel="icon", type="image/png", href="/android-chrome-192x192.png", sizes="192x192")
     link(rel="icon", type="image/png", href="/favicon-96x96.png", sizes="96x96")
     link(rel="icon", type="image/png", href="/favicon-16x16.png", sizes="16x16")
+    link(
+      title=title
+      rel="alternate",
+      type="application/json+oembed",
+      href=oembedUrl,
+    )
+
     meta(property="og:image" content="http://npmcharts.com/images/og-image-3.png")
     link(rel="manifest", href="/manifest.json")
     script.
