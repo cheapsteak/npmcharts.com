@@ -1,9 +1,22 @@
+const url = require('url');
 const express = require('express');
 const cors = require('cors');
 const router = express.Router();
 
+const route = require('path-match')({
+  // path-to-regexp options 
+  sensitive: false,
+  strict: false,
+  end: false,
+});
+const getTitle = require('../utils/getTitle');
+
+const match = route('/compare/:packages([^/]+/[^/]+)');
+
 router.get('/', cors(), function(req, res, next) {
   const incomingUrl = req.query.url;
+  const incomingUrlParams = match(url.parse(incomingUrl).pathname);
+  const packages = incomingUrlParams.packages && incomingUrlParams.packages.split(',');
   const embedUrl = incomingUrl+'?minimal';
   const width = req.query.maxwidth || 700;
   const height = req.query.maxheight || 500;
@@ -14,12 +27,14 @@ router.get('/', cors(), function(req, res, next) {
         version: '1.0',
         provider_name: 'npmcharts',
         provider_url: "https://npmcharts.com",
+        title: getTitle(packages),
         width: width,
         height: height,
+        packages: packages,
         html: `<iframe
             style="width: 100%; overflow: hidden;"
             src="${embedUrl}"
-            width="500"
+            width="${width}"
             height="${height}"
             frameborder="0"
             scrolling="no"
