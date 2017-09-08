@@ -11,15 +11,18 @@ router.get('/', function(req, res, next) {
   res.render('index', {
     title: getTitle(),
     oembedUrl: `https://npmcharts.com/oembed?${querystring.stringify({url: fullUrl, format: 'json'})}`,
+    isEmbed: !!req.query.minimal,
   });
 });
 
 router.get('/compare/:packages*', function(req, res, next) {
   const packages = req.params.packages.split(',');
   const fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+  console.log('isEmbed', req.query.minimal);
   res.render('index', {
     title: getTitle(packages),
     oembedUrl: `https://npmcharts.com/oembed?${querystring.stringify({url: fullUrl, format: 'json'})}`,
+    isEmbed: !!req.query.minimal,
   });
 });
 
