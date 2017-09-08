@@ -49,7 +49,7 @@ $lineColor = #f3f3f3;
           stroke-opacity: 0.35 !important
           .nv-line
             stroke-width: 2.5px
-    .nv-scatterWrap .nv-point
+    .nv-scatterWrap .nv-point:not(.hover)
       stroke-width: 0
       fill-opacity: 1
 
@@ -59,3 +59,6 @@ $lineColor = #f3f3f3;
 
   .nvd3 .nv-brushBackground rect
     stroke-opacity: 0.3
+  .nv-axisMaxMin
+    // for some reason the `showMaxMin` option is ignored when in minimal mode
+    display: none;

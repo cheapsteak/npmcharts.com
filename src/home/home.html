@@ -1,4 +1,9 @@
-<header class="page-header">
+<header
+  class="page-header"
+  :class="{
+    loading: $loadingRouteData,
+  }"
+>
   <h1 class="heading">
     <a href="/" class="identity" v-link="{ path: '/'}" title="npmcharts">
       <img src="/images/logo.svg" width="190" alt="npmcharts"/>

@@ -10,6 +10,11 @@ $logoColor = #d85151
 $subheadingColor = #9fb2c2
 $inputBg = #f9f9ff
 
+@keyframes moving-gradient {
+  0% { background-position: left bottom; }
+  100% { background-position: right bottom; }
+}
+
 .page-header
   padding: 1em
   color: #fff
@@ -17,6 +22,22 @@ $inputBg = #f9f9ff
   border-bottom: 1px solid #ccc
   box-sizing: border-box
   flex-shrink: 0
+  position: relative
+  &:before
+    content: '';
+    width: 100%;
+    height: 3px;
+    background: #f00;
+    background-image: linear-gradient(to right, #2196f3, #a2d4f7);
+    background-repeat: repeat;
+    bottom: -1px;
+    left: 0;
+    position: absolute;
+  &.loading
+    &:before
+      background-size: 50% 100%;
+      background-image: linear-gradient(to right, #79bef9, #b5ddff, #79bef9);
+      animation: moving-gradient 1s linear infinite
   .heading
     line-height: 0.8
     margin-top: 10px
@@ -136,6 +157,7 @@ main
     display: flex
     flex-direction: column
   .chart
+    background-color: #fff;
     position: relative
     flex-grow: 1
     display: flex;
