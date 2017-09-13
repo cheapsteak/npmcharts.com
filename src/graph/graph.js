@@ -140,7 +140,8 @@ export default Vue.extend({
         .tickFormat(d3.format('s'))
 
       // focus on an area
-      chart.brushExtent([subMonths(new Date(), 3), new Date()])
+      const startDate = subMonths(new Date(), 9)
+      chart.brushExtent([startDate, new Date()])
 
       nv.utils.windowResize(function () {
         // too small, looks weird, probably from mobile keyboard coming onscreen
