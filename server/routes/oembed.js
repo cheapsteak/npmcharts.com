@@ -1,4 +1,5 @@
 const url = require('url');
+const querystring = require('querystring');
 const express = require('express');
 const cors = require('cors');
 const router = express.Router();
@@ -14,10 +15,12 @@ const getTitle = require('../utils/getTitle');
 const match = route('/compare/:packages([^/]+/[^/]+)');
 
 router.get('/', cors(), function(req, res, next) {
-  const incomingUrl = req.query.url;
-  const incomingUrlParams = match(url.parse(incomingUrl).pathname);
-  const packages = incomingUrlParams.packages && incomingUrlParams.packages.split(',');
-  const embedUrl = incomingUrl+'?minimal=true';
+  const incomingUrl = url.parse(req.query.url);
+  const routeParams = match(incomingUrl.pathname);
+  const queryParams = querystring.parse(incomingUrl.query);
+  const packages = routeParams.packages && routeParams.packages.split(',');
+  const outgoingQueryParams = querystring.stringify(Object.assign({}, queryParams, {minimal: true}));
+  const embedUrl = `https://${incomingUrl.host}/${incomingUrl.pathname}?${outgoingQueryParams}`;
   const width = req.query.maxwidth || 700;
   const height = req.query.maxheight || 500;
   const fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
