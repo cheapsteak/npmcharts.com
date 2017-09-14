@@ -9,7 +9,9 @@
       <img src="/images/logo.svg" width="190" alt="npmcharts"/>
     </a>
     <p class="sub-heading">
-      compare 
+      <template v-if="moduleNames.length > 1">
+        compare 
+      </template>
       <template v-if="isUsingPresetPackages">
         npm downloads
       </template>
@@ -21,6 +23,7 @@
         :href="'https://www.npmjs.com/package/'+moduleName"
         target="_blank"
       >{{ moduleName }}</a>
+      download trends
 
     </p>
   </h1>
