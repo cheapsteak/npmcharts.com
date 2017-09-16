@@ -7,7 +7,7 @@ const router = express.Router();
 const getTitle = require('../utils/getTitle');
 
 const sendSPA = function(req, res, next) {
-  const packages = req.params.packages.split(',');
+  const packages = req.params.packages ? req.params.packages.split(',') : [];
   const fullUrl = url.parse(req.protocol + '://' + req.get('host') + req.originalUrl);
   res.render('index', {
     title: getTitle(packages),
