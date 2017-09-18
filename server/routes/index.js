@@ -21,5 +21,9 @@ const sendSPA = function(req, res, next) {
 router.get('/', sendSPA);
 router.get('/compare/:packages*', sendSPA);
 
+router.get('//compare/:packages*', (req, res) =>
+  res.redirect(301, url.parse(req.protocol + '://' + req.get('host') + req.originalUrl.replace(/\/\/compare/, '/compare')).href)
+);
+
 module.exports = router;
 
