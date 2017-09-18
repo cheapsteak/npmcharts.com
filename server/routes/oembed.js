@@ -20,7 +20,7 @@ router.get('/', cors(), function(req, res, next) {
   const queryParams = querystring.parse(incomingUrl.query);
   const packages = routeParams.packages && routeParams.packages.split(',');
   const outgoingQueryParams = querystring.stringify(Object.assign({}, queryParams, {minimal: true}));
-  const embedUrl = `https://${incomingUrl.host}/${incomingUrl.pathname}?${outgoingQueryParams}`;
+  const embedUrl = `https://${incomingUrl.host}${incomingUrl.pathname}?${outgoingQueryParams}`;
   const width = req.query.maxwidth || 700;
   const height = req.query.maxheight || 500;
   const fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
