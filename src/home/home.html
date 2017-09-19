@@ -9,7 +9,7 @@
       <img src="/images/logo.svg" width="190" alt="npmcharts"/>
     </a>
     <p class="sub-heading">
-      <template v-if="moduleNames.length > 1">
+      <template v-if="moduleNames && moduleNames.length > 1">
         compare 
       </template>
       <template v-if="isUsingPresetPackages">
@@ -81,6 +81,7 @@
       :module-data="moduleData"
       :show-weekends="showWeekends"
       :show-outliers="showOutliers"
+      :disable-scroll-jack="isMinimalMode === 'true'"
     >
     </graph>
     <div class="no-packages-selected" v-if="!moduleData">

@@ -46,6 +46,10 @@ const filterEntriesMemo = _.memoize(filterEntries, function resolver (){
 
 export default Vue.extend({
   props: {
+    disableScrollJack: {
+      type: Boolean,
+      default: false,
+    },
     showWeekends: {
       type: Boolean,
       default: true
@@ -246,6 +250,32 @@ export default Vue.extend({
         })
       );
 
+      if (!this.disableScrollJack) {
+        this.scrollJack({ focusChartRect });
+      }
+
+      // Update legend on mousemove
+      var prevMousemove = chart.interactiveLayer.dispatch.on('elementMousemove');
+      chart.interactiveLayer.dispatch.on('elementMousemove', (e) => {
+          prevMousemove.call(chart.interactiveLayer, e);
+          const date = e.pointXValue;
+          try {
+            this.$set('legendData', this.getDataAtDate(date));
+          } catch (e) {
+            console.warn(`error retrieving data for ${date}`)
+          }
+      });
+
+      // Reset legend data to current date's when mouse leaves interactiveLayer
+      var prevMouseout = chart.interactiveLayer.dispatch.on('elementMouseout');
+      chart.interactiveLayer.dispatch.on('elementMouseout', (e) => {
+        prevMouseout.call(chart.interactiveLayer, e);
+        this.legendData = this.getDataAtDate(this.chart.xAxis.domain()[1]);
+      });
+    },
+    scrollJack ({ focusChartRect }) {
+      const chart = this.chart;
+
       // mousewheel zoom
       svg.call(d3.behavior.zoom()
         .on('zoom', e => {
@@ -266,25 +296,6 @@ export default Vue.extend({
           this.applyOverrides();
         })
       );
-
-      // Update legend on mousemove
-      var prevMousemove = chart.interactiveLayer.dispatch.on('elementMousemove');
-      chart.interactiveLayer.dispatch.on('elementMousemove', (e) => {
-          prevMousemove.call(chart.interactiveLayer, e);
-          const date = e.pointXValue;
-          try {
-            this.$set('legendData', this.getDataAtDate(date));
-          } catch (e) {
-            console.warn(`error retrieving data for ${date}`)
-          }
-      });
-
-      // Reset legend data to current date's when mouse leaves interactiveLayer
-      var prevMouseout = chart.interactiveLayer.dispatch.on('elementMouseout');
-      chart.interactiveLayer.dispatch.on('elementMouseout', (e) => {
-        prevMouseout.call(chart.interactiveLayer, e);
-        this.legendData = this.getDataAtDate(this.chart.xAxis.domain()[1]);
-      });
     },
     getDataAtDate (date) {
       date = startOfDay(date);
