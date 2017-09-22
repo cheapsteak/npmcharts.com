@@ -1,3 +1,4 @@
+import querystring from 'querystring';
 import _ from 'lodash';
 import npmData from '../services/downloads.js';
 import {graph} from '../graph/graph.js';
@@ -93,7 +94,8 @@ export default Vue.extend({
   },
   ready () {
     packageEvents.on('change', () => {
-      this.$route.router.go('/compare/' + packages.join(','));
+      const queryString = querystring.stringify(this.$route.query);
+      this.$route.router.go(`/compare/${packages.join(',')}?${queryString}`);
     });
   },
   methods: {
