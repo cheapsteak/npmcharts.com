@@ -1,0 +1,9 @@
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/" xmlns:moz="http://www.mozilla.org/2006/browser/search/">
+<ShortName>npmcharts</ShortName>
+<Description>
+Compare npm package download counts over time to spot trends and see which to use and which to avoid.
+</Description>
+<InputEncoding>UTF-8</InputEncoding>
+<Image width="16" height="16" type="image/x-icon">https://npmcharts.com/favicon-96x96.png</Image>
+<Url type="text/html" method="get" template="https://npmcharts.com/compare/{searchTerms}"/>
+</OpenSearchDescription>
