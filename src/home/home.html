@@ -5,7 +5,10 @@
   }"
 >
   <h1 class="heading">
-    <a href="/" class="identity" v-link="{ path: '/'}" title="npmcharts">
+    <a v-if="!isEmbedded" href="/" class="identity" v-link="{ path: '/'}" title="npmcharts">
+      <img src="/images/logo.svg" width="190" alt="npmcharts"/>
+    </a>
+    <a v-else :href=" $route.params.packages ? '/compare/' + $route.params.packages : '/' " class="identity" title="npmcharts">
       <img src="/images/logo.svg" width="190" alt="npmcharts"/>
     </a>
     <p class="sub-heading">

@@ -33,6 +33,7 @@ html
     meta(property="og:image" content="http://npmcharts.com/images/og-image-3.png")
     link(rel="manifest", href="/manifest.json")
     if isEmbed
+      base(target="_blank")
       script.
         if (navigator.doNotTrack) {
           window.ga = function () {};

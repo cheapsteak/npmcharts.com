@@ -73,6 +73,9 @@ export default Vue.extend({
             ? 'do iiiit'
             : 'just click it already!'
     },
+    isEmbedded () {
+      return this.isMinimalMode;
+    }
   },
   watch: {
     shouldShowComments () {
