@@ -7,6 +7,7 @@
   "main": "gulpfile.js",
   "scripts": {
     "production": "PORT=3896 pm2 start ecosystem.config.js --env production",
+    "startup": "pm2 startup",
     "stop:production": "pm2 stop npmcharts",
     "start": "npm run dev",
     "start:server": "cd server && npm run start",
