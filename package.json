@@ -15,7 +15,8 @@
     "dev:server": "cd server && npm run dev",
     "dev": "npm-run-all --parallel dev:*",
     "build": "NODE_ENV=production npm run build:frontend",
-    "build:frontend": "gulp build"
+    "build:frontend": "gulp build",
+    "lint": "eslint ."
   },
   "keywords": [
     "gulp",
@@ -36,10 +37,19 @@
     "whatwg-fetch": "^0.9.0"
   },
   "devDependencies": {
+    "babel-eslint": "^7.2.3",
     "babelify": "^6.1.1",
     "browser-sync": "^2.7.2",
     "browserify": "^10.2.1",
     "connect-modrewrite": "^0.8.2",
+    "eslint": "3.19",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-config-react-app": "^2.1.0",
+    "eslint-plugin-flowtype": "^2.45.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-jsx-a11y": "^5.0.3",
+    "eslint-plugin-prettier": "^2.6.0",
+    "eslint-plugin-react": "^7.6.1",
     "exorcist": "^0.4.0",
     "gulp": "~3.8.1",
     "gulp-autoprefixer": "1.0.1",
@@ -56,10 +66,15 @@
     "minimist": "^1.2.0",
     "node-notifier": "^4.2.1",
     "npm-run-all": "^4.0.2",
+    "prettier": "^1.10.2",
     "rimraf": "^2.3.4",
     "stringify": "^3.1.0",
     "vinyl-source-stream": "~1.0.0",
     "vinyl-transform": "^1.0.0",
     "watchify": "^3.2.1"
+  },
+  "prettier": {
+    "trailingComma": "all",
+    "singleQuote": true
   }
 }
