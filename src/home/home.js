@@ -1,47 +1,67 @@
+import Vue from 'vue';
 import querystring from 'querystring';
 import _ from 'lodash';
 import npmData from '../services/downloads.js';
-import {graph} from '../graph/graph.js';
 import config from '../../config.js';
 
 const palette = config.palette;
 
-var {default: packageInput, emitter: packageEvents, packages, removePackage} = require('../packages/packages.js');
+var {
+  default: packageInput,
+  emitter: packageEvents,
+  packages,
+} = require('../packages/packages.js');
 
 export default Vue.extend({
   route: {
     waitForData: true,
-    data ({ to, next, redirect }) {
-      const packageNames = (
+    data({ to, next, redirect }) {
+      const packageNames =
         to.path === '/' || !to.params.packages
           ? _.sample(this.presetPackages)
-          : to.params.packages.split(',').map(packageName => window.decodeURIComponent(packageName))
-      );
+          : to.params.packages
+              .split(',')
+              .map(packageName => window.decodeURIComponent(packageName));
 
       if (to.path === '/' || !to.params.packages) {
-        document.title = "Compare download stats for npm packages - npmcharts";
+        document.title = 'Compare download stats for npm packages - npmcharts';
         this.isUsingPresetPackages = true;
       } else {
-        document.title = "Compare npm downloads for " + to.params.packages.split(',').join(', ') + " - npmcharts";
+        document.title =
+          'Compare npm downloads for ' +
+          to.params.packages.split(',').join(', ') +
+          ' - npmcharts';
       }
 
       setTimeout(() => ga('send', 'pageview'));
 
       packageNames
-      ? npmData.fetch(packageNames, false)
-          .then(() => {
+        ? npmData.fetch(packageNames, false).then(() => {
             const moduleData = npmData.modules.map(x => ({
               ...x,
               // if most recent day has no download count, remove it
-              downloads: _.last(x.downloads).count === 0 ? _.initial(x.downloads) : x.downloads,
-            }))
-            next({isMinimalMode: to.query.minimal, moduleNames: npmData.moduleNames, moduleData, isUsingPresetPackages: !to.params.packages});
+              downloads:
+                _.last(x.downloads).count === 0
+                  ? _.initial(x.downloads)
+                  : x.downloads,
+            }));
+            next({
+              isMinimalMode: to.query.minimal,
+              moduleNames: npmData.moduleNames,
+              moduleData,
+              isUsingPresetPackages: !to.params.packages,
+            });
           })
-      : next({isMinimalMode: to.query.minimal, moduleNames: null, moduleData: null, samplePreset: _.sample(this.presetPackages)});
+        : next({
+            isMinimalMode: to.query.minimal,
+            moduleNames: null,
+            moduleData: null,
+            samplePreset: _.sample(this.presetPackages),
+          });
     },
   },
   template: require('./home.html'),
-  data () {
+  data() {
     return {
       presetPackages: config.presetPackages,
       samplePreset: [],
@@ -54,35 +74,43 @@ export default Vue.extend({
       isUsingPresetPackages: undefined,
       hoverCount: 0,
       twitterIcon: require('../assets/images/icon-twitter.svg'),
-      shouldShowComments: window.innerWidth >= 1000 && !(JSON.parse(!!window.localStorage.getItem('shouldShowComments'))),
+      shouldShowComments:
+        window.innerWidth >= 1000 &&
+        !JSON.parse(!!window.localStorage.getItem('shouldShowComments')),
     };
   },
   computed: {
-    shareUrl () {
-      return this.moduleNames && `http://npmcharts.com/compare/${this.moduleNames.join(',')}`;
+    shareUrl() {
+      return (
+        this.moduleNames &&
+        `http://npmcharts.com/compare/${this.moduleNames.join(',')}`
+      );
     },
-    twitterShareUrl () {
-      return this.shareUrl && `https://twitter.com/intent/tweet?url=${window.encodeURIComponent(this.shareUrl)}`;
+    twitterShareUrl() {
+      return (
+        this.shareUrl &&
+        `https://twitter.com/intent/tweet?url=${window.encodeURIComponent(
+          this.shareUrl,
+        )}`
+      );
     },
-    twitterMessage () {
+    twitterMessage() {
       const hoverCount = this.hoverCount;
       return hoverCount < 3
         ? 'this chart'
         : hoverCount < 6
           ? 'neat eh?'
-          : hoverCount < 10
-            ? 'do iiiit'
-            : 'just click it already!'
+          : hoverCount < 10 ? 'do iiiit' : 'just click it already!';
     },
-    isEmbedded () {
+    isEmbedded() {
       return this.isMinimalMode;
-    }
+    },
   },
   watch: {
-    shouldShowComments () {
-      this.$refs.graph.render()
+    shouldShowComments() {
+      this.$refs.graph.render();
     },
-    isMinimalMode (isMinimalMode) {
+    isMinimalMode(isMinimalMode) {
       console.log('isminimalmode', isMinimalMode);
       if (isMinimalMode) {
         document.body.classList.add('minimal');
@@ -92,50 +120,70 @@ export default Vue.extend({
       this.$refs.graph.render();
     },
   },
-  ready () {
+  ready() {
     packageEvents.on('change', () => {
       const queryString = querystring.stringify(this.$route.query);
       this.$route.router.go(`/compare/${packages.join(',')}?${queryString}`);
     });
   },
   methods: {
-    addPackage (packageName) {
-      ga('send', 'event', 'packageInput', 'add', `${packageName} existing:${this.moduleNames}`);
+    addPackage(packageName) {
+      ga(
+        'send',
+        'event',
+        'packageInput',
+        'add',
+        `${packageName} existing:${this.moduleNames}`,
+      );
       if (this.$route.params && this.$route.params.packages) {
-        this.$route.router.go('/compare/' + this.$route.params.packages + ',' + packageName);
+        this.$route.router.go(
+          '/compare/' + this.$route.params.packages + ',' + packageName,
+        );
       } else {
         this.$route.router.go('/compare/' + packageName);
       }
     },
-    clearPackages () {
+    clearPackages() {
       this.$route.router.go('/compare');
     },
-    handleClickToggleComments () {
+    handleClickToggleComments() {
       const eventAction = this.shouldShowComments ? 'close' : 'open';
-      const eventLabel = (this.moduleNames || []).slice().sort().join(',');
+      const eventLabel = (this.moduleNames || [])
+        .slice()
+        .sort()
+        .join(',');
       ga('send', 'event', 'comment toggle', eventAction, eventLabel);
       this.shouldShowComments = !this.shouldShowComments;
-      window.localStorage.setItem('shouldShowComments', this.shouldShowComments);
+      window.localStorage.setItem(
+        'shouldShowComments',
+        this.shouldShowComments,
+      );
     },
-    handleClickTwitter () {
+    handleClickTwitter() {
       ga('send', 'event', 'share', 'twitter', this.twitterShareUrl);
       window.open(this.twitterShareUrl);
     },
-    handleHoverTwitter () {
+    handleHoverTwitter() {
       this.hoverCount++;
-      ga('send', 'event', 'hoverShare', 'twitter', this.twitterShareUrl, this.hoverCount);
-      
+      ga(
+        'send',
+        'event',
+        'hoverShare',
+        'twitter',
+        this.twitterShareUrl,
+        this.hoverCount,
+      );
     },
-    handleMouseEnterTwitter () {
-      this.twitterEventTimeout = setTimeout(this.handleHoverTwitter, 500)
+    handleMouseEnterTwitter() {
+      this.twitterEventTimeout = setTimeout(this.handleHoverTwitter, 500);
     },
-    handleMouseLeaveTwitter () {
+    handleMouseLeaveTwitter() {
       clearTimeout(this.twitterEventTimeout);
     },
     shuffle: _.shuffle,
   },
   components: {
     'package-input': packageInput,
-    graph: require('../graph/graph.js')
-  }
+    graph: require('../graph/graph.js'),
+  },
 });

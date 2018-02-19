@@ -1,17 +1,18 @@
+import Vue from 'vue';
 export const packages = [];
-export const emitter = new (require('events').EventEmitter)();
+export const emitter = new (require('events')).EventEmitter();
 
-export function addPackage (name, notify=true) {
+export function addPackage(name, notify = true) {
   packages.indexOf(name) === -1 && packages.push(name);
   notify && emitter.emit('change');
 }
 
-export function removePackage (name, notify=true) {
+export function removePackage(name, notify = true) {
   packages.splice(packages.indexOf(name), 1);
   notify && emitter.emit('change');
 }
 
-export function setPackages (val, notify=true) {
+export function setPackages(val, notify = true) {
   packages.splice(0, packages.length, ...val);
   notify && emitter.emit('change');
 }
@@ -40,25 +41,25 @@ export default Vue.extend({
       </button>
     </span>
   `,
-  data () {
+  data() {
     return {
-      isValid: false
+      isValid: false,
     };
   },
   methods: {
-    handleClickSubmit (e) {
+    handleClickSubmit(e) {
       e && e.preventDefault() && e.stopPropagation();
       this.submit();
     },
-    submit (val) {
+    submit(val) {
       this.onSubmit(this.$els.textbox.value);
       this.$els.textbox.value = '';
     },
-    handleEnter () {
+    handleEnter() {
       this.isValid && this.submit();
     },
-    validate () {
-      this.isValid = this.$els.textbox.value !== "";
-    }
-  }
-})
+    validate() {
+      this.isValid = this.$els.textbox.value !== '';
+    },
+  },
+});

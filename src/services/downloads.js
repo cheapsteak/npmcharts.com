@@ -1,23 +1,24 @@
 import _ from 'lodash';
 import { format as formatDate, subYears } from 'date-fns';
 
-import {packages, setPackages} from '../packages/packages.js'
+import { packages, setPackages } from '../packages/packages.js';
 import isScopedPackageName from '../utils/isScopedPackageName';
 
-export default (function () {
+export default (function() {
   const DATE_FORMAT = 'YYYY-MM-DD';
   const end = formatDate(new Date(), DATE_FORMAT);
   const start = formatDate(subYears(new Date(), 1), DATE_FORMAT);
 
   function processDownloads(json) {
-    const modules = (json.package ? [json] : _.values(json))
-      .filter(_.isObject);
-    return modules.map((module) => ({
-        name: module.package,
-        // replace '-' with '/' to fix problem with ES5 coercing it to UTC
-        downloads: module.downloads
-          .map(entry => ({day: new Date(entry.day.replace(/\-/g, '/')), count: entry.downloads}))
-      }));
+    const modules = (json.package ? [json] : _.values(json)).filter(_.isObject);
+    return modules.map(module => ({
+      name: module.package,
+      // replace '-' with '/' to fix problem with ES5 coercing it to UTC
+      downloads: module.downloads.map(entry => ({
+        day: new Date(entry.day.replace(/-/g, '/')),
+        count: entry.downloads,
+      })),
+    }));
   }
 
   async function fetchPackages(...packageNames) {
@@ -28,12 +29,21 @@ export default (function () {
   }
 
   async function batchFetchPackages(...packageNames) {
-    const { scopedPackageNames, globalPackageNames } = _.groupBy(packageNames, name => isScopedPackageName(name) ? 'scopedPackageNames' : 'globalPackageNames');
-    const [ scopedPackageStats, globalPackageStats ] = [
-      await (scopedPackageNames && Promise.all(scopedPackageNames.map((packageName) => fetchPackages(packageName)))),
-      await (globalPackageNames && fetchPackages(...globalPackageNames))
+    const { scopedPackageNames, globalPackageNames } = _.groupBy(
+      packageNames,
+      name =>
+        isScopedPackageName(name) ? 'scopedPackageNames' : 'globalPackageNames',
+    );
+    const [scopedPackageStats, globalPackageStats] = [
+      await (scopedPackageNames &&
+        Promise.all(
+          scopedPackageNames.map(packageName => fetchPackages(packageName)),
+        )),
+      await (globalPackageNames && fetchPackages(...globalPackageNames)),
     ];
-    return _.flatten(_.compact(_.concat(scopedPackageStats, globalPackageStats)));
+    return _.flatten(
+      _.compact(_.concat(scopedPackageStats, globalPackageStats)),
+    );
   }
 
   let modules = {};
@@ -45,10 +55,10 @@ export default (function () {
         downloads: module.downloads,
       }));
     },
-    get moduleNames () {
+    get moduleNames() {
       return packages;
     },
-    async fetch(packages, notify=true) {
+    async fetch(packages, notify = true) {
       setPackages(packages, notify);
 
       const newData = await batchFetchPackages(...packages);
@@ -56,6 +66,6 @@ export default (function () {
         modules[module.name] = _.extend({}, modules[module.name], module);
       });
       return this.modules;
-    }
+    },
   };
 })();

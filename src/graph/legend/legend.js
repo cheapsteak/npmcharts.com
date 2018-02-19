@@ -1,4 +1,5 @@
-import {removePackage} from '../../packages/packages.js';
+import Vue from 'vue';
+import { removePackage } from '../../packages/packages.js';
 
 export default Vue.extend({
   props: {
@@ -7,22 +8,22 @@ export default Vue.extend({
   },
   template: require('./legend.html'),
   methods: {
-    removePackage (packageName) {
+    removePackage(packageName) {
       ga('send', 'event', 'legend', 'remove', packageName);
       removePackage(packageName);
       this.$emit('legend-blur');
     },
-    handleMouseEnterLegend () {
+    handleMouseEnterLegend() {
       this.$emit('legend-focus');
     },
-    handleMouseLeaveLegend () {
+    handleMouseLeaveLegend() {
       this.$emit('legend-blur');
     },
-    handleMouseEnterPackage (packageName) {
+    handleMouseEnterPackage(packageName) {
       this.$emit('package-focus', packageName);
     },
-    handleMouseLeavePackage (packageName) {
+    handleMouseLeavePackage(packageName) {
       this.$emit('package-blur', packageName);
     },
-  }
+  },
 });
