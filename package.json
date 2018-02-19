@@ -14,8 +14,8 @@
     "dev:frontend": "gulp",
     "dev:server": "cd server && npm run dev",
     "dev": "npm-run-all --parallel dev:*",
-    "build:production": "NODE_ENV=production npm run build:frontend",
-    "build": "gulp build"
+    "build": "NODE_ENV=production npm run build:frontend",
+    "build:frontend": "gulp build"
   },
   "keywords": [
     "gulp",
