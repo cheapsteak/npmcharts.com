@@ -7,7 +7,7 @@ const route = require('path-match')({
   end: false,
 });
 
-const match = route('/compare/:packages([^/]+/[^/]+)');
+const match = route('/compare/:packages([^/]+[/]*[^/]+)');
 
 module.exports = urlString => {
   const parsedUrl = url.parse(urlString);
