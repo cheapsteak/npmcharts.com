@@ -13,7 +13,6 @@ module.exports = ({ url, width, height }) => {
     title: getTitle(packages),
     width: width,
     height: height,
-    packages: packages,
     html: `<iframe
           style="width: 100%; overflow: hidden;"
           src="${embedUrl}"
