@@ -12,5 +12,5 @@ const match = route('/compare/:packages([^/]+[/]*[^/]+)');
 module.exports = urlString => {
   const parsedUrl = url.parse(urlString);
   const routeParams = match(parsedUrl.pathname);
-  return routeParams.packages && routeParams.packages.split(',');
+  return routeParams.packages ? routeParams.packages.split(',') : [];
 };

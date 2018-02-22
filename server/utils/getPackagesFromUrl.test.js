@@ -15,4 +15,6 @@ test('getPackagesFromUrl correctly parses packages from url', () => {
     'emotion',
     '@angular/core',
   ]);
+
+  expect(getPackagesFromUrl('/compare/')).toEqual([]);
 });
