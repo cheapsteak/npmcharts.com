@@ -7,7 +7,7 @@ module.exports = urlString => {
   const outgoingQueryParams = querystring.stringify(
     Object.assign({}, queryParams, { minimal: true }),
   );
-  const embedUrl = `https://${parsedUrl.host}${
+  const embedUrl = `${parsedUrl.protocol}//${parsedUrl.host}${
     parsedUrl.pathname
   }?${outgoingQueryParams}`;
   return embedUrl;
