@@ -4,18 +4,30 @@ const express = require('express');
 const router = express.Router();
 
 const getTitle = require('../utils/getTitle');
+const getMinimalUrl = require('../utils/getMinimalUrl');
+const shouldScreencapUrl = require('../utils/shouldScreencapUrl');
 
 const sendSPA = function(req, res, next) {
   const packages = req.params.packages ? req.params.packages.split(',') : [];
   const fullUrl = url.parse(
     req.protocol + '://' + req.get('host') + req.originalUrl,
   );
+  const minimalModeUrl = getMinimalUrl(fullUrl.href);
+  console.log(minimalModeUrl);
+  const ogImage = shouldScreencapUrl(minimalModeUrl)
+    ? `${req.protocol}://${req.get('host')}/chart-image?${querystring.stringify(
+        {
+          url: fullUrl.href,
+        },
+      )}`
+    : 'https://npmcharts.com/images/og-image-3.png';
   res.render('index', {
     title: getTitle(packages),
     oembedUrl: `https://npmcharts.com/oembed?${querystring.stringify({
       url: fullUrl.href,
       format: 'json',
     })}`,
+    ogImage,
     isEmbed: !!req.query.minimal,
     canonicalUrl: `https://npmcharts.com${fullUrl.pathname}`,
   });
