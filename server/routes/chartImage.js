@@ -18,6 +18,7 @@ router.get('/', async function(req, res, next) {
   } else {
     try {
       const imageBuffer = await getChartImage(getMinimalUrl(req.query.url));
+      res.contentType('image/png');
       res.send(imageBuffer);
     } catch (e) {
       res.status(500).send(e);
