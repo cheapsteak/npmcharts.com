@@ -11,6 +11,7 @@
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.3",
     "express": "~4.15.2",
+    "generic-pool": "^3.4.2",
     "morgan": "~1.8.1",
     "pug": "~2.0.0-beta11",
     "puppeteer": "^1.1.0",

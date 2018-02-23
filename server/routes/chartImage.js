@@ -16,7 +16,12 @@ router.get('/', async function(req, res, next) {
     // });
     res.redirect('https://npmcharts.com/images/og-image-3.png');
   } else {
-    res.send(await getChartImage(getMinimalUrl(req.query.url)));
+    try {
+      const imageBuffer = await getChartImage(getMinimalUrl(req.query.url));
+      res.send(imageBuffer);
+    } catch (e) {
+      res.status(500).send(e);
+    }
   }
 });
 
