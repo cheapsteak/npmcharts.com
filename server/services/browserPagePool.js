@@ -13,7 +13,11 @@ const factory = {
       const page = await browser.newPage();
 
       debug('setting viewport');
-      await page.setViewport({ width: 600, height: 315, deviceScaleFactor: 2 });
+      await page.setViewport({
+        width: 800,
+        height: 420,
+        deviceScaleFactor: 1.5,
+      });
 
       debug('going to' + url);
       await page.goto(url, { waitUntil: 'networkidle0', timeout: 60000 });
