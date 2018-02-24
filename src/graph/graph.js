@@ -54,7 +54,7 @@ const filterEntriesMemo = _.memoize(filterEntries, function resolver() {
 
 export default Vue.extend({
   props: {
-    disableScrollJack: {
+    isMinimalMode: {
       type: Boolean,
       default: false,
     },
@@ -90,11 +90,18 @@ export default Vue.extend({
   `,
   data() {
     return {
-      chart: nv.models.lineWithFocusChart(),
+      chart: this.isMinimalMode
+        ? nv.models.lineChart()
+        : nv.models.lineWithFocusChart(),
       svg: null,
       useLog: false,
       legendData: null,
     };
+  },
+  computed: {
+    disableScrollJack() {
+      return this.isMinimalMode;
+    },
   },
   watch: {
     useLog(val) {
@@ -132,7 +139,9 @@ export default Vue.extend({
         .showMaxMin(false)
         .tickFormat(d => d3.time.format('%e %b')(new Date(d)));
 
-      chart.x2Axis.showMaxMin(false).tickFormat(d => {
+      const dateAxis = this.isMinimalMode ? chart.xAxis : chart.x2Axis;
+
+      dateAxis.showMaxMin(false).tickFormat(d => {
         if (formatDate(d, 'DDD') === '1') {
           return formatDate(d, 'YYYY');
         } else if (formatDate(d, 'D') === '1') {
@@ -306,6 +315,7 @@ export default Vue.extend({
             this.render();
           }),
       );
+      console.log('disable scrolljack', this.disableScrollJack);
 
       if (!this.disableScrollJack) {
         this.scrollJack({ focusChartRect });
