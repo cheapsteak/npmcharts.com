@@ -5,3 +5,4 @@ public
 rev-manifest.json
 error.log
 npm-debug.log*
+screenshots/*
