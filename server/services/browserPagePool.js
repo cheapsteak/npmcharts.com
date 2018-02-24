@@ -2,8 +2,7 @@ var debug = require('debug')('server:browserPagePool');
 const genericPool = require('generic-pool');
 const puppeteer = require('puppeteer');
 
-// const url = 'https://npmcharts.com/';
-const url = 'http://localhost:9001/';
+const url = 'https://npmcharts.com/';
 
 const factory = {
   create: async function() {
