@@ -30,8 +30,12 @@ html
       href=oembedUrl,
     )
 
+    meta(property="twitter:card" content="summary_large_image")
+    meta(property="twitter:title" content=title)
+    meta(property="twitter:site" content="@npmcharts")
+    meta(property="twitter:image" content=ogImage)
     meta(property="og:image" content=ogImage)
-    //- meta(property="og:image" content="https://npmcharts.com/images/og-image-3.png")
+
     link(rel="manifest", href="/manifest.json")
     if isEmbed
       base(target="_blank")
