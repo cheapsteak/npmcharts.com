@@ -42,6 +42,7 @@ module.exports = async url => {
     await page.waitForFunction(
       `window.__currently_rendered_graph__ === '${packages.join(',')}';`,
     );
+    await page.waitFor(300);
 
     fs.ensureDirSync(SCREENSHOT_DIR);
     debug('taking screenshot');
