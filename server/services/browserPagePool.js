@@ -4,12 +4,16 @@ const puppeteer = require('puppeteer');
 
 const factory = {
   create: async function() {
-    debug('launching browser');
-    const browser = await puppeteer.launch();
-    debug('opening new page');
-    const page = await browser.newPage();
-    debug('returning page');
-    return page;
+    try {
+      debug('launching browser');
+      const browser = await puppeteer.launch();
+      debug('opening new page');
+      const page = await browser.newPage();
+      debug('returning page');
+      return page;
+    } catch (e) {
+      console.error('browserPagePool error cretaing browser page', e);
+    }
   },
   destroy: function(puppeteer) {
     debug('closing browser');
