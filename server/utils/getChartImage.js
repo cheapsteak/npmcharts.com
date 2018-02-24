@@ -3,8 +3,10 @@ const fs = require('fs-extra');
 const debug = require('debug')('server:getChartImage');
 const differenceInWeeks = require('date-fns/difference_in_weeks');
 const sanitizeFilename = require('filenamify');
+
 const browserPagePool = require('../services/browserPagePool');
 const getPackagesFromUrl = require('./getPackagesFromUrl');
+const SCREENSHOT_DIR = require('../constants/SCREENSHOT_DIR');
 
 const sanitizeScreenshotFilename = url =>
   sanitizeFilename(getPackagesFromUrl(url).join(','));
@@ -15,9 +17,8 @@ const fileIsNotStale = filePath =>
 module.exports = async url => {
   try {
     debug('checking if screenshot exists');
-    const screenshotDir = path.join(__dirname, '../../screenshots/');
     const screenshotPath = path.join(
-      screenshotDir,
+      SCREENSHOT_DIR,
       `${sanitizeScreenshotFilename(url)}.png`,
     );
 
@@ -32,7 +33,7 @@ module.exports = async url => {
     await page.goto(url, { waitUntil: 'networkidle0', timeout: 60000 });
     debug('setting viewport');
     await page.setViewport({ width: 800, height: 420 });
-    fs.ensureDirSync(screenshotDir);
+    fs.ensureDirSync(SCREENSHOT_DIR);
     debug('taking screenshot');
     const screenshot = await page.screenshot({
       path: screenshotPath,
