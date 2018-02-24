@@ -11,9 +11,7 @@ router.get('/', async function(req, res, next) {
       message: 'Please pass a url on the query string',
     });
   } else if (!shouldScreencapUrl(req.query.url)) {
-    // res.status(400).send({
-    //   message: `"url" param of ${req.query.url} is not valid`,
-    // });
+    // send the fallback image for invalid urls
     res.redirect('https://npmcharts.com/images/og-image-3.png');
   } else {
     try {
