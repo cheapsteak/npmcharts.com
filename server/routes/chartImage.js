@@ -21,7 +21,8 @@ router.get('/', async function(req, res, next) {
       res.contentType('image/png');
       res.send(imageBuffer);
     } catch (e) {
-      res.status(500).send(e);
+      console.error(e);
+      res.status(500).send({ error: e.toString() });
     }
   }
 });
