@@ -27,12 +27,22 @@ module.exports = async url => {
       return fs.readFileSync(screenshotPath);
     }
 
+    const packages = getPackagesFromUrl(url);
+
     debug('acquiring page');
     const page = await browserPagePool.acquire();
-    debug('going to' + url);
-    await page.goto(url, { waitUntil: 'networkidle0', timeout: 60000 });
-    debug('setting viewport');
-    await page.setViewport({ width: 800, height: 420 });
+
+    const navigationCommand = `router.go('/compare/${packages.join(
+      ',',
+    )}?minimal=true')`;
+    debug('evaluating:', navigationCommand);
+
+    await page.evaluate(navigationCommand);
+    debug('waiting for graph to render');
+    await page.waitForFunction(
+      `window.__currently_rendered_graph__ === '${packages.join(',')}';`,
+    );
+
     fs.ensureDirSync(SCREENSHOT_DIR);
     debug('taking screenshot');
     const screenshot = await page.screenshot({
