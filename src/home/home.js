@@ -15,6 +15,11 @@ var {
 export default Vue.extend({
   route: {
     waitForData: true,
+    canReuse(...args) {
+      // hack to solve https://github.com/cheapsteak/npmcharts.com/issues/23
+      // > Dots on graph don't update when a package is added/removed
+      return false;
+    },
     data({ to, next, redirect }) {
       const packageNames =
         to.path === '/' || !to.params.packages
