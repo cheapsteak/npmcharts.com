@@ -248,6 +248,8 @@ export default Vue.extend({
 
       this.legendData = this.getDataAtDate(this.chart.xAxis.domain()[1]);
       this.applyOverrides();
+
+      window.__currently_rendered_graph__ = this.moduleNames.join(',');
     },
     applyOverrides() {
       if (!this.moduleData.length) {

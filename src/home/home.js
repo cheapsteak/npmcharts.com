@@ -130,6 +130,7 @@ export default Vue.extend({
       const queryString = querystring.stringify(this.$route.query);
       this.$route.router.go(`/compare/${packages.join(',')}?${queryString}`);
     });
+    window.router = this.$route.router;
   },
   methods: {
     addPackage(packageName) {
