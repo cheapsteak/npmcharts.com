@@ -130,6 +130,7 @@ export default Vue.extend({
       const queryString = querystring.stringify(this.$route.query);
       this.$route.router.go(`/compare/${packages.join(',')}?${queryString}`);
     });
+    // expose router so puppeteer can trigger route changes
     window.router = this.$route.router;
   },
   methods: {
