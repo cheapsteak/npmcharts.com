@@ -139,7 +139,6 @@ export default Vue.extend({
       this.$refs.graph.render();
     },
     isMinimalMode(isMinimalMode) {
-      console.log('isminimalmode', isMinimalMode);
       if (isMinimalMode) {
         document.body.classList.add('minimal');
       } else {
