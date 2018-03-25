@@ -42,4 +42,4 @@ async function getPackagesDownloads(packageNames, { startDate, endDate }) {
   );
 }
 
-export default getPackagesDownloads;
+module.exports = getPackagesDownloads;
