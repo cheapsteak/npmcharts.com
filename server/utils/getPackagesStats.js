@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const fetch = require('isomorphic-fetch');
 const isScopedPackageName = require('../utils/isScopedPackageName');
 
 const standardizePackageResponse = response =>
