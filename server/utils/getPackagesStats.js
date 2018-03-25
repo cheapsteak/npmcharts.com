@@ -28,7 +28,10 @@ async function getPackageStats(packageNames, { startDate, endDate }) {
       ? [standardPackagesResponse]
       : Object.values(standardPackagesResponse);
 
-  return [...standardPackagesStats, ...scopedPackagesResponse];
+  return _.sortBy(
+    [...standardPackagesStats, ...scopedPackagesResponse],
+    packageName => packageNames.indexOf(packageName.package),
+  );
 }
 
 export default getPackageStats;
