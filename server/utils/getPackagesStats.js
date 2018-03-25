@@ -5,7 +5,7 @@ const isScopedPackageName = require('../utils/isScopedPackageName');
 const standardizePackageResponse = response =>
   'package' in response ? [response] : Object.values(response);
 
-async function getPackageStats(packageNames, { startDate, endDate }) {
+async function getPackagesStats(packageNames, { startDate, endDate }) {
   function fetchPackagesStats(packageNames) {
     const packageNamesParam = packageNames.join(',');
     const url = `https://api.npmjs.org/downloads/range/${startDate}:${endDate}/${packageNamesParam}`;
@@ -42,4 +42,4 @@ async function getPackageStats(packageNames, { startDate, endDate }) {
   );
 }
 
-export default getPackageStats;
+export default getPackagesStats;

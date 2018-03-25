@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const { format: formatDate, subDays } = require('date-fns');
 
-const getPackageStats = require('./getPackagesStats');
+const getPackagesStats = require('./getPackagesStats');
 
 const DATE_FORMAT = 'YYYY-MM-DD';
 
@@ -11,7 +11,7 @@ const getPackagesDescriptions = async packageNames => {
     formatDate(new Date(), DATE_FORMAT),
   ];
 
-  const packagesStats = await getPackageStats(packageNames, {
+  const packagesStats = await getPackagesStats(packageNames, {
     startDate,
     endDate: now,
   });
