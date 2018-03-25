@@ -36,9 +36,13 @@ async function getPackagesDownloads(packageNames, { startDate, endDate }) {
     scopedPackagesResponse,
   );
 
-  return _.sortBy(
-    [...standardPackagesStats, ...scopedPackagesStats],
-    packageName => packageNames.indexOf(packageName.package),
+  const combinedPackagesStats = _.compact([
+    ...standardPackagesStats,
+    ...scopedPackagesStats,
+  ]);
+
+  return packageNames.map(packageName =>
+    _.find(combinedPackagesStats, entry => entry.package === packageName),
   );
 }
 
