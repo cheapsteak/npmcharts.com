@@ -1,6 +1,9 @@
 const _ = require('lodash');
 const isScopedPackageName = require('../utils/isScopedPackageName');
 
+const standardizePackageResponse = response =>
+  'package' in response ? [response] : Object.values(response);
+
 async function getPackageStats(packageNames, { startDate, endDate }) {
   function fetchPackagesStats(packageNames) {
     const packageNamesParam = packageNames.join(',');
@@ -16,20 +19,24 @@ async function getPackageStats(packageNames, { startDate, endDate }) {
   const scopedPackagesRequests = scopedPackageNames.map(packageName =>
     fetchPackagesStats([packageName]),
   );
-  const standardPackagesRequest = fetchPackagesStats(standardPackageNames);
+  const standardPackagesRequest = standardPackageNames.length
+    ? fetchPackagesStats(standardPackageNames)
+    : {};
 
   const [
     standardPackagesResponse,
     ...scopedPackagesResponse
   ] = await Promise.all([standardPackagesRequest, ...scopedPackagesRequests]);
 
-  const standardPackagesStats =
-    'package' in standardPackagesResponse
-      ? [standardPackagesResponse]
-      : Object.values(standardPackagesResponse);
+  const standardPackagesStats = standardizePackageResponse(
+    standardPackagesResponse,
+  );
+  const scopedPackagesStats = standardizePackageResponse(
+    scopedPackagesResponse,
+  );
 
   return _.sortBy(
-    [...standardPackagesStats, ...scopedPackagesResponse],
+    [...standardPackagesStats, ...scopedPackagesStats],
     packageName => packageNames.indexOf(packageName.package),
   );
 }
