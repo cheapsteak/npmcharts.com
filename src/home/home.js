@@ -150,7 +150,10 @@ export default Vue.extend({
   ready() {
     packageEvents.on('change', () => {
       const queryString = querystring.stringify(this.$route.query);
-      this.$route.router.go(`/compare/${packages.join(',')}?${queryString}`);
+      const nextRouteSansQuery = `/compare/${packages.join(',')}`;
+      if (this.$route.router.app.$route.path !== nextRouteSansQuery) {
+        this.$route.router.go(`${nextRouteSansQuery}?${queryString}`);
+      }
     });
     // expose router so puppeteer can trigger route changes
     window.router = this.$route.router;
