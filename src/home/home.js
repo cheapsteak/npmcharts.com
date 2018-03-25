@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { format as formatDate, subYears } from 'date-fns';
 import config from '../../config.js';
 import { setPackages } from '../packages/packages.js';
-import getPackagesStats from '../../server/utils/getPackagesStats';
+import getPackagesDownloads from '../../server/utils/stats/getPackagesDownloads';
 
 const palette = config.palette;
 
@@ -73,11 +73,13 @@ export default Vue.extend({
       const startDate = formatDate(subYears(new Date(), 1), DATE_FORMAT);
 
       // can't use 'await' here or will trigger vue router error
-      getPackagesStats(packageNames, {
+      getPackagesDownloads(packageNames, {
         startDate,
         endDate,
-      }).then(packagesStats => {
-        const processedPackagesStats = packagesStats.map(processPackageStats);
+      }).then(packagesDownloads => {
+        const processedPackagesStats = packagesDownloads.map(
+          processPackageStats,
+        );
 
         next({
           isMinimalMode: to.query.minimal,

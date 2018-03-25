@@ -1,11 +1,11 @@
 const _ = require('lodash');
 const fetch = require('isomorphic-fetch');
-const isScopedPackageName = require('../utils/isScopedPackageName');
+const isScopedPackageName = require('../isScopedPackageName');
 
 const standardizePackageResponse = response =>
   'package' in response ? [response] : Object.values(response);
 
-async function getPackagesStats(packageNames, { startDate, endDate }) {
+async function getPackagesDownloads(packageNames, { startDate, endDate }) {
   function fetchPackagesStats(packageNames) {
     const packageNamesParam = packageNames.join(',');
     const url = `https://api.npmjs.org/downloads/range/${startDate}:${endDate}/${packageNamesParam}`;
@@ -42,4 +42,4 @@ async function getPackagesStats(packageNames, { startDate, endDate }) {
   );
 }
 
-export default getPackagesStats;
+export default getPackagesDownloads;
