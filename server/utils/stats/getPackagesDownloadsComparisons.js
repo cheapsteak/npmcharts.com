@@ -5,6 +5,25 @@ const getPackagesDownloads = require('./getPackagesDownloads');
 
 const DATE_FORMAT = 'YYYY-MM-DD';
 
+const getDownloadComparisonForPeriod = (downloads, durationInDays) => {
+  const trimmedDownloads =
+    _.last(downloads).downloads === 0 ? _.initial(downloads) : downloads;
+
+  const current = _.sumBy(
+    trimmedDownloads.slice(-durationInDays),
+    x => x.downloads,
+  );
+  const previous = _.sumBy(
+    _.difference(
+      trimmedDownloads.slice(-durationInDays * 2),
+      trimmedDownloads.slice(-durationInDays),
+    ),
+    x => x.downloads,
+  );
+  const change = (current - previous) / previous;
+  return { current, previous, change };
+};
+
 const getPackagesDownloadsComparisons = async packageNames => {
   const [startDate, now] = [
     formatDate(subDays(new Date(), 61), DATE_FORMAT),
@@ -16,29 +35,13 @@ const getPackagesDownloadsComparisons = async packageNames => {
     endDate: now,
   });
 
-  const getDownloadComparisonForPeriod = (downloads, durationInDays) => {
-    const current = _.sumBy(downloads.slice(-durationInDays), x => x.downloads);
-    const previous = _.sumBy(
-      _.difference(
-        downloads.slice(-durationInDays * 2),
-        downloads.slice(-durationInDays),
-      ),
-      x => x.downloads,
-    );
-    const change = (current - previous) / previous;
-    return { current, previous, change };
-  };
-
   const results = packagesStats.map(packageStats => {
-    const downloads =
-      _.last(packageStats.downloads).downloads === 0
-        ? _.initial(packageStats.downloads)
-        : packageStats.downloads;
-
-    return {
-      monthly: getDownloadComparisonForPeriod(downloads, 30),
-      weekly: getDownloadComparisonForPeriod(downloads, 7),
-    };
+    return packageStats
+      ? {
+          monthly: getDownloadComparisonForPeriod(packageStats.downloads, 30),
+          weekly: getDownloadComparisonForPeriod(packageStats.downloads, 7),
+        }
+      : null;
   });
 
   return results;
