@@ -77,7 +77,7 @@ export default Vue.extend({
         startDate,
         endDate,
       }).then(packagesDownloads => {
-        const processedPackagesStats = packagesDownloads.map(
+        const processedPackagesStats = _.compact(packagesDownloads).map(
           processPackageStats,
         );
 
