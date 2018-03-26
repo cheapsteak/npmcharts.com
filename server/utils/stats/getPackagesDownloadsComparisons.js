@@ -38,6 +38,7 @@ const getPackagesDownloadsComparisons = async packageNames => {
   const results = packagesStats.map(packageStats => {
     return packageStats
       ? {
+          package: packageStats.package,
           monthly: getDownloadComparisonForPeriod(packageStats.downloads, 30),
           weekly: getDownloadComparisonForPeriod(packageStats.downloads, 7),
         }
