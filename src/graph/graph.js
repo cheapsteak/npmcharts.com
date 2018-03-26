@@ -224,6 +224,7 @@ export default Vue.extend({
         return;
       }
       const chart = this.chart;
+      // tick on the 1st of the month
       chart.x2Axis.tickValues(
         this.moduleData[0].downloads
           .map(item => item.day)
