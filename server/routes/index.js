@@ -6,9 +6,10 @@ const router = express.Router();
 const getTitle = require('../utils/getTitle');
 const getMinimalUrl = require('../utils/getMinimalUrl');
 const shouldScreencapUrl = require('../utils/shouldScreencapUrl');
+const getPackgesFromUrl = require('../utils/getPackagesFromUrl');
 
 const sendSPA = function(req, res, next) {
-  const packages = req.params.packages ? req.params.packages.split(',') : [];
+  const packages = getPackgesFromUrl(req.originalUrl);
   const fullUrl = url.parse(
     req.protocol + '://' + req.get('host') + req.originalUrl,
   );
