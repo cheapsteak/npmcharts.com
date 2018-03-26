@@ -11,10 +11,6 @@ const getPackagesDescriptions = async packages => {
   const comparisons = await getPackagesDownloadsComparisons(packages);
   const trimmedComparisons = _.compact(comparisons);
 
-  console.log('---------/ngetPackagesDescriptions/n---------');
-  console.log('packages', packages);
-  console.log('trimmedComparisons', trimmedComparisons);
-
   if (trimmedComparisons.length === 0) {
     description = `Compare npm package download counts over time to spot trends and see which to use and which to avoid.`;
   } else if (trimmedComparisons.length === 1) {
