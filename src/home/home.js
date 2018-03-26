@@ -1,10 +1,25 @@
 import Vue from 'vue';
 import querystring from 'querystring';
 import _ from 'lodash';
-import npmData from '../services/downloads.js';
+import { format as formatDate, subYears } from 'date-fns';
 import config from '../../config.js';
+import { setPackages } from '../packages/packages.js';
+import getPackagesDownloads from '../../server/utils/stats/getPackagesDownloads';
 
 const palette = config.palette;
+
+function processPackageStats(npmModuleData) {
+  const downloads = npmModuleData.downloads.map(entry => ({
+    // replace '-' with '/' to fix problem with ES5 coercing it to UTC
+    day: new Date(entry.day.replace(/-/g, '/')),
+    count: entry.downloads,
+  }));
+  return {
+    name: npmModuleData.package,
+    // if most recent day has no download count, remove it
+    downloads: _.last(downloads).count === 0 ? _.initial(downloads) : downloads,
+  };
+}
 
 var {
   default: packageInput,
@@ -40,29 +55,39 @@ export default Vue.extend({
 
       setTimeout(() => ga('send', 'pageview'));
 
-      packageNames
-        ? npmData.fetch(packageNames, false).then(() => {
-            const moduleData = npmData.modules.map(x => ({
-              ...x,
-              // if most recent day has no download count, remove it
-              downloads:
-                _.last(x.downloads).count === 0
-                  ? _.initial(x.downloads)
-                  : x.downloads,
-            }));
-            next({
-              isMinimalMode: to.query.minimal,
-              moduleNames: npmData.moduleNames,
-              moduleData,
-              isUsingPresetPackages: !to.params.packages,
-            });
-          })
-        : next({
-            isMinimalMode: to.query.minimal,
-            moduleNames: null,
-            moduleData: null,
-            samplePreset: _.sample(this.presetPackages),
-          });
+      if (!packageNames) {
+        next({
+          isMinimalMode: to.query.minimal,
+          moduleNames: null,
+          moduleData: null,
+          samplePreset: _.sample(this.presetPackages),
+        });
+        return;
+      }
+
+      // set notify to false to prevent triggering route change
+      setPackages(packageNames, false);
+
+      const DATE_FORMAT = 'YYYY-MM-DD';
+      const endDate = formatDate(new Date(), DATE_FORMAT);
+      const startDate = formatDate(subYears(new Date(), 1), DATE_FORMAT);
+
+      // can't use 'await' here or will trigger vue router error
+      getPackagesDownloads(packageNames, {
+        startDate,
+        endDate,
+      }).then(packagesDownloads => {
+        const processedPackagesStats = _.compact(packagesDownloads).map(
+          processPackageStats,
+        );
+
+        next({
+          isMinimalMode: to.query.minimal,
+          moduleNames: packageNames,
+          moduleData: processedPackagesStats,
+          isUsingPresetPackages: !to.params.packages,
+        });
+      });
     },
   },
   template: require('./home.html'),
@@ -116,7 +141,6 @@ export default Vue.extend({
       this.$refs.graph.render();
     },
     isMinimalMode(isMinimalMode) {
-      console.log('isminimalmode', isMinimalMode);
       if (isMinimalMode) {
         document.body.classList.add('minimal');
       } else {
@@ -128,7 +152,10 @@ export default Vue.extend({
   ready() {
     packageEvents.on('change', () => {
       const queryString = querystring.stringify(this.$route.query);
-      this.$route.router.go(`/compare/${packages.join(',')}?${queryString}`);
+      const nextRouteSansQuery = `/compare/${packages.join(',')}`;
+      if (this.$route.router.app.$route.path !== nextRouteSansQuery) {
+        this.$route.router.go(`${nextRouteSansQuery}?${queryString}`);
+      }
     });
     // expose router so puppeteer can trigger route changes
     window.router = this.$route.router;

@@ -6,14 +6,15 @@ const router = express.Router();
 const getTitle = require('../utils/getTitle');
 const getMinimalUrl = require('../utils/getMinimalUrl');
 const shouldScreencapUrl = require('../utils/shouldScreencapUrl');
+const getPackagesDownloadsDescriptions = require('../utils/stats/getPackagesDownloadsDescription');
+const getPackgesFromUrl = require('../utils/getPackagesFromUrl');
 
-const sendSPA = function(req, res, next) {
-  const packages = req.params.packages ? req.params.packages.split(',') : [];
+const sendSPA = async function(req, res, next) {
+  const packages = getPackgesFromUrl(req.originalUrl);
   const fullUrl = url.parse(
     req.protocol + '://' + req.get('host') + req.originalUrl,
   );
   const minimalModeUrl = getMinimalUrl(fullUrl.href);
-  console.log(minimalModeUrl);
   const ogImage = shouldScreencapUrl(minimalModeUrl)
     ? `${req.protocol}://${req.get('host')}/chart-image?${querystring.stringify(
         {
@@ -21,8 +22,10 @@ const sendSPA = function(req, res, next) {
         },
       )}`
     : 'https://npmcharts.com/images/og-image-3.png';
+  const pageDescription = await getPackagesDownloadsDescriptions(packages);
   res.render('index', {
     title: getTitle(packages),
+    description: pageDescription,
     oembedUrl: `https://npmcharts.com/oembed?${querystring.stringify({
       url: fullUrl.href,
       format: 'json',

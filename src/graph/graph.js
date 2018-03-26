@@ -318,7 +318,6 @@ export default Vue.extend({
             this.render();
           }),
       );
-      console.log('disable scrolljack', this.disableScrollJack);
 
       if (!this.disableScrollJack) {
         this.scrollJack({ focusChartRect });
