@@ -99,7 +99,6 @@ export default Vue.extend({
       moduleData: null,
       palette,
       showWeekends: false,
-      showOutliers: true,
       isMinimalMode: false,
       isUsingPresetPackages: undefined,
       hoverCount: 0,

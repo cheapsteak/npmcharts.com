@@ -27,23 +27,11 @@ function getClosestNItems(item, index, array, N) {
 }
 
 // entries: [{day: Date, count: Number}]
-function filterEntries(
-  entries,
-  { showWeekends = false, showOutliers = true, outlierStdevs = 5 },
-) {
+function filterEntries(entries, { showWeekends = false }) {
   if (!showWeekends) {
     entries = entries.filter(
       entry => [0, 6].indexOf(entry.day.getDay()) === -1,
     );
-  }
-  if (!showOutliers) {
-    entries = entries.filter((entry, index, array) => {
-      const sample = getClosestNItems(entry, index, array, 90).map(
-        entry => entry.count,
-      );
-
-      return withinStdevs(entry.count, sample, outlierStdevs);
-    });
   }
   return entries;
 }
@@ -61,14 +49,6 @@ export default Vue.extend({
     showWeekends: {
       type: Boolean,
       default: true,
-    },
-    showOutliers: {
-      type: Boolean,
-      default: false,
-    },
-    outlierStdevs: {
-      type: Number,
-      default: 4,
     },
     moduleNames: Array,
     moduleData: Array,
@@ -109,12 +89,6 @@ export default Vue.extend({
       this.chart.update();
     },
     showWeekends() {
-      this.render();
-    },
-    showOutliers() {
-      this.render();
-    },
-    outlierStdevs() {
       this.render();
     },
     moduleData() {
@@ -221,15 +195,8 @@ export default Vue.extend({
           module.downloads,
           {
             showWeekends: this.showWeekends,
-            showOutliers: this.showOutliers,
-            outlierStdevs: this.outlierStdevs,
           },
-          [
-            module.name,
-            this.showWeekends,
-            this.showOutliers,
-            this.outlierStdevs,
-          ].join(','),
+          [module.name, this.showWeekends].join(','),
         ).map(downloads => ({
           x: downloads.day,
           y: downloads.count,
