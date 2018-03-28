@@ -3,12 +3,18 @@ import nv from 'nvd3';
 import Vue from 'vue';
 import Hammer from 'hammerjs';
 import _ from 'lodash';
-import { withinStdevs } from '../utils/stats.js';
 import { format as formatDate, subMonths, startOfDay } from 'date-fns';
+import { line, curveCatmullRom } from 'd3-shape';
 
 const { palette } = require('../../config.js');
+
 // this can't go in the data of the component, observing it changes it.
 let svg;
+
+const catmulRomInterpolation = (points, tension) =>
+  line()
+    .curve(curveCatmullRom)(points)
+    .replace(/^M/, '');
 
 // returns N items closest to the given item in an array
 function getClosestNItems(item, index, array, N) {
@@ -130,6 +136,7 @@ export default Vue.extend({
     const margin = (this.margin = { top: 0, right: 36, bottom: 30, left: 16 });
     svg = d3.select('#chart svg');
     const chart = this.chart;
+
     nv.addGraph(() => {
       chart
         .margin(margin)
@@ -238,6 +245,12 @@ export default Vue.extend({
       const chart = this.chart;
       const processedData = this.processForD3(this.moduleData);
       this.processedData = processedData;
+      const interpolation = this.groupByWeek
+        ? catmulRomInterpolation
+        : 'linear';
+
+      chart.interpolate(interpolation);
+
       chart.yScale(this.useLog ? d3.scale.log() : d3.scale.linear());
       svg
         .data([processedData])
