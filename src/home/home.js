@@ -5,13 +5,13 @@ import { format as formatDate, subYears } from 'date-fns';
 import config from '../../config.js';
 import { setPackages } from '../packages/packages.js';
 import getPackagesDownloads from '../../server/utils/stats/getPackagesDownloads';
+import { startOfDay } from 'date-fns';
 
 const palette = config.palette;
 
 function processPackageStats(npmModuleData) {
   const downloads = npmModuleData.downloads.map(entry => ({
-    // replace '-' with '/' to fix problem with ES5 coercing it to UTC
-    day: new Date(entry.day.replace(/-/g, '/')),
+    day: startOfDay(entry.day),
     count: entry.downloads,
   }));
   return {
@@ -99,6 +99,7 @@ export default Vue.extend({
       moduleData: null,
       palette,
       showWeekends: false,
+      groupByWeek: false,
       isMinimalMode: false,
       isUsingPresetPackages: undefined,
       hoverCount: 0,

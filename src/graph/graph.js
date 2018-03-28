@@ -27,16 +27,40 @@ function getClosestNItems(item, index, array, N) {
 }
 
 // entries: [{day: Date, count: Number}]
-function filterEntries(entries, { showWeekends = false }) {
-  if (!showWeekends) {
+function processEntries(
+  entries,
+  { showWeekends = false, groupByWeek = false },
+) {
+  if (groupByWeek) {
+    entries = _.flow([
+      entries =>
+        _.groupBy(entries, entry =>
+          Math.floor((entries.length - entries.indexOf(entry)) / 7),
+        ),
+      _.values,
+      entries =>
+        entries.map(entries => ({
+          count: _.sumBy(entries, entry => entry.count),
+          day: entries[0].day,
+        })),
+      /*
+        x axis entries need to be in ascending order
+        finding the point to highlight relies on nv.interactiveBisect
+        (used in lineChart.js on "elementMousemove")
+        which "Will not work if the data points move backwards
+      */
+      _.reverse,
+    ])(entries);
+  } else if (!showWeekends) {
     entries = entries.filter(
       entry => [0, 6].indexOf(entry.day.getDay()) === -1,
     );
   }
+
   return entries;
 }
 
-const filterEntriesMemo = _.memoize(filterEntries, function resolver() {
+const processEntriesMemo = _.memoize(processEntries, function resolver() {
   return Array.prototype.slice.call(arguments, -1)[0];
 });
 
@@ -49,6 +73,10 @@ export default Vue.extend({
     showWeekends: {
       type: Boolean,
       default: true,
+    },
+    groupByWeek: {
+      type: Boolean,
+      default: false,
     },
     moduleNames: Array,
     moduleData: Array,
@@ -92,6 +120,9 @@ export default Vue.extend({
       this.render();
     },
     moduleData() {
+      this.render();
+    },
+    groupByWeek() {
       this.render();
     },
   },
@@ -191,12 +222,13 @@ export default Vue.extend({
     processForD3(input) {
       return input.map(module => ({
         key: module.name,
-        values: filterEntriesMemo(
+        values: processEntriesMemo(
           module.downloads,
           {
             showWeekends: this.showWeekends,
+            groupByWeek: this.groupByWeek,
           },
-          [module.name, this.showWeekends].join(','),
+          [module.name, this.showWeekends, this.groupByWeek].join(','),
         ).map(downloads => ({
           x: downloads.day,
           y: downloads.count,
@@ -206,6 +238,7 @@ export default Vue.extend({
     render() {
       const chart = this.chart;
       const processedData = this.processForD3(this.moduleData);
+      this.processedData = processedData;
       chart.yScale(this.useLog ? d3.scale.log() : d3.scale.linear());
       svg
         .data([processedData])
@@ -314,7 +347,6 @@ export default Vue.extend({
     },
     scrollJack({ focusChartRect }) {
       const chart = this.chart;
-
       // mousewheel zoom
       svg.call(
         d3.behavior
@@ -325,7 +357,6 @@ export default Vue.extend({
               .brushExtent()
               .map(x => new Date(x).getTime());
             const newStart = currentStart - Math.floor(dy * 1000 * 60 * 60 * 3);
-
             if (
               !(d3.event.sourceEvent instanceof WheelEvent) ||
               newStart <= this.moduleData[0].downloads[0].day.getTime() ||
@@ -341,25 +372,40 @@ export default Vue.extend({
           }),
       );
     },
-    getDataAtDate(date) {
+    getStartOfPeriod(date) {
       date = startOfDay(date);
+      const indexInModuleData = _.findIndex(
+        this.moduleData[0].downloads,
+        entry => entry.day.getTime() === date.getTime(),
+      );
+
+      const startOfPeriodBucket = Math.floor(
+        (this.moduleData[0].downloads.length - indexInModuleData) / 7,
+      );
+
+      return this.processedData[0].values[
+        this.processedData[0].values.length - startOfPeriodBucket - 1
+      ].x;
+    },
+    getDataAtDate(date) {
+      const modules = this.processedData;
+
+      const startOfPeriod = this.getStartOfPeriod(date);
 
       return {
-        date: date,
-        modules: this.moduleData.map((module, i) => {
-          return {
-            color: palette[i % palette.length],
-            name: module.name,
-            downloads: _.get(
-              _.find(
-                module.downloads,
-                entry => entry.day.getTime() === date.getTime(),
-              ),
-              'count',
-              0,
+        date,
+        modules: modules.map((module, i) => ({
+          color: palette[i % palette.length],
+          name: module.key,
+          downloads: _.get(
+            _.find(
+              module.values,
+              entry => entry.x.getTime() === startOfPeriod.getTime(),
             ),
-          };
-        }),
+            'y',
+            0,
+          ),
+        })),
       };
     },
     handlePackageFocus(moduleName) {
