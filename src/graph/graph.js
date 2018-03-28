@@ -16,23 +16,6 @@ const catmulRomInterpolation = (points, tension) =>
     .curve(curveCatmullRom)(points)
     .replace(/^M/, '');
 
-// returns N items closest to the given item in an array
-function getClosestNItems(item, index, array, N) {
-  const halfN = N / 2;
-  let beginning, end;
-  beginning = Math.max(index - halfN, 0);
-  end = Math.min(index + halfN, array.length);
-
-  if (index < halfN) {
-    end += halfN - index;
-  } else if (array.length - index < halfN) {
-    beginning -= halfN - (array.length - index);
-  }
-
-  return array.slice(beginning, end);
-}
-
-// entries: [{day: Date, count: Number}]
 function processEntries(
   entries,
   { showWeekends = false, groupByWeek = false },

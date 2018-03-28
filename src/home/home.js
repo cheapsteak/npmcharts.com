@@ -180,19 +180,6 @@ export default Vue.extend({
     clearPackages() {
       this.$route.router.go('/compare');
     },
-    handleClickToggleComments() {
-      const eventAction = this.shouldShowComments ? 'close' : 'open';
-      const eventLabel = (this.moduleNames || [])
-        .slice()
-        .sort()
-        .join(',');
-      ga('send', 'event', 'comment toggle', eventAction, eventLabel);
-      this.shouldShowComments = !this.shouldShowComments;
-      window.localStorage.setItem(
-        'shouldShowComments',
-        this.shouldShowComments,
-      );
-    },
     handleClickTwitter() {
       ga('send', 'event', 'share', 'twitter', this.twitterShareUrl);
       window.open(this.twitterShareUrl);
