@@ -136,6 +136,8 @@ export default Vue.extend({
         .showLegend(false)
         .color(palette)
         .xScale(d3.time.scale())
+        .x(point => point.day)
+        .y(point => point.count)
         .useInteractiveGuideline(true);
 
       chart.interactiveLayer.tooltip.enabled(false);
@@ -229,10 +231,7 @@ export default Vue.extend({
             groupByWeek: this.groupByWeek,
           },
           [module.name, this.showWeekends, this.groupByWeek].join(','),
-        ).map(downloads => ({
-          x: downloads.day,
-          y: downloads.count,
-        })),
+        ),
       }));
     },
     render() {
@@ -385,7 +384,7 @@ export default Vue.extend({
 
       return this.processedData[0].values[
         this.processedData[0].values.length - startOfPeriodBucket - 1
-      ].x;
+      ].day;
     },
     getDataAtDate(date) {
       const modules = this.processedData;
@@ -400,9 +399,9 @@ export default Vue.extend({
           downloads: _.get(
             _.find(
               module.values,
-              entry => entry.x.getTime() === startOfPeriod.getTime(),
+              entry => entry.day.getTime() === startOfPeriod.getTime(),
             ),
-            'y',
+            'count',
             0,
           ),
         })),
