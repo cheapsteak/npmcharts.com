@@ -70,21 +70,7 @@ export default Vue.extend({
     moduleNames: Array,
     moduleData: Array,
   },
-  template: `
-    <div v-el:chart id="chart" class="with-3d-shadow with-transitions">
-      <legend
-        v-if="moduleData.length && legendData"
-        :modules="legendData.modules"
-        :date="legendData.date"
-        @package-focus="handlePackageFocus"
-        @package-blur="handlePackageBlur"
-        @legend-blur="handleLegendBlur"
-        @legend-focus="handleLegendFocus"
-      >
-      </legend>
-      <svg></svg>
-    </div>
-  `,
+  template: require('./graph.html'),
   data() {
     return {
       chart: this.isMinimalMode
