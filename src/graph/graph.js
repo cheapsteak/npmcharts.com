@@ -18,15 +18,12 @@ const catmulRomInterpolation = (points, tension) =>
     .curve(curveCatmullRom)(points)
     .replace(/^M/, '');
 
-function processEntries(
-  entries,
-  { showWeekends = false, groupByWeek = false },
-) {
-  if (groupByWeek) {
+function processEntries(entries, { showWeekends = false, periodLength = 7 }) {
+  if (periodLength !== 1) {
     entries = _.flow([
       entries =>
         _.groupBy(entries, entry =>
-          Math.floor((entries.length - entries.indexOf(entry)) / 7),
+          Math.floor((entries.length - entries.indexOf(entry)) / periodLength),
         ),
       _.values,
       entries =>
@@ -65,9 +62,9 @@ export default Vue.extend({
       type: Boolean,
       default: true,
     },
-    groupByWeek: {
-      type: Boolean,
-      default: false,
+    periodLength: {
+      type: Number,
+      default: 7,
     },
     moduleNames: Array,
     moduleData: Array,
@@ -105,7 +102,7 @@ export default Vue.extend({
     moduleData() {
       this.render();
     },
-    groupByWeek() {
+    periodLength() {
       this.render();
     },
   },
@@ -212,9 +209,9 @@ export default Vue.extend({
           module.downloads,
           {
             showWeekends: this.showWeekends,
-            groupByWeek: this.groupByWeek,
+            periodLength: this.periodLength,
           },
-          [module.name, this.showWeekends, this.groupByWeek].join(','),
+          [module.name, this.showWeekends, this.periodLength].join(','),
         ),
       }));
     },
@@ -222,9 +219,8 @@ export default Vue.extend({
       const chart = this.chart;
       const processedData = this.processForD3(this.moduleData);
       this.processedData = processedData;
-      const interpolation = this.groupByWeek
-        ? catmulRomInterpolation
-        : 'linear';
+      const interpolation =
+        this.periodLength > 1 ? catmulRomInterpolation : 'linear';
 
       chart.interpolate(interpolation);
 
@@ -376,7 +372,8 @@ export default Vue.extend({
       );
 
       const startOfPeriodBucket = Math.floor(
-        (this.moduleData[0].downloads.length - indexInModuleData) / 7,
+        (this.moduleData[0].downloads.length - indexInModuleData) /
+          this.periodLength,
       );
 
       return this.processedData[0].values[

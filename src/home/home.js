@@ -55,13 +55,13 @@ export default Vue.extend({
 
       setTimeout(() => ga('send', 'pageview'));
 
-      const isMinimalMode = to.query.minimal === 'true';
-      const groupByWeek = to.query.groupByWeek === 'true';
+      const isMinimalMode = to.query.minimal === 'false';
+      const periodLength = Number(to.query.periodLength || 7);
 
       if (!packageNames) {
         next({
           isMinimalMode,
-          groupByWeek,
+          periodLength,
           moduleNames: null,
           moduleData: null,
           samplePreset: _.sample(this.presetPackages),
@@ -87,7 +87,7 @@ export default Vue.extend({
 
         next({
           isMinimalMode,
-          groupByWeek,
+          periodLength,
           moduleNames: packageNames,
           moduleData: processedPackagesStats,
           isUsingPresetPackages: !to.params.packages,
@@ -104,7 +104,7 @@ export default Vue.extend({
       moduleData: null,
       palette,
       showWeekends: false,
-      groupByWeek: false,
+      periodLength: 7,
       isMinimalMode: false,
       isUsingPresetPackages: undefined,
       hoverCount: 0,
@@ -148,14 +148,6 @@ export default Vue.extend({
       }
       this.$refs.graph.render();
     },
-    groupByWeek(groupByWeek, oldGroupByWeek) {
-      console.log(
-        'groupByWeek',
-        oldGroupByWeek,
-        groupByWeek,
-        this.$route.query.groupByWeek,
-      );
-    },
   },
   ready() {
     packageEvents.on('change', () => {
@@ -170,6 +162,9 @@ export default Vue.extend({
   methods: {
     track(eventName, value) {
       ga('send', 'event', eventName, value);
+    },
+    getMergedQueryParams(params) {
+      return { ...this.$route.query, ...params };
     },
     addPackage(packageName) {
       ga(

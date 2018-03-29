@@ -38,12 +38,27 @@
     ></package-input>
     <div class="graph-config">
       <label class="include-item" @change="track(showWeekends ? 'show-weekends' : 'hide-weekends')"><input type="checkbox" v-model="showWeekends"/>include weekends</label>
+
       <label
         v-if="moduleNames"
-        v-link="{ path: '/compare/' + moduleNames.join(','), query: { groupByWeek: !groupByWeek }}"
-        @change="track(groupByWeek ? 'group-by-week' : 'group-by-day')"
+        v-link="{ path: '/compare/' + moduleNames.join(',') + '?', query: getMergedQueryParams({periodLength: 1})}"
+        @change="track('set periodLength', periodLength)"
       >
-        <input type="checkbox" :checked="!!groupByWeek">weekly downloads
+        <input type="checkbox" :checked="periodLength === 1">daily
+      </label>
+      <label
+        v-if="moduleNames"
+        v-link="{ path: '/compare/' + moduleNames.join(',') + '?', query: getMergedQueryParams({periodLength: 7})}"
+        @change="track('set periodLength', periodLength)"
+      >
+        <input type="checkbox" :checked="periodLength === 7">weekly
+      </label>
+      <label
+        v-if="moduleNames"
+        v-link="{ path: '/compare/' + moduleNames.join(',') + '?', query: getMergedQueryParams({periodLength: 30})}"
+        @change="track('set periodLength', periodLength)"
+      >
+        <input type="checkbox" :checked="periodLength === 30">monthly
       </label>
       <button class="minimal-mode" v-link="{ query: { minimal: true }}" @click="track('enter-minimal-mode')">enter minimal mode</button>
 
@@ -88,7 +103,7 @@
       :module-names="moduleNames"
       :module-data="moduleData"
       :show-weekends="showWeekends"
-      :group-by-week="groupByWeek"
+      :period-length="periodLength"
       :is-minimal-mode="isMinimalMode === 'true'"
     >
     </graph>
