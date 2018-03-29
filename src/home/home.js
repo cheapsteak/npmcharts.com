@@ -55,9 +55,13 @@ export default Vue.extend({
 
       setTimeout(() => ga('send', 'pageview'));
 
+      const isMinimalMode = to.query.minimal === 'true';
+      const groupByWeek = to.query.groupByWeek === 'true';
+
       if (!packageNames) {
         next({
-          isMinimalMode: to.query.minimal,
+          isMinimalMode,
+          groupByWeek,
           moduleNames: null,
           moduleData: null,
           samplePreset: _.sample(this.presetPackages),
@@ -82,7 +86,8 @@ export default Vue.extend({
         );
 
         next({
-          isMinimalMode: to.query.minimal,
+          isMinimalMode,
+          groupByWeek,
           moduleNames: packageNames,
           moduleData: processedPackagesStats,
           isUsingPresetPackages: !to.params.packages,
@@ -139,6 +144,14 @@ export default Vue.extend({
         document.body.classList.remove('minimal');
       }
       this.$refs.graph.render();
+    },
+    groupByWeek(groupByWeek, oldGroupByWeek) {
+      console.log(
+        'groupByWeek',
+        oldGroupByWeek,
+        groupByWeek,
+        this.$route.query.groupByWeek,
+      );
     },
   },
   ready() {
