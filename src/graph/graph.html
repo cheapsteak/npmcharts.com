@@ -2,6 +2,7 @@
   <legend
     v-if="moduleData.length && legendData"
     :modules="legendData.modules"
+    :group-by-week="groupByWeek"
     :date="legendData.date"
     @package-focus="handlePackageFocus"
     @package-blur="handlePackageBlur"
