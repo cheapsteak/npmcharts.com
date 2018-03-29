@@ -67,7 +67,7 @@
       <ul class="matches">
         <li
           v-for="packages in shuffle(presetPackages)"
-          v-link="'/compare/' + packages.join(',')"
+          v-link="'/compare/' + packages.join(',') + '?' + queryString"
           class="match"
         >
           <template v-for="package in packages">

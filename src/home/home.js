@@ -132,6 +132,9 @@ export default Vue.extend({
     isEmbedded() {
       return this.isMinimalMode;
     },
+    queryString() {
+      return querystring.stringify(this.$route.query);
+    },
   },
   watch: {
     shouldShowComments() {
@@ -156,10 +159,9 @@ export default Vue.extend({
   },
   ready() {
     packageEvents.on('change', () => {
-      const queryString = querystring.stringify(this.$route.query);
       const nextRouteSansQuery = `/compare/${packages.join(',')}`;
       if (this.$route.router.app.$route.path !== nextRouteSansQuery) {
-        this.$route.router.go(`${nextRouteSansQuery}?${queryString}`);
+        this.$route.router.go(`${nextRouteSansQuery}?${this.queryString}`);
       }
     });
     // expose router so puppeteer can trigger route changes
