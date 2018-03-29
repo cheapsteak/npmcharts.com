@@ -10,6 +10,8 @@ const { palette } = require('../../config.js');
 
 // this can't go in the data of the component, observing it changes it.
 let svg;
+const xAccessor = point => point.day;
+const yAccessor = point => point.count;
 
 const catmulRomInterpolation = (points, tension) =>
   line()
@@ -85,6 +87,12 @@ export default Vue.extend({
     disableScrollJack() {
       return this.isMinimalMode;
     },
+    // in case a module
+    seriesWithMostDataPoints() {
+      return _.sortBy(this.processedData, series => series.values.length)[
+        this.processedData.length - 1
+      ];
+    },
   },
   watch: {
     useLog(val) {
@@ -112,8 +120,8 @@ export default Vue.extend({
         .showLegend(false)
         .color(palette)
         .xScale(d3.time.scale())
-        .x(point => point.day)
-        .y(point => point.count)
+        .x(xAccessor)
+        .y(yAccessor)
         .useInteractiveGuideline(true);
 
       chart.interactiveLayer.tooltip.enabled(false);
@@ -309,11 +317,18 @@ export default Vue.extend({
       var prevMousemove = chart.interactiveLayer.dispatch.on(
         'elementMousemove',
       );
+
       chart.interactiveLayer.dispatch.on('elementMousemove', e => {
         prevMousemove.call(chart.interactiveLayer, e);
         const date = e.pointXValue;
         try {
-          this.$set('legendData', this.getDataAtDate(date));
+          const nearestPointIndex = nv.interactiveBisect(
+            this.seriesWithMostDataPoints.values,
+            date,
+            xAccessor,
+          );
+          const point = this.seriesWithMostDataPoints.values[nearestPointIndex];
+          this.$set('legendData', this.getDataAtDate(xAccessor(point)));
         } catch (e) {
           console.warn(`error retrieving data for ${date}`);
         }
