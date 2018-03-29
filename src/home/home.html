@@ -37,9 +37,14 @@
       :is-using-preset-packages="isUsingPresetPackages"
     ></package-input>
     <div class="graph-config">
-
       <label class="include-item" @change="track(showWeekends ? 'show-weekends' : 'hide-weekends')"><input type="checkbox" v-model="showWeekends"/>include weekends</label>
-      <label v-link="{ query: { groupByWeek: !groupByWeek }}" @change="track(groupByWeek ? 'group-by-week' : 'group-by-day')"><input type="checkbox" :checked="!!groupByWeek">weekly downloads</label>
+      <label
+        v-if="moduleNames"
+        v-link="{ path: '/compare/' + moduleNames.join(','), query: { groupByWeek: !groupByWeek }}"
+        @change="track(groupByWeek ? 'group-by-week' : 'group-by-day')"
+      >
+        <input type="checkbox" :checked="!!groupByWeek">weekly downloads
+      </label>
       <button class="minimal-mode" v-link="{ query: { minimal: true }}" @click="track('enter-minimal-mode')">enter minimal mode</button>
 
     </div>
