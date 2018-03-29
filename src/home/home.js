@@ -124,14 +124,6 @@ export default Vue.extend({
         )}`
       );
     },
-    twitterMessage() {
-      const hoverCount = this.hoverCount;
-      return hoverCount < 3
-        ? 'this chart'
-        : hoverCount < 6
-          ? 'neat eh?'
-          : hoverCount < 10 ? 'do iiiit' : 'just click it already!';
-    },
     isEmbedded() {
       return this.isMinimalMode;
     },
@@ -161,6 +153,9 @@ export default Vue.extend({
     window.router = this.$route.router;
   },
   methods: {
+    track(eventName, value) {
+      ga('send', 'event', eventName, value);
+    },
     addPackage(packageName) {
       ga(
         'send',
