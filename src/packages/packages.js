@@ -52,14 +52,14 @@ export default Vue.extend({
       this.submit();
     },
     submit(val) {
-      this.onSubmit(this.$els.textbox.value);
+      this.onSubmit(this.$els.textbox.value.trim());
       this.$els.textbox.value = '';
     },
     handleEnter() {
       this.isValid && this.submit();
     },
     validate() {
-      this.isValid = this.$els.textbox.value !== '';
+      this.isValid = this.$els.textbox.value.trim() !== '';
     },
   },
 });
