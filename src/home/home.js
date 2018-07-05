@@ -55,7 +55,7 @@ export default Vue.extend({
 
       setTimeout(() => ga('send', 'pageview'));
 
-      const isMinimalMode = to.query.minimal === 'false';
+      const isMinimalMode = to.query.minimal === 'true';
       const periodLength = Number(to.query.periodLength || 7);
 
       if (!packageNames) {
