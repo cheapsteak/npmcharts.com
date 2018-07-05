@@ -3,52 +3,52 @@ import nv from 'nvd3';
 import Vue from 'vue';
 import Hammer from 'hammerjs';
 import _ from 'lodash';
-import { withinStdevs } from '../utils/stats.js';
 import { format as formatDate, subMonths, startOfDay } from 'date-fns';
+import { line, curveCatmullRom } from 'd3-shape';
 
 const { palette } = require('../../config.js');
+
 // this can't go in the data of the component, observing it changes it.
 let svg;
+const xAccessor = point => point.day;
+const yAccessor = point => point.count;
 
-// returns N items closest to the given item in an array
-function getClosestNItems(item, index, array, N) {
-  const halfN = N / 2;
-  let beginning, end;
-  beginning = Math.max(index - halfN, 0);
-  end = Math.min(index + halfN, array.length);
+const catmulRomInterpolation = (points, tension) =>
+  line()
+    .curve(curveCatmullRom)(points)
+    .replace(/^M/, '');
 
-  if (index < halfN) {
-    end += halfN - index;
-  } else if (array.length - index < halfN) {
-    beginning -= halfN - (array.length - index);
-  }
-
-  return array.slice(beginning, end);
-}
-
-// entries: [{day: Date, count: Number}]
-function filterEntries(
-  entries,
-  { showWeekends = false, showOutliers = true, outlierStdevs = 5 },
-) {
-  if (!showWeekends) {
+function processEntries(entries, { showWeekends = false, periodLength = 7 }) {
+  if (periodLength !== 1) {
+    entries = _.flow([
+      entries =>
+        _.groupBy(entries, entry =>
+          Math.floor((entries.length - entries.indexOf(entry)) / periodLength),
+        ),
+      _.values,
+      entries =>
+        entries.map(entries => ({
+          count: _.sumBy(entries, entry => entry.count),
+          day: entries[0].day,
+        })),
+      /*
+        x axis entries need to be in ascending order
+        finding the point to highlight relies on nv.interactiveBisect
+        (used in lineChart.js on "elementMousemove")
+        which "Will not work if the data points move backwards
+      */
+      _.reverse,
+    ])(entries);
+  } else if (!showWeekends) {
     entries = entries.filter(
       entry => [0, 6].indexOf(entry.day.getDay()) === -1,
     );
   }
-  if (!showOutliers) {
-    entries = entries.filter((entry, index, array) => {
-      const sample = getClosestNItems(entry, index, array, 90).map(
-        entry => entry.count,
-      );
 
-      return withinStdevs(entry.count, sample, outlierStdevs);
-    });
-  }
   return entries;
 }
 
-const filterEntriesMemo = _.memoize(filterEntries, function resolver() {
+const processEntriesMemo = _.memoize(processEntries, function resolver() {
   return Array.prototype.slice.call(arguments, -1)[0];
 });
 
@@ -62,32 +62,14 @@ export default Vue.extend({
       type: Boolean,
       default: true,
     },
-    showOutliers: {
-      type: Boolean,
-      default: false,
-    },
-    outlierStdevs: {
+    periodLength: {
       type: Number,
-      default: 4,
+      default: 7,
     },
     moduleNames: Array,
     moduleData: Array,
   },
-  template: `
-    <div v-el:chart id="chart" class="with-3d-shadow with-transitions">
-      <legend
-        v-if="moduleData.length && legendData"
-        :modules="legendData.modules"
-        :date="legendData.date"
-        @package-focus="handlePackageFocus"
-        @package-blur="handlePackageBlur"
-        @legend-blur="handleLegendBlur"
-        @legend-focus="handleLegendFocus"
-      >
-      </legend>
-      <svg></svg>
-    </div>
-  `,
+  template: require('./graph.html'),
   data() {
     return {
       chart: this.isMinimalMode
@@ -102,6 +84,12 @@ export default Vue.extend({
     disableScrollJack() {
       return this.isMinimalMode;
     },
+    // in case a module
+    seriesWithMostDataPoints() {
+      return _.sortBy(this.processedData, series => series.values.length)[
+        this.processedData.length - 1
+      ];
+    },
   },
   watch: {
     useLog(val) {
@@ -111,13 +99,10 @@ export default Vue.extend({
     showWeekends() {
       this.render();
     },
-    showOutliers() {
-      this.render();
-    },
-    outlierStdevs() {
-      this.render();
-    },
     moduleData() {
+      this.render();
+    },
+    periodLength() {
       this.render();
     },
   },
@@ -125,12 +110,15 @@ export default Vue.extend({
     const margin = (this.margin = { top: 0, right: 36, bottom: 30, left: 16 });
     svg = d3.select('#chart svg');
     const chart = this.chart;
+
     nv.addGraph(() => {
       chart
         .margin(margin)
         .showLegend(false)
         .color(palette)
         .xScale(d3.time.scale())
+        .x(xAccessor)
+        .y(yAccessor)
         .useInteractiveGuideline(true);
 
       chart.interactiveLayer.tooltip.enabled(false);
@@ -217,28 +205,25 @@ export default Vue.extend({
     processForD3(input) {
       return input.map(module => ({
         key: module.name,
-        values: filterEntriesMemo(
+        values: processEntriesMemo(
           module.downloads,
           {
             showWeekends: this.showWeekends,
-            showOutliers: this.showOutliers,
-            outlierStdevs: this.outlierStdevs,
+            periodLength: this.periodLength,
           },
-          [
-            module.name,
-            this.showWeekends,
-            this.showOutliers,
-            this.outlierStdevs,
-          ].join(','),
-        ).map(downloads => ({
-          x: downloads.day,
-          y: downloads.count,
-        })),
+          [module.name, this.showWeekends, this.periodLength].join(','),
+        ),
       }));
     },
     render() {
       const chart = this.chart;
       const processedData = this.processForD3(this.moduleData);
+      this.processedData = processedData;
+      const interpolation =
+        this.periodLength > 1 ? catmulRomInterpolation : 'linear';
+
+      chart.interpolate(interpolation);
+
       chart.yScale(this.useLog ? d3.scale.log() : d3.scale.linear());
       svg
         .data([processedData])
@@ -257,6 +242,7 @@ export default Vue.extend({
         return;
       }
       const chart = this.chart;
+      // tick on the 1st of the month
       chart.x2Axis.tickValues(
         this.moduleData[0].downloads
           .map(item => item.day)
@@ -327,11 +313,18 @@ export default Vue.extend({
       var prevMousemove = chart.interactiveLayer.dispatch.on(
         'elementMousemove',
       );
+
       chart.interactiveLayer.dispatch.on('elementMousemove', e => {
         prevMousemove.call(chart.interactiveLayer, e);
         const date = e.pointXValue;
         try {
-          this.$set('legendData', this.getDataAtDate(date));
+          const nearestPointIndex = nv.interactiveBisect(
+            this.seriesWithMostDataPoints.values,
+            date,
+            xAccessor,
+          );
+          const point = this.seriesWithMostDataPoints.values[nearestPointIndex];
+          this.$set('legendData', this.getDataAtDate(xAccessor(point)));
         } catch (e) {
           console.warn(`error retrieving data for ${date}`);
         }
@@ -346,7 +339,6 @@ export default Vue.extend({
     },
     scrollJack({ focusChartRect }) {
       const chart = this.chart;
-
       // mousewheel zoom
       svg.call(
         d3.behavior
@@ -357,7 +349,6 @@ export default Vue.extend({
               .brushExtent()
               .map(x => new Date(x).getTime());
             const newStart = currentStart - Math.floor(dy * 1000 * 60 * 60 * 3);
-
             if (
               !(d3.event.sourceEvent instanceof WheelEvent) ||
               newStart <= this.moduleData[0].downloads[0].day.getTime() ||
@@ -373,25 +364,41 @@ export default Vue.extend({
           }),
       );
     },
-    getDataAtDate(date) {
+    getStartOfPeriod(date) {
       date = startOfDay(date);
+      const indexInModuleData = _.findIndex(
+        this.moduleData[0].downloads,
+        entry => entry.day.getTime() === date.getTime(),
+      );
+
+      const startOfPeriodBucket = Math.floor(
+        (this.moduleData[0].downloads.length - indexInModuleData) /
+          this.periodLength,
+      );
+
+      return this.processedData[0].values[
+        this.processedData[0].values.length - startOfPeriodBucket - 1
+      ].day;
+    },
+    getDataAtDate(date) {
+      const modules = this.processedData;
+
+      const startOfPeriod = this.getStartOfPeriod(date);
 
       return {
-        date: date,
-        modules: this.moduleData.map((module, i) => {
-          return {
-            color: palette[i % palette.length],
-            name: module.name,
-            downloads: _.get(
-              _.find(
-                module.downloads,
-                entry => entry.day.getTime() === date.getTime(),
-              ),
-              'count',
-              0,
+        date,
+        modules: modules.map((module, i) => ({
+          color: palette[i % palette.length],
+          name: module.key,
+          downloads: _.get(
+            _.find(
+              module.values,
+              entry => entry.day.getTime() === startOfPeriod.getTime(),
             ),
-          };
-        }),
+            'count',
+            0,
+          ),
+        })),
       };
     },
     handlePackageFocus(moduleName) {

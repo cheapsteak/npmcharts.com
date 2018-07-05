@@ -37,10 +37,32 @@
       :is-using-preset-packages="isUsingPresetPackages"
     ></package-input>
     <div class="graph-config">
+      <!--
+      <label class="include-item" @change="track(showWeekends ? 'show-weekends' : 'hide-weekends')"><input type="checkbox" v-model="showWeekends"/>include weekends</label>
+      -->
 
-      <label class="include-item"><input type="checkbox" v-model="showWeekends"/>include weekends</label>
-
-      <button class="minimal-mode" v-link="{ query: { minimal: true }}" >enter minimal mode</button>
+      <label
+        v-if="moduleNames"
+        v-link="{ path: '/compare/' + moduleNames.join(',') + '?', query: getMergedQueryParams({periodLength: 1})}"
+        @change="track('set periodLength', periodLength)"
+      >
+        <input type="radio" :checked="periodLength === 1"> daily
+      </label>
+      <label
+        v-if="moduleNames"
+        v-link="{ path: '/compare/' + moduleNames.join(',') + '?', query: getMergedQueryParams({periodLength: 7})}"
+        @change="track('set periodLength', periodLength)"
+      >
+        <input type="radio" :checked="periodLength === 7"> weekly
+      </label>
+      <label
+        v-if="moduleNames"
+        v-link="{ path: '/compare/' + moduleNames.join(',') + '?', query: getMergedQueryParams({periodLength: 30})}"
+        @change="track('set periodLength', periodLength)"
+      >
+        <input type="radio" :checked="periodLength === 30"> monthly
+      </label>
+      <button class="minimal-mode" v-link="{ query: { minimal: true }}" @click="track('enter-minimal-mode')">enter minimal mode</button>
 
     </div>
   </form>
@@ -56,13 +78,13 @@
         @mouseenter="handleMouseEnterTwitter"
         @mouseleave="handleMouseLeaveTwitter"
       >
-        <i v-html="twitterIcon"></i> {{ twitterMessage }}
+        <i v-html="twitterIcon"></i> this chart
       </span>
       <div class="caption">or try</div>
       <ul class="matches">
         <li
           v-for="packages in shuffle(presetPackages)"
-          v-link="'/compare/' + packages.join(',')"
+          v-link="'/compare/' + packages.join(',') + '?' + queryString"
           class="match"
         >
           <template v-for="package in packages">
@@ -83,7 +105,7 @@
       :module-names="moduleNames"
       :module-data="moduleData"
       :show-weekends="showWeekends"
-      :show-outliers="showOutliers"
+      :period-length="periodLength"
       :is-minimal-mode="isMinimalMode === 'true'"
     >
     </graph>

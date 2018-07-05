@@ -5,13 +5,13 @@ import { format as formatDate, subYears } from 'date-fns';
 import config from '../../config.js';
 import { setPackages } from '../packages/packages.js';
 import getPackagesDownloads from '../../server/utils/stats/getPackagesDownloads';
+import { startOfDay } from 'date-fns';
 
 const palette = config.palette;
 
 function processPackageStats(npmModuleData) {
   const downloads = npmModuleData.downloads.map(entry => ({
-    // replace '-' with '/' to fix problem with ES5 coercing it to UTC
-    day: new Date(entry.day.replace(/-/g, '/')),
+    day: startOfDay(entry.day),
     count: entry.downloads,
   }));
   return {
@@ -55,9 +55,13 @@ export default Vue.extend({
 
       setTimeout(() => ga('send', 'pageview'));
 
+      const isMinimalMode = to.query.minimal === 'false';
+      const periodLength = Number(to.query.periodLength || 7);
+
       if (!packageNames) {
         next({
-          isMinimalMode: to.query.minimal,
+          isMinimalMode,
+          periodLength,
           moduleNames: null,
           moduleData: null,
           samplePreset: _.sample(this.presetPackages),
@@ -82,7 +86,8 @@ export default Vue.extend({
         );
 
         next({
-          isMinimalMode: to.query.minimal,
+          isMinimalMode,
+          periodLength,
           moduleNames: packageNames,
           moduleData: processedPackagesStats,
           isUsingPresetPackages: !to.params.packages,
@@ -98,8 +103,8 @@ export default Vue.extend({
       moduleNames: null,
       moduleData: null,
       palette,
-      showWeekends: false,
-      showOutliers: true,
+      showWeekends: true,
+      periodLength: 7,
       isMinimalMode: false,
       isUsingPresetPackages: undefined,
       hoverCount: 0,
@@ -124,16 +129,11 @@ export default Vue.extend({
         )}`
       );
     },
-    twitterMessage() {
-      const hoverCount = this.hoverCount;
-      return hoverCount < 3
-        ? 'this chart'
-        : hoverCount < 6
-          ? 'neat eh?'
-          : hoverCount < 10 ? 'do iiiit' : 'just click it already!';
-    },
     isEmbedded() {
       return this.isMinimalMode;
+    },
+    queryString() {
+      return querystring.stringify(this.$route.query);
     },
   },
   watch: {
@@ -151,16 +151,21 @@ export default Vue.extend({
   },
   ready() {
     packageEvents.on('change', () => {
-      const queryString = querystring.stringify(this.$route.query);
       const nextRouteSansQuery = `/compare/${packages.join(',')}`;
       if (this.$route.router.app.$route.path !== nextRouteSansQuery) {
-        this.$route.router.go(`${nextRouteSansQuery}?${queryString}`);
+        this.$route.router.go(`${nextRouteSansQuery}?${this.queryString}`);
       }
     });
     // expose router so puppeteer can trigger route changes
     window.router = this.$route.router;
   },
   methods: {
+    track(eventName, value) {
+      ga('send', 'event', eventName, value);
+    },
+    getMergedQueryParams(params) {
+      return { ...this.$route.query, ...params };
+    },
     addPackage(packageName) {
       ga(
         'send',
@@ -179,19 +184,6 @@ export default Vue.extend({
     },
     clearPackages() {
       this.$route.router.go('/compare');
-    },
-    handleClickToggleComments() {
-      const eventAction = this.shouldShowComments ? 'close' : 'open';
-      const eventLabel = (this.moduleNames || [])
-        .slice()
-        .sort()
-        .join(',');
-      ga('send', 'event', 'comment toggle', eventAction, eventLabel);
-      this.shouldShowComments = !this.shouldShowComments;
-      window.localStorage.setItem(
-        'shouldShowComments',
-        this.shouldShowComments,
-      );
     },
     handleClickTwitter() {
       ga('send', 'event', 'share', 'twitter', this.twitterShareUrl);
