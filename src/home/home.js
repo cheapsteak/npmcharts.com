@@ -140,16 +140,13 @@ export default Vue.extend({
     shouldShowComments() {
       this.$refs.graph.render();
     },
-    isMinimalMode(isMinimalMode) {
-      if (isMinimalMode) {
-        document.body.classList.add('minimal');
-      } else {
-        document.body.classList.remove('minimal');
-      }
-      this.$refs.graph.render();
-    },
   },
   ready() {
+    if (this.isMinimalMode) {
+      document.body.classList.add('minimal');
+    } else {
+      document.body.classList.remove('minimal');
+    }
     packageEvents.on('change', () => {
       const nextRouteSansQuery = `/compare/${packages.join(',')}`;
       if (this.$route.router.app.$route.path !== nextRouteSansQuery) {
