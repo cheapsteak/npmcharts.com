@@ -46,21 +46,21 @@
         v-link="{ path: '/compare/' + moduleNames.join(',') + '?', query: getMergedQueryParams({periodLength: 1})}"
         @change="track('set periodLength', periodLength)"
       >
-        <input type="checkbox" :checked="periodLength === 1">daily
+        <input type="radio" :checked="periodLength === 1"> daily
       </label>
       <label
         v-if="moduleNames"
         v-link="{ path: '/compare/' + moduleNames.join(',') + '?', query: getMergedQueryParams({periodLength: 7})}"
         @change="track('set periodLength', periodLength)"
       >
-        <input type="checkbox" :checked="periodLength === 7">weekly
+        <input type="radio" :checked="periodLength === 7"> weekly
       </label>
       <label
         v-if="moduleNames"
         v-link="{ path: '/compare/' + moduleNames.join(',') + '?', query: getMergedQueryParams({periodLength: 30})}"
         @change="track('set periodLength', periodLength)"
       >
-        <input type="checkbox" :checked="periodLength === 30">monthly
+        <input type="radio" :checked="periodLength === 30"> monthly
       </label>
       <button class="minimal-mode" v-link="{ query: { minimal: true }}" @click="track('enter-minimal-mode')">enter minimal mode</button>
 
