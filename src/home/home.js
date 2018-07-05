@@ -103,7 +103,7 @@ export default Vue.extend({
       moduleNames: null,
       moduleData: null,
       palette,
-      showWeekends: false,
+      showWeekends: true,
       periodLength: 7,
       isMinimalMode: false,
       isUsingPresetPackages: undefined,
