@@ -2,9 +2,9 @@ import Vue from 'vue';
 import querystring from 'querystring';
 import _ from 'lodash';
 import { format as formatDate, subYears } from 'date-fns';
-import config from '../../config.js';
+import config from 'configs';
 import { setPackages } from '../packages/packages.js';
-import getPackagesDownloads from '../../server/utils/stats/getPackagesDownloads';
+import getPackagesDownloads from 'utils/stats/getPackagesDownloads';
 import { startOfDay } from 'date-fns';
 
 const palette = config.palette;

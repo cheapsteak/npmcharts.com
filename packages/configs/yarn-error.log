@@ -1,0 +1,32 @@
+Arguments: 
+  /Users/chang/.nvm/versions/node/v8.8.0/bin/node /usr/local/Cellar/yarn/1.5.1/libexec/bin/yarn.js init
+
+PATH: 
+  /opt/local/bin:/opt/local/sbin:/Users/chang/.rvm/gems/ruby-2.2.1/bin:/Users/chang/.rvm/gems/ruby-2.2.1@global/bin:/Users/chang/.rvm/rubies/ruby-2.2.1/bin:/Users/chang/.nvm/versions/node/v8.8.0/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/Users/chang/.rvm/bin:/Users/chang/Library/Android/sdk/platform-tools:/Users/chang/Library/Android/sdk/tools:/Users/chang/.rvm/bin:/usr/local/sbin
+
+Yarn version: 
+  1.5.1
+
+Node version: 
+  8.8.0
+
+Platform: 
+  darwin x64
+
+npm manifest: 
+  
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
+
+Trace: 
+  SyntaxError: /Users/chang/projects/npmcharts.com/packages/configs/package.json: Unexpected end of JSON input
+      at JSON.parse (<anonymous>)
+      at /usr/local/Cellar/yarn/1.5.1/libexec/lib/cli.js:1036:59
+      at Generator.next (<anonymous>)
+      at step (/usr/local/Cellar/yarn/1.5.1/libexec/lib/cli.js:98:30)
+      at /usr/local/Cellar/yarn/1.5.1/libexec/lib/cli.js:109:13
+      at <anonymous>

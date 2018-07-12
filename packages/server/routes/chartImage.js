@@ -2,10 +2,10 @@ const fs = require('fs');
 const express = require('express');
 const filesize = require('filesize');
 
-const SCREENSHOT_DIR = require('../constants/SCREENSHOT_DIR');
-const getChartImage = require('../utils/getChartImage');
-const getMinimalUrl = require('../utils/getMinimalUrl');
-const shouldScreencapUrl = require('../utils/shouldScreencapUrl');
+const SCREENSHOT_DIR = require('configs/SCREENSHOT_DIR');
+const getChartImage = require('utils/getChartImage');
+const getMinimalUrl = require('utils/getMinimalUrl');
+const shouldScreencapUrl = require('utils/shouldScreencapUrl');
 
 const router = express.Router();
 

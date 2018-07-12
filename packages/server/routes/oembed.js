@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const router = express.Router();
 
-const getOembedObject = require('../utils/getOembedObject');
+const getOembedObject = require('utils/getOembedObject');
 
 router.get('/', cors(), function(req, res, next) {
   const incomingUrl = url.parse(req.query.url);

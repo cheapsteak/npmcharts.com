@@ -4,7 +4,7 @@ module.exports = {
       name: 'npmcharts',
       script: 'npm',
       args: 'start',
-      cwd: './server',
+      cwd: './packages/server',
       watch: true,
       env: {
         NODE_ENV: 'development',
