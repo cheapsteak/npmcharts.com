@@ -4,16 +4,9 @@
   "private": true,
   "description": "frontend for npmcharts.com",
   "scripts": {
-    "production": "PORT=3896 pm2 start ecosystem.config.js --env production",
-    "startup": "pm2 startup",
-    "stop:production": "pm2 stop npmcharts",
     "start": "npm run dev",
-    "start:server": "cd server && npm run start",
-    "dev:frontend": "cd packages/frontend && gulp",
-    "dev:server": "cd server && npm run dev",
-    "dev": "npm-run-all --parallel dev:*",
-    "build": "NODE_ENV=production npm run build:frontend",
-    "build:frontend": "gulp build",
+    "dev": "gulp",
+    "build": "gulp build",
     "lint": "eslint .",
     "test": "jest"
   },
