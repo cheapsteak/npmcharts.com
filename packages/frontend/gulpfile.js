@@ -26,6 +26,8 @@ var stringify = require('stringify');
 var modRewrite = require('connect-modrewrite');
 var minimist = require('minimist');
 
+var config = require('configs');
+
 var argv = minimist(process.argv.slice(2));
 
 /*eslint "no-process-env":0 */
@@ -151,7 +153,7 @@ gulp.task('styles', function() {
         'include css': true,
         paths: ['node_modules', path.join(__dirname, config.source)],
         compress: production,
-        define: { palette: require('./config.js').palette },
+        define: { palette: config.palette },
       }),
     )
     .on('error', handleError)

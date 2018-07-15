@@ -4,9 +4,9 @@ const debug = require('debug')('server:getChartImage');
 const differenceInWeeks = require('date-fns/difference_in_weeks');
 const sanitizeFilename = require('filenamify');
 
-const browserPagePool = require('../services/browserPagePool');
+const browserPagePool = require('./services/browserPagePool');
 const getPackagesFromUrl = require('./getPackagesFromUrl');
-const SCREENSHOT_DIR = require('../constants/SCREENSHOT_DIR');
+const SCREENSHOT_DIR = require('configs/SCREENSHOT_DIR');
 
 const sanitizeScreenshotFilename = url =>
   sanitizeFilename(getPackagesFromUrl(url).join(','));

@@ -6,7 +6,7 @@ import _ from 'lodash';
 import { format as formatDate, subMonths, startOfDay } from 'date-fns';
 import { line, curveCatmullRom } from 'd3-shape';
 
-const { palette } = require('../../config.js');
+const { palette } = require('configs');
 
 // this can't go in the data of the component, observing it changes it.
 let svg;
@@ -78,6 +78,7 @@ export default Vue.extend({
       svg: null,
       useLog: false,
       legendData: null,
+      moduleSizes: {},
     };
   },
   computed: {

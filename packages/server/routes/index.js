@@ -3,11 +3,11 @@ const querystring = require('querystring');
 const express = require('express');
 const router = express.Router();
 
-const getTitle = require('../utils/getTitle');
-const getMinimalUrl = require('../utils/getMinimalUrl');
-const shouldScreencapUrl = require('../utils/shouldScreencapUrl');
-const getPackagesDownloadsDescriptions = require('../utils/stats/getPackagesDownloadsDescription');
-const getPackgesFromUrl = require('../utils/getPackagesFromUrl');
+const getTitle = require('utils/getTitle');
+const getMinimalUrl = require('utils/getMinimalUrl');
+const shouldScreencapUrl = require('utils/shouldScreencapUrl');
+const getPackagesDownloadsDescriptions = require('utils/stats/getPackagesDownloadsDescription');
+const getPackgesFromUrl = require('utils/getPackagesFromUrl');
 
 const sendSPA = async function(req, res, next) {
   const packages = getPackgesFromUrl(req.originalUrl);
