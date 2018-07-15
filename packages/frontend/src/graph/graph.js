@@ -1,7 +1,6 @@
 import d3 from 'd3';
 import nv from 'nvd3';
 import Vue from 'vue';
-import Hammer from 'hammerjs';
 import _ from 'lodash';
 import { format as formatDate, subMonths, startOfDay } from 'date-fns';
 import { line, curveCatmullRom } from 'd3-shape';
@@ -72,9 +71,7 @@ export default Vue.extend({
   template: require('./graph.html'),
   data() {
     return {
-      chart: this.isMinimalMode
-        ? nv.models.lineChart()
-        : nv.models.lineWithFocusChart(),
+      chart: nv.models.lineChart(),
       svg: null,
       useLog: false,
       legendData: null,
@@ -82,9 +79,6 @@ export default Vue.extend({
     };
   },
   computed: {
-    disableScrollJack() {
-      return this.isMinimalMode;
-    },
     // in case a module
     seriesWithMostDataPoints() {
       return _.sortBy(this.processedData, series => series.values.length)[
@@ -128,7 +122,7 @@ export default Vue.extend({
         .showMaxMin(false)
         .tickFormat(d => d3.time.format('%e %b')(new Date(d)));
 
-      const dateAxis = this.isMinimalMode ? chart.xAxis : chart.x2Axis;
+      const dateAxis = chart.xAxis;
 
       dateAxis.showMaxMin(false).tickFormat(d => {
         if (formatDate(d, 'DDD') === '1') {
@@ -142,12 +136,6 @@ export default Vue.extend({
         .orient('right')
         .showMaxMin(false)
         .tickFormat(d3.format('s'));
-
-      chart.y2Axis.showMaxMin(false).tickFormat(d3.format('s'));
-
-      // focus on an area
-      const startDate = subMonths(new Date(), 9);
-      chart.brushExtent([startDate, new Date()]);
 
       nv.utils.windowResize(function() {
         // too small, looks weird, probably from mobile keyboard coming onscreen
@@ -164,42 +152,6 @@ export default Vue.extend({
       });
       this.render();
       return chart;
-    });
-
-    const updateChart = _.debounce(() => {
-      svg.call(this.chart);
-    }, 50);
-    this.hammerInstance = new Hammer(this.$els.chart);
-    this.hammerInstance.get('pinch').set({ enable: true });
-    this.hammerInstance.on('pinchin', e => {
-      const [currentStart, end] = chart
-        .brushExtent()
-        .map(x => new Date(x).getTime());
-      const newStart =
-        currentStart + Math.floor(e.distance * 1000 * 60 * 60 * 5);
-      if (
-        newStart <= this.moduleData[0].downloads[0].day.getTime() ||
-        newStart > end - 7 * 1000 * 60 * 60 * 10
-      ) {
-        return;
-      }
-      chart.brushExtent([newStart, end]);
-      updateChart();
-    });
-    this.hammerInstance.on('pinchout', e => {
-      const [currentStart, end] = chart
-        .brushExtent()
-        .map(x => new Date(x).getTime());
-      const newStart =
-        currentStart - Math.floor(e.distance * 1000 * 60 * 60 * 5);
-      if (
-        newStart <= this.moduleData[0].downloads[0].day.getTime() ||
-        newStart > end - 7 * 1000 * 60 * 60 * 10
-      ) {
-        return;
-      }
-      chart.brushExtent([newStart, end]);
-      updateChart();
     });
   },
   methods: {
@@ -261,55 +213,6 @@ export default Vue.extend({
         );
       svg.select('.nv-context .nv-y.nv-axis').remove();
 
-      const focusChartRect = document
-        .querySelector('.nv-context')
-        .getBoundingClientRect();
-
-      // drag to scroll (mobile)
-      svg.call(
-        d3.behavior
-          .drag()
-          .on('drag', e => {
-            // ignore drags on the focus chart
-            const { clientX, clientY } = d3.event.sourceEvent.touches
-              ? d3.event.sourceEvent.touches[0]
-              : d3.event.sourceEvent;
-            if (
-              clientX > focusChartRect.left &&
-              clientX < focusChartRect.left + focusChartRect.width &&
-              clientY > focusChartRect.top &&
-              clientY < focusChartRect.top + focusChartRect.height
-            ) {
-              return;
-            }
-            const { dx } = d3.event;
-            const [currentStart, currentEnd] = chart
-              .brushExtent()
-              .map(x => new Date(x).getTime());
-            const [newStart, newEnd] = [currentStart, currentEnd].map(
-              x => new Date(x - dx * 1000 * 60 * 60 * 10),
-            );
-            if (
-              (d3.event.sourceEvent.touches &&
-                d3.event.sourceEvent.touches.length === 2) ||
-              (newEnd >=
-                this.moduleData[0].downloads.slice(-1)[0].day.getTime() ||
-                newStart <= this.moduleData[0].downloads[0].day.getTime())
-            ) {
-              return;
-            }
-            chart.brushExtent([newStart, newEnd]);
-            svg.call(this.chart);
-          })
-          .on('dragend', e => {
-            this.render();
-          }),
-      );
-
-      if (!this.disableScrollJack) {
-        this.scrollJack({ focusChartRect });
-      }
-
       // Update legend on mousemove
       var prevMousemove = chart.interactiveLayer.dispatch.on(
         'elementMousemove',
@@ -337,33 +240,6 @@ export default Vue.extend({
         prevMouseout.call(chart.interactiveLayer, e);
         this.legendData = this.getDataAtDate(this.chart.xAxis.domain()[1]);
       });
-    },
-    scrollJack({ focusChartRect }) {
-      const chart = this.chart;
-      // mousewheel zoom
-      svg.call(
-        d3.behavior
-          .zoom()
-          .on('zoom', e => {
-            const dy = d3.event.sourceEvent.deltaY;
-            const [currentStart, end] = chart
-              .brushExtent()
-              .map(x => new Date(x).getTime());
-            const newStart = currentStart - Math.floor(dy * 1000 * 60 * 60 * 3);
-            if (
-              !(d3.event.sourceEvent instanceof WheelEvent) ||
-              newStart <= this.moduleData[0].downloads[0].day.getTime() ||
-              end - newStart <= 3 * 1000 * 60 * 60 * 24 * 7
-            ) {
-              return;
-            }
-            chart.brushExtent([newStart, end]);
-            svg.call(this.chart);
-          })
-          .on('zoomend', e => {
-            this.applyOverrides();
-          }),
-      );
     },
     getStartOfPeriod(date) {
       date = startOfDay(date);
