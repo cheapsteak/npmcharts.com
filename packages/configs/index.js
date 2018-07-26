@@ -1,6 +1,6 @@
 module.exports = {
   presetPackages: [
-    ['browserify', 'webpack', 'rollup', 'parcel'],
+    ['browserify', 'webpack', 'rollup', 'parcel-bundler'],
     ['recompose', 'mobx'],
     [
       'glamor',
