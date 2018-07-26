@@ -22,7 +22,9 @@ function processEntries(entries, { showWeekends = false, periodLength = 7 }) {
     entries = _.flow([
       entries =>
         _.groupBy(entries, entry =>
-          Math.floor((entries.length - entries.indexOf(entry)) / periodLength),
+          Math.floor(
+            (entries.length - entries.indexOf(entry) - 1) / periodLength,
+          ),
         ),
       _.values,
       entries =>
