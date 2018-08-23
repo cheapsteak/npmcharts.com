@@ -104,7 +104,7 @@ export default Vue.extend({
     },
   },
   ready() {
-    const margin = (this.margin = { top: 0, right: 36, bottom: 30, left: 16 });
+    const margin = (this.margin = { top: 0, right: 40, bottom: 30, left: 16 });
     svg = d3.select('#chart svg');
     const chart = this.chart;
 
@@ -152,7 +152,9 @@ export default Vue.extend({
             'translate(' + nv.utils.availableWidth(null, svg, margin) + ',0)',
           );
       });
+
       this.render();
+
       return chart;
     });
   },
@@ -185,6 +187,37 @@ export default Vue.extend({
         .transition()
         .duration(500)
         .call(chart);
+
+      var packageSizes = ['11kb', '1.2mb'];
+
+      console.log('processedData', processedData);
+
+      svg
+        .append('g')
+        .attr('class', 'package-labels')
+        .attr(
+          'style',
+          `transform: translateX(${nv.utils.availableWidth(
+            null,
+            svg,
+            this.margin,
+          )}px);`,
+        )
+        .selectAll('circle')
+        .data(processedData)
+        .enter()
+        .append('text')
+        .attr('class', 'package-label')
+        .text(d => console.log(d.key) || d.key)
+        .attr('style', d => {
+          const translateY = Math.max(
+            chart.yScale()(_.last(d.values).count),
+            10,
+          );
+          return `transform:
+              translateX(20px)
+              translateY(${translateY}px);`;
+        });
 
       this.legendData = this.getDataAtDate(this.chart.xAxis.domain()[1]);
       this.applyOverrides();
