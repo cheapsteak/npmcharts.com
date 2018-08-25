@@ -3,7 +3,7 @@
 exports[`getOembedObject output matches snapshot 1`] = `
 Object {
   "height": 500,
-  "html": "<iframe style=\\"width: 100%; overflow: hidden;\\" src=\\"https://null/?minimal=true\\" width=\\"700\\" height=\\"500\\" frameborder=\\"0\\" scrolling=\\"no\\" ></iframe>",
+  "html": "<iframe style=\\"width: 100%; overflow: hidden;\\" src=\\"https://npmcharts.com/?minimal=true\\" width=\\"700\\" height=\\"500\\" frameborder=\\"0\\" scrolling=\\"no\\" ></iframe>",
   "provider_name": "npmcharts",
   "provider_url": "https://npmcharts.com",
   "title": "Compare download trends of npm packages - npmcharts 📈",
@@ -16,7 +16,7 @@ Object {
 exports[`getOembedObject output matches snapshot 2`] = `
 Object {
   "height": 500,
-  "html": "<iframe style=\\"width: 100%; overflow: hidden;\\" src=\\"https://null/compare/glamor,aphrodite,radium,glamorous,styled-components,jss,emotion?minimal=true\\" width=\\"700\\" height=\\"500\\" frameborder=\\"0\\" scrolling=\\"no\\" ></iframe>",
+  "html": "<iframe style=\\"width: 100%; overflow: hidden;\\" src=\\"https://npmcharts.com/compare/glamor,aphrodite,radium,glamorous,styled-components,jss,emotion?minimal=true\\" width=\\"700\\" height=\\"500\\" frameborder=\\"0\\" scrolling=\\"no\\" ></iframe>",
   "provider_name": "npmcharts",
   "provider_url": "https://npmcharts.com",
   "title": "Compare npm downloads for glamor, aphrodite, radium, glamorous, styled-components, jss and emotion - npmcharts 📈",

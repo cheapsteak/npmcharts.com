@@ -3,7 +3,7 @@ const getOembedObject = require('./getOembedObject');
 test('getOembedObject output matches snapshot', () => {
   expect(
     getOembedObject({
-      url: '/',
+      url: 'https://npmcharts.com',
       width: 700,
       height: 500,
     }),
@@ -12,7 +12,7 @@ test('getOembedObject output matches snapshot', () => {
   expect(
     getOembedObject({
       url:
-        '/compare/glamor,aphrodite,radium,glamorous,styled-components,jss,emotion',
+        'https://npmcharts.com/compare/glamor,aphrodite,radium,glamorous,styled-components,jss,emotion',
       width: 700,
       height: 500,
     }),
