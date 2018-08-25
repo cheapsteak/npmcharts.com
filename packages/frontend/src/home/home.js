@@ -4,22 +4,10 @@ import _ from 'lodash';
 import { format as formatDate, subYears } from 'date-fns';
 import config from 'configs';
 import { setPackages } from '../packages/packages.js';
+import processPackagesStats from 'frontend/src/utils/processPackagesStats';
 import getPackagesDownloads from 'utils/stats/getPackagesDownloads';
-import { startOfDay } from 'date-fns';
 
 const palette = config.palette;
-
-function processPackageStats(npmModuleData) {
-  const downloads = npmModuleData.downloads.map(entry => ({
-    day: startOfDay(entry.day),
-    count: entry.downloads,
-  }));
-  return {
-    name: npmModuleData.package,
-    // if most recent day has no download count, remove it
-    downloads: _.last(downloads).count === 0 ? _.initial(downloads) : downloads,
-  };
-}
 
 var {
   default: packageInput,
@@ -81,9 +69,7 @@ export default Vue.extend({
         startDate,
         endDate,
       }).then(packagesDownloads => {
-        const processedPackagesStats = _.compact(packagesDownloads).map(
-          processPackageStats,
-        );
+        const processedPackagesStats = processPackagesStats(packagesDownloads);
 
         next({
           isMinimalMode,
