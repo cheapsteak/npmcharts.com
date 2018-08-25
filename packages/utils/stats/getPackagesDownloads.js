@@ -1,27 +1,22 @@
 const _ = require('lodash');
-const fetch = require('isomorphic-fetch');
 const isScopedPackageName = require('../isScopedPackageName');
+const fetchPackagesStats = require('./fetchPackagesStats');
 
 const standardizePackageResponse = response =>
   'package' in response ? [response] : Object.values(response);
 
 async function getPackagesDownloads(packageNames, { startDate, endDate }) {
-  function fetchPackagesStats(packageNames) {
-    const packageNamesParam = packageNames.join(',');
-    const url = `https://api.npmjs.org/downloads/range/${startDate}:${endDate}/${packageNamesParam}`;
-    return fetch(url).then(response => response.json());
-  }
-
   const [scopedPackageNames, standardPackageNames] = _.partition(
     packageNames,
     isScopedPackageName,
   );
 
   const scopedPackagesRequests = scopedPackageNames.map(packageName =>
-    fetchPackagesStats([packageName]),
+    fetchPackagesStats([packageName], startDate, endDate),
   );
+
   const standardPackagesRequest = standardPackageNames.length
-    ? fetchPackagesStats(standardPackageNames)
+    ? fetchPackagesStats(standardPackageNames, startDate, endDate)
     : {};
 
   const [
