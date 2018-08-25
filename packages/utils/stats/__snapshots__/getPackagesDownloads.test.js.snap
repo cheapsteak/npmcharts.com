@@ -1,0 +1,1475 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`getPackageDownloads Processes fetched data 1`] = `
+Object {
+  "downloads": Array [
+    Object {
+      "day": "2017-08-25",
+      "downloads": 125772,
+    },
+    Object {
+      "day": "2017-08-26",
+      "downloads": 37976,
+    },
+    Object {
+      "day": "2017-08-27",
+      "downloads": 36580,
+    },
+    Object {
+      "day": "2017-08-28",
+      "downloads": 131113,
+    },
+    Object {
+      "day": "2017-08-29",
+      "downloads": 156306,
+    },
+    Object {
+      "day": "2017-08-30",
+      "downloads": 148160,
+    },
+    Object {
+      "day": "2017-08-31",
+      "downloads": 149340,
+    },
+    Object {
+      "day": "2017-09-01",
+      "downloads": 125447,
+    },
+    Object {
+      "day": "2017-09-02",
+      "downloads": 37085,
+    },
+    Object {
+      "day": "2017-09-03",
+      "downloads": 35350,
+    },
+    Object {
+      "day": "2017-09-04",
+      "downloads": 96905,
+    },
+    Object {
+      "day": "2017-09-05",
+      "downloads": 138460,
+    },
+    Object {
+      "day": "2017-09-06",
+      "downloads": 147099,
+    },
+    Object {
+      "day": "2017-09-07",
+      "downloads": 145363,
+    },
+    Object {
+      "day": "2017-09-08",
+      "downloads": 141774,
+    },
+    Object {
+      "day": "2017-09-09",
+      "downloads": 37979,
+    },
+    Object {
+      "day": "2017-09-10",
+      "downloads": 37302,
+    },
+    Object {
+      "day": "2017-09-11",
+      "downloads": 148635,
+    },
+    Object {
+      "day": "2017-09-12",
+      "downloads": 158609,
+    },
+    Object {
+      "day": "2017-09-13",
+      "downloads": 163901,
+    },
+    Object {
+      "day": "2017-09-14",
+      "downloads": 159831,
+    },
+    Object {
+      "day": "2017-09-15",
+      "downloads": 142345,
+    },
+    Object {
+      "day": "2017-09-16",
+      "downloads": 40944,
+    },
+    Object {
+      "day": "2017-09-17",
+      "downloads": 36907,
+    },
+    Object {
+      "day": "2017-09-18",
+      "downloads": 149898,
+    },
+    Object {
+      "day": "2017-09-19",
+      "downloads": 160669,
+    },
+    Object {
+      "day": "2017-09-20",
+      "downloads": 153171,
+    },
+    Object {
+      "day": "2017-09-21",
+      "downloads": 155496,
+    },
+    Object {
+      "day": "2017-09-22",
+      "downloads": 135965,
+    },
+    Object {
+      "day": "2017-09-23",
+      "downloads": 38629,
+    },
+    Object {
+      "day": "2017-09-24",
+      "downloads": 35348,
+    },
+    Object {
+      "day": "2017-09-25",
+      "downloads": 146560,
+    },
+    Object {
+      "day": "2017-09-26",
+      "downloads": 156594,
+    },
+    Object {
+      "day": "2017-09-27",
+      "downloads": 156633,
+    },
+    Object {
+      "day": "2017-09-28",
+      "downloads": 148565,
+    },
+    Object {
+      "day": "2017-09-29",
+      "downloads": 134650,
+    },
+    Object {
+      "day": "2017-09-30",
+      "downloads": 39354,
+    },
+    Object {
+      "day": "2017-10-01",
+      "downloads": 36249,
+    },
+    Object {
+      "day": "2017-10-02",
+      "downloads": 128727,
+    },
+    Object {
+      "day": "2017-10-03",
+      "downloads": 141670,
+    },
+    Object {
+      "day": "2017-10-04",
+      "downloads": 149393,
+    },
+    Object {
+      "day": "2017-10-05",
+      "downloads": 150287,
+    },
+    Object {
+      "day": "2017-10-06",
+      "downloads": 134694,
+    },
+    Object {
+      "day": "2017-10-07",
+      "downloads": 38594,
+    },
+    Object {
+      "day": "2017-10-08",
+      "downloads": 36220,
+    },
+    Object {
+      "day": "2017-10-09",
+      "downloads": 142965,
+    },
+    Object {
+      "day": "2017-10-10",
+      "downloads": 161297,
+    },
+    Object {
+      "day": "2017-10-11",
+      "downloads": 167063,
+    },
+    Object {
+      "day": "2017-10-12",
+      "downloads": 164590,
+    },
+    Object {
+      "day": "2017-10-13",
+      "downloads": 151374,
+    },
+    Object {
+      "day": "2017-10-14",
+      "downloads": 41102,
+    },
+    Object {
+      "day": "2017-10-15",
+      "downloads": 39757,
+    },
+    Object {
+      "day": "2017-10-16",
+      "downloads": 162552,
+    },
+    Object {
+      "day": "2017-10-17",
+      "downloads": 158305,
+    },
+    Object {
+      "day": "2017-10-18",
+      "downloads": 164309,
+    },
+    Object {
+      "day": "2017-10-19",
+      "downloads": 161235,
+    },
+    Object {
+      "day": "2017-10-20",
+      "downloads": 142923,
+    },
+    Object {
+      "day": "2017-10-21",
+      "downloads": 38079,
+    },
+    Object {
+      "day": "2017-10-22",
+      "downloads": 36641,
+    },
+    Object {
+      "day": "2017-10-23",
+      "downloads": 156285,
+    },
+    Object {
+      "day": "2017-10-24",
+      "downloads": 175894,
+    },
+    Object {
+      "day": "2017-10-25",
+      "downloads": 181487,
+    },
+    Object {
+      "day": "2017-10-26",
+      "downloads": 165400,
+    },
+    Object {
+      "day": "2017-10-27",
+      "downloads": 146756,
+    },
+    Object {
+      "day": "2017-10-28",
+      "downloads": 39769,
+    },
+    Object {
+      "day": "2017-10-29",
+      "downloads": 39253,
+    },
+    Object {
+      "day": "2017-10-30",
+      "downloads": 149405,
+    },
+    Object {
+      "day": "2017-10-31",
+      "downloads": 159730,
+    },
+    Object {
+      "day": "2017-11-01",
+      "downloads": 158531,
+    },
+    Object {
+      "day": "2017-11-02",
+      "downloads": 167583,
+    },
+    Object {
+      "day": "2017-11-03",
+      "downloads": 148968,
+    },
+    Object {
+      "day": "2017-11-04",
+      "downloads": 41964,
+    },
+    Object {
+      "day": "2017-11-05",
+      "downloads": 40175,
+    },
+    Object {
+      "day": "2017-11-06",
+      "downloads": 155061,
+    },
+    Object {
+      "day": "2017-11-07",
+      "downloads": 168439,
+    },
+    Object {
+      "day": "2017-11-08",
+      "downloads": 166705,
+    },
+    Object {
+      "day": "2017-11-09",
+      "downloads": 163329,
+    },
+    Object {
+      "day": "2017-11-10",
+      "downloads": 141814,
+    },
+    Object {
+      "day": "2017-11-11",
+      "downloads": 43289,
+    },
+    Object {
+      "day": "2017-11-12",
+      "downloads": 40232,
+    },
+    Object {
+      "day": "2017-11-13",
+      "downloads": 157678,
+    },
+    Object {
+      "day": "2017-11-14",
+      "downloads": 167344,
+    },
+    Object {
+      "day": "2017-11-15",
+      "downloads": 166069,
+    },
+    Object {
+      "day": "2017-11-16",
+      "downloads": 166926,
+    },
+    Object {
+      "day": "2017-11-17",
+      "downloads": 151103,
+    },
+    Object {
+      "day": "2017-11-18",
+      "downloads": 43141,
+    },
+    Object {
+      "day": "2017-11-19",
+      "downloads": 39141,
+    },
+    Object {
+      "day": "2017-11-20",
+      "downloads": 161937,
+    },
+    Object {
+      "day": "2017-11-21",
+      "downloads": 170877,
+    },
+    Object {
+      "day": "2017-11-22",
+      "downloads": 155593,
+    },
+    Object {
+      "day": "2017-11-23",
+      "downloads": 120926,
+    },
+    Object {
+      "day": "2017-11-24",
+      "downloads": 105045,
+    },
+    Object {
+      "day": "2017-11-25",
+      "downloads": 36801,
+    },
+    Object {
+      "day": "2017-11-26",
+      "downloads": 39427,
+    },
+    Object {
+      "day": "2017-11-27",
+      "downloads": 152163,
+    },
+    Object {
+      "day": "2017-11-28",
+      "downloads": 172541,
+    },
+    Object {
+      "day": "2017-11-29",
+      "downloads": 171218,
+    },
+    Object {
+      "day": "2017-11-30",
+      "downloads": 170498,
+    },
+    Object {
+      "day": "2017-12-01",
+      "downloads": 148315,
+    },
+    Object {
+      "day": "2017-12-02",
+      "downloads": 43545,
+    },
+    Object {
+      "day": "2017-12-03",
+      "downloads": 40045,
+    },
+    Object {
+      "day": "2017-12-04",
+      "downloads": 166875,
+    },
+    Object {
+      "day": "2017-12-05",
+      "downloads": 177065,
+    },
+    Object {
+      "day": "2017-12-06",
+      "downloads": 167610,
+    },
+    Object {
+      "day": "2017-12-07",
+      "downloads": 166010,
+    },
+    Object {
+      "day": "2017-12-08",
+      "downloads": 141969,
+    },
+    Object {
+      "day": "2017-12-09",
+      "downloads": 42302,
+    },
+    Object {
+      "day": "2017-12-10",
+      "downloads": 40227,
+    },
+    Object {
+      "day": "2017-12-11",
+      "downloads": 165131,
+    },
+    Object {
+      "day": "2017-12-12",
+      "downloads": 170274,
+    },
+    Object {
+      "day": "2017-12-13",
+      "downloads": 168343,
+    },
+    Object {
+      "day": "2017-12-14",
+      "downloads": 161287,
+    },
+    Object {
+      "day": "2017-12-15",
+      "downloads": 138857,
+    },
+    Object {
+      "day": "2017-12-16",
+      "downloads": 38853,
+    },
+    Object {
+      "day": "2017-12-17",
+      "downloads": 36362,
+    },
+    Object {
+      "day": "2017-12-18",
+      "downloads": 150478,
+    },
+    Object {
+      "day": "2017-12-19",
+      "downloads": 163062,
+    },
+    Object {
+      "day": "2017-12-20",
+      "downloads": 157916,
+    },
+    Object {
+      "day": "2017-12-21",
+      "downloads": 151875,
+    },
+    Object {
+      "day": "2017-12-22",
+      "downloads": 121037,
+    },
+    Object {
+      "day": "2017-12-23",
+      "downloads": 34547,
+    },
+    Object {
+      "day": "2017-12-24",
+      "downloads": 29488,
+    },
+    Object {
+      "day": "2017-12-25",
+      "downloads": 37206,
+    },
+    Object {
+      "day": "2017-12-26",
+      "downloads": 65503,
+    },
+    Object {
+      "day": "2017-12-27",
+      "downloads": 92216,
+    },
+    Object {
+      "day": "2017-12-28",
+      "downloads": 92176,
+    },
+    Object {
+      "day": "2017-12-29",
+      "downloads": 75913,
+    },
+    Object {
+      "day": "2017-12-30",
+      "downloads": 36610,
+    },
+    Object {
+      "day": "2017-12-31",
+      "downloads": 25579,
+    },
+    Object {
+      "day": "2018-01-01",
+      "downloads": 26985,
+    },
+    Object {
+      "day": "2018-01-02",
+      "downloads": 111340,
+    },
+    Object {
+      "day": "2018-01-03",
+      "downloads": 137577,
+    },
+    Object {
+      "day": "2018-01-04",
+      "downloads": 159418,
+    },
+    Object {
+      "day": "2018-01-05",
+      "downloads": 134863,
+    },
+    Object {
+      "day": "2018-01-06",
+      "downloads": 39558,
+    },
+    Object {
+      "day": "2018-01-07",
+      "downloads": 38001,
+    },
+    Object {
+      "day": "2018-01-08",
+      "downloads": 147021,
+    },
+    Object {
+      "day": "2018-01-09",
+      "downloads": 160559,
+    },
+    Object {
+      "day": "2018-01-10",
+      "downloads": 165600,
+    },
+    Object {
+      "day": "2018-01-11",
+      "downloads": 163654,
+    },
+    Object {
+      "day": "2018-01-12",
+      "downloads": 152528,
+    },
+    Object {
+      "day": "2018-01-13",
+      "downloads": 41705,
+    },
+    Object {
+      "day": "2018-01-14",
+      "downloads": 39216,
+    },
+    Object {
+      "day": "2018-01-15",
+      "downloads": 137598,
+    },
+    Object {
+      "day": "2018-01-16",
+      "downloads": 166108,
+    },
+    Object {
+      "day": "2018-01-17",
+      "downloads": 189084,
+    },
+    Object {
+      "day": "2018-01-18",
+      "downloads": 188993,
+    },
+    Object {
+      "day": "2018-01-19",
+      "downloads": 166147,
+    },
+    Object {
+      "day": "2018-01-20",
+      "downloads": 52963,
+    },
+    Object {
+      "day": "2018-01-21",
+      "downloads": 46934,
+    },
+    Object {
+      "day": "2018-01-22",
+      "downloads": 174409,
+    },
+    Object {
+      "day": "2018-01-23",
+      "downloads": 184118,
+    },
+    Object {
+      "day": "2018-01-24",
+      "downloads": 177211,
+    },
+    Object {
+      "day": "2018-01-25",
+      "downloads": 172299,
+    },
+    Object {
+      "day": "2018-01-26",
+      "downloads": 152615,
+    },
+    Object {
+      "day": "2018-01-27",
+      "downloads": 46951,
+    },
+    Object {
+      "day": "2018-01-28",
+      "downloads": 42546,
+    },
+    Object {
+      "day": "2018-01-29",
+      "downloads": 166816,
+    },
+    Object {
+      "day": "2018-01-30",
+      "downloads": 183892,
+    },
+    Object {
+      "day": "2018-01-31",
+      "downloads": 177711,
+    },
+    Object {
+      "day": "2018-02-01",
+      "downloads": 179399,
+    },
+    Object {
+      "day": "2018-02-02",
+      "downloads": 157948,
+    },
+    Object {
+      "day": "2018-02-03",
+      "downloads": 50785,
+    },
+    Object {
+      "day": "2018-02-04",
+      "downloads": 43280,
+    },
+    Object {
+      "day": "2018-02-05",
+      "downloads": 168387,
+    },
+    Object {
+      "day": "2018-02-06",
+      "downloads": 184562,
+    },
+    Object {
+      "day": "2018-02-07",
+      "downloads": 187888,
+    },
+    Object {
+      "day": "2018-02-08",
+      "downloads": 188047,
+    },
+    Object {
+      "day": "2018-02-09",
+      "downloads": 172524,
+    },
+    Object {
+      "day": "2018-02-10",
+      "downloads": 49205,
+    },
+    Object {
+      "day": "2018-02-11",
+      "downloads": 52072,
+    },
+    Object {
+      "day": "2018-02-12",
+      "downloads": 184335,
+    },
+    Object {
+      "day": "2018-02-13",
+      "downloads": 188679,
+    },
+    Object {
+      "day": "2018-02-14",
+      "downloads": 183797,
+    },
+    Object {
+      "day": "2018-02-15",
+      "downloads": 183110,
+    },
+    Object {
+      "day": "2018-02-16",
+      "downloads": 160678,
+    },
+    Object {
+      "day": "2018-02-17",
+      "downloads": 50260,
+    },
+    Object {
+      "day": "2018-02-18",
+      "downloads": 44816,
+    },
+    Object {
+      "day": "2018-02-19",
+      "downloads": 153322,
+    },
+    Object {
+      "day": "2018-02-20",
+      "downloads": 182810,
+    },
+    Object {
+      "day": "2018-02-21",
+      "downloads": 190961,
+    },
+    Object {
+      "day": "2018-02-22",
+      "downloads": 190078,
+    },
+    Object {
+      "day": "2018-02-23",
+      "downloads": 174381,
+    },
+    Object {
+      "day": "2018-02-24",
+      "downloads": 59910,
+    },
+    Object {
+      "day": "2018-02-25",
+      "downloads": 51665,
+    },
+    Object {
+      "day": "2018-02-26",
+      "downloads": 186061,
+    },
+    Object {
+      "day": "2018-02-27",
+      "downloads": 207298,
+    },
+    Object {
+      "day": "2018-02-28",
+      "downloads": 190205,
+    },
+    Object {
+      "day": "2018-03-01",
+      "downloads": 187265,
+    },
+    Object {
+      "day": "2018-03-02",
+      "downloads": 168560,
+    },
+    Object {
+      "day": "2018-03-03",
+      "downloads": 56165,
+    },
+    Object {
+      "day": "2018-03-04",
+      "downloads": 48975,
+    },
+    Object {
+      "day": "2018-03-05",
+      "downloads": 186041,
+    },
+    Object {
+      "day": "2018-03-06",
+      "downloads": 205177,
+    },
+    Object {
+      "day": "2018-03-07",
+      "downloads": 200852,
+    },
+    Object {
+      "day": "2018-03-08",
+      "downloads": 195350,
+    },
+    Object {
+      "day": "2018-03-09",
+      "downloads": 175584,
+    },
+    Object {
+      "day": "2018-03-10",
+      "downloads": 53732,
+    },
+    Object {
+      "day": "2018-03-11",
+      "downloads": 47424,
+    },
+    Object {
+      "day": "2018-03-12",
+      "downloads": 190704,
+    },
+    Object {
+      "day": "2018-03-13",
+      "downloads": 200866,
+    },
+    Object {
+      "day": "2018-03-14",
+      "downloads": 199762,
+    },
+    Object {
+      "day": "2018-03-15",
+      "downloads": 202989,
+    },
+    Object {
+      "day": "2018-03-16",
+      "downloads": 183361,
+    },
+    Object {
+      "day": "2018-03-17",
+      "downloads": 52367,
+    },
+    Object {
+      "day": "2018-03-18",
+      "downloads": 49768,
+    },
+    Object {
+      "day": "2018-03-19",
+      "downloads": 200267,
+    },
+    Object {
+      "day": "2018-03-20",
+      "downloads": 213910,
+    },
+    Object {
+      "day": "2018-03-21",
+      "downloads": 205288,
+    },
+    Object {
+      "day": "2018-03-22",
+      "downloads": 202611,
+    },
+    Object {
+      "day": "2018-03-23",
+      "downloads": 183245,
+    },
+    Object {
+      "day": "2018-03-24",
+      "downloads": 49643,
+    },
+    Object {
+      "day": "2018-03-25",
+      "downloads": 45806,
+    },
+    Object {
+      "day": "2018-03-26",
+      "downloads": 192398,
+    },
+    Object {
+      "day": "2018-03-27",
+      "downloads": 205453,
+    },
+    Object {
+      "day": "2018-03-28",
+      "downloads": 198656,
+    },
+    Object {
+      "day": "2018-03-29",
+      "downloads": 188473,
+    },
+    Object {
+      "day": "2018-03-30",
+      "downloads": 130529,
+    },
+    Object {
+      "day": "2018-03-31",
+      "downloads": 45614,
+    },
+    Object {
+      "day": "2018-04-01",
+      "downloads": 40819,
+    },
+    Object {
+      "day": "2018-04-02",
+      "downloads": 137623,
+    },
+    Object {
+      "day": "2018-04-03",
+      "downloads": 196084,
+    },
+    Object {
+      "day": "2018-04-04",
+      "downloads": 197393,
+    },
+    Object {
+      "day": "2018-04-05",
+      "downloads": 191106,
+    },
+    Object {
+      "day": "2018-04-06",
+      "downloads": 173990,
+    },
+    Object {
+      "day": "2018-04-07",
+      "downloads": 46935,
+    },
+    Object {
+      "day": "2018-04-08",
+      "downloads": 47334,
+    },
+    Object {
+      "day": "2018-04-09",
+      "downloads": 183705,
+    },
+    Object {
+      "day": "2018-04-10",
+      "downloads": 204839,
+    },
+    Object {
+      "day": "2018-04-11",
+      "downloads": 207465,
+    },
+    Object {
+      "day": "2018-04-12",
+      "downloads": 181243,
+    },
+    Object {
+      "day": "2018-04-13",
+      "downloads": 182781,
+    },
+    Object {
+      "day": "2018-04-14",
+      "downloads": 50820,
+    },
+    Object {
+      "day": "2018-04-15",
+      "downloads": 46522,
+    },
+    Object {
+      "day": "2018-04-16",
+      "downloads": 187752,
+    },
+    Object {
+      "day": "2018-04-17",
+      "downloads": 204295,
+    },
+    Object {
+      "day": "2018-04-18",
+      "downloads": 204510,
+    },
+    Object {
+      "day": "2018-04-19",
+      "downloads": 206401,
+    },
+    Object {
+      "day": "2018-04-20",
+      "downloads": 182596,
+    },
+    Object {
+      "day": "2018-04-21",
+      "downloads": 50007,
+    },
+    Object {
+      "day": "2018-04-22",
+      "downloads": 46586,
+    },
+    Object {
+      "day": "2018-04-23",
+      "downloads": 194235,
+    },
+    Object {
+      "day": "2018-04-24",
+      "downloads": 205471,
+    },
+    Object {
+      "day": "2018-04-25",
+      "downloads": 197530,
+    },
+    Object {
+      "day": "2018-04-26",
+      "downloads": 199907,
+    },
+    Object {
+      "day": "2018-04-27",
+      "downloads": 180560,
+    },
+    Object {
+      "day": "2018-04-28",
+      "downloads": 54377,
+    },
+    Object {
+      "day": "2018-04-29",
+      "downloads": 46977,
+    },
+    Object {
+      "day": "2018-04-30",
+      "downloads": 163701,
+    },
+    Object {
+      "day": "2018-05-01",
+      "downloads": 138883,
+    },
+    Object {
+      "day": "2018-05-02",
+      "downloads": 196184,
+    },
+    Object {
+      "day": "2018-05-03",
+      "downloads": 200774,
+    },
+    Object {
+      "day": "2018-05-04",
+      "downloads": 185245,
+    },
+    Object {
+      "day": "2018-05-05",
+      "downloads": 53720,
+    },
+    Object {
+      "day": "2018-05-06",
+      "downloads": 51228,
+    },
+    Object {
+      "day": "2018-05-07",
+      "downloads": 189025,
+    },
+    Object {
+      "day": "2018-05-08",
+      "downloads": 206186,
+    },
+    Object {
+      "day": "2018-05-09",
+      "downloads": 202444,
+    },
+    Object {
+      "day": "2018-05-10",
+      "downloads": 182499,
+    },
+    Object {
+      "day": "2018-05-11",
+      "downloads": 183811,
+    },
+    Object {
+      "day": "2018-05-12",
+      "downloads": 58640,
+    },
+    Object {
+      "day": "2018-05-13",
+      "downloads": 51050,
+    },
+    Object {
+      "day": "2018-05-14",
+      "downloads": 216385,
+    },
+    Object {
+      "day": "2018-05-15",
+      "downloads": 247056,
+    },
+    Object {
+      "day": "2018-05-16",
+      "downloads": 231502,
+    },
+    Object {
+      "day": "2018-05-17",
+      "downloads": 227664,
+    },
+    Object {
+      "day": "2018-05-18",
+      "downloads": 201414,
+    },
+    Object {
+      "day": "2018-05-19",
+      "downloads": 65847,
+    },
+    Object {
+      "day": "2018-05-20",
+      "downloads": 64511,
+    },
+    Object {
+      "day": "2018-05-21",
+      "downloads": 194794,
+    },
+    Object {
+      "day": "2018-05-22",
+      "downloads": 222481,
+    },
+    Object {
+      "day": "2018-05-23",
+      "downloads": 226165,
+    },
+    Object {
+      "day": "2018-05-24",
+      "downloads": 207192,
+    },
+    Object {
+      "day": "2018-05-25",
+      "downloads": 186362,
+    },
+    Object {
+      "day": "2018-05-26",
+      "downloads": 51865,
+    },
+    Object {
+      "day": "2018-05-27",
+      "downloads": 49353,
+    },
+    Object {
+      "day": "2018-05-28",
+      "downloads": 154381,
+    },
+    Object {
+      "day": "2018-05-29",
+      "downloads": 36,
+    },
+    Object {
+      "day": "2018-05-30",
+      "downloads": 0,
+    },
+    Object {
+      "day": "2018-05-31",
+      "downloads": 0,
+    },
+    Object {
+      "day": "2018-06-01",
+      "downloads": 0,
+    },
+    Object {
+      "day": "2018-06-02",
+      "downloads": 57298,
+    },
+    Object {
+      "day": "2018-06-03",
+      "downloads": 51086,
+    },
+    Object {
+      "day": "2018-06-04",
+      "downloads": 215713,
+    },
+    Object {
+      "day": "2018-06-05",
+      "downloads": 236786,
+    },
+    Object {
+      "day": "2018-06-06",
+      "downloads": 228152,
+    },
+    Object {
+      "day": "2018-06-07",
+      "downloads": 223952,
+    },
+    Object {
+      "day": "2018-06-08",
+      "downloads": 198767,
+    },
+    Object {
+      "day": "2018-06-09",
+      "downloads": 57092,
+    },
+    Object {
+      "day": "2018-06-10",
+      "downloads": 53747,
+    },
+    Object {
+      "day": "2018-06-11",
+      "downloads": 206976,
+    },
+    Object {
+      "day": "2018-06-12",
+      "downloads": 220763,
+    },
+    Object {
+      "day": "2018-06-13",
+      "downloads": 221220,
+    },
+    Object {
+      "day": "2018-06-14",
+      "downloads": 227291,
+    },
+    Object {
+      "day": "2018-06-15",
+      "downloads": 194998,
+    },
+    Object {
+      "day": "2018-06-16",
+      "downloads": 51867,
+    },
+    Object {
+      "day": "2018-06-17",
+      "downloads": 48821,
+    },
+    Object {
+      "day": "2018-06-18",
+      "downloads": 211903,
+    },
+    Object {
+      "day": "2018-06-19",
+      "downloads": 230820,
+    },
+    Object {
+      "day": "2018-06-20",
+      "downloads": 232609,
+    },
+    Object {
+      "day": "2018-06-21",
+      "downloads": 228368,
+    },
+    Object {
+      "day": "2018-06-22",
+      "downloads": 196570,
+    },
+    Object {
+      "day": "2018-06-23",
+      "downloads": 52708,
+    },
+    Object {
+      "day": "2018-06-24",
+      "downloads": 57329,
+    },
+    Object {
+      "day": "2018-06-25",
+      "downloads": 223550,
+    },
+    Object {
+      "day": "2018-06-26",
+      "downloads": 232145,
+    },
+    Object {
+      "day": "2018-06-27",
+      "downloads": 218646,
+    },
+    Object {
+      "day": "2018-06-28",
+      "downloads": 219741,
+    },
+    Object {
+      "day": "2018-06-29",
+      "downloads": 198549,
+    },
+    Object {
+      "day": "2018-06-30",
+      "downloads": 52696,
+    },
+    Object {
+      "day": "2018-07-01",
+      "downloads": 52823,
+    },
+    Object {
+      "day": "2018-07-02",
+      "downloads": 205217,
+    },
+    Object {
+      "day": "2018-07-03",
+      "downloads": 213424,
+    },
+    Object {
+      "day": "2018-07-04",
+      "downloads": 169478,
+    },
+    Object {
+      "day": "2018-07-05",
+      "downloads": 203815,
+    },
+    Object {
+      "day": "2018-07-06",
+      "downloads": 191664,
+    },
+    Object {
+      "day": "2018-07-07",
+      "downloads": 49184,
+    },
+    Object {
+      "day": "2018-07-08",
+      "downloads": 46056,
+    },
+    Object {
+      "day": "2018-07-09",
+      "downloads": 206686,
+    },
+    Object {
+      "day": "2018-07-10",
+      "downloads": 217427,
+    },
+    Object {
+      "day": "2018-07-11",
+      "downloads": 217372,
+    },
+    Object {
+      "day": "2018-07-12",
+      "downloads": 235896,
+    },
+    Object {
+      "day": "2018-07-13",
+      "downloads": 202049,
+    },
+    Object {
+      "day": "2018-07-14",
+      "downloads": 56544,
+    },
+    Object {
+      "day": "2018-07-15",
+      "downloads": 60096,
+    },
+    Object {
+      "day": "2018-07-16",
+      "downloads": 210842,
+    },
+    Object {
+      "day": "2018-07-17",
+      "downloads": 227160,
+    },
+    Object {
+      "day": "2018-07-18",
+      "downloads": 224824,
+    },
+    Object {
+      "day": "2018-07-19",
+      "downloads": 221864,
+    },
+    Object {
+      "day": "2018-07-20",
+      "downloads": 200121,
+    },
+    Object {
+      "day": "2018-07-21",
+      "downloads": 53624,
+    },
+    Object {
+      "day": "2018-07-22",
+      "downloads": 50754,
+    },
+    Object {
+      "day": "2018-07-23",
+      "downloads": 212052,
+    },
+    Object {
+      "day": "2018-07-24",
+      "downloads": 214498,
+    },
+    Object {
+      "day": "2018-07-25",
+      "downloads": 221213,
+    },
+    Object {
+      "day": "2018-07-26",
+      "downloads": 217428,
+    },
+    Object {
+      "day": "2018-07-27",
+      "downloads": 203782,
+    },
+    Object {
+      "day": "2018-07-28",
+      "downloads": 63680,
+    },
+    Object {
+      "day": "2018-07-29",
+      "downloads": 66814,
+    },
+    Object {
+      "day": "2018-07-30",
+      "downloads": 226194,
+    },
+    Object {
+      "day": "2018-07-31",
+      "downloads": 240359,
+    },
+    Object {
+      "day": "2018-08-01",
+      "downloads": 242976,
+    },
+    Object {
+      "day": "2018-08-02",
+      "downloads": 238891,
+    },
+    Object {
+      "day": "2018-08-03",
+      "downloads": 199627,
+    },
+    Object {
+      "day": "2018-08-04",
+      "downloads": 56216,
+    },
+    Object {
+      "day": "2018-08-05",
+      "downloads": 53342,
+    },
+    Object {
+      "day": "2018-08-06",
+      "downloads": 0,
+    },
+    Object {
+      "day": "2018-08-07",
+      "downloads": 226492,
+    },
+    Object {
+      "day": "2018-08-08",
+      "downloads": 224536,
+    },
+    Object {
+      "day": "2018-08-09",
+      "downloads": 227013,
+    },
+    Object {
+      "day": "2018-08-10",
+      "downloads": 201402,
+    },
+    Object {
+      "day": "2018-08-11",
+      "downloads": 58719,
+    },
+    Object {
+      "day": "2018-08-12",
+      "downloads": 59372,
+    },
+    Object {
+      "day": "2018-08-13",
+      "downloads": 212654,
+    },
+    Object {
+      "day": "2018-08-14",
+      "downloads": 207858,
+    },
+    Object {
+      "day": "2018-08-15",
+      "downloads": 191366,
+    },
+    Object {
+      "day": "2018-08-16",
+      "downloads": 218536,
+    },
+    Object {
+      "day": "2018-08-17",
+      "downloads": 195229,
+    },
+    Object {
+      "day": "2018-08-18",
+      "downloads": 52421,
+    },
+    Object {
+      "day": "2018-08-19",
+      "downloads": 49927,
+    },
+    Object {
+      "day": "2018-08-20",
+      "downloads": 209413,
+    },
+    Object {
+      "day": "2018-08-21",
+      "downloads": 222466,
+    },
+    Object {
+      "day": "2018-08-22",
+      "downloads": 215284,
+    },
+    Object {
+      "day": "2018-08-23",
+      "downloads": 221164,
+    },
+    Object {
+      "day": "2018-08-24",
+      "downloads": 194163,
+    },
+    Object {
+      "day": "2018-08-25",
+      "downloads": 0,
+    },
+  ],
+  "end": "2018-08-25",
+  "package": "log4js",
+  "start": "2017-08-25",
+}
+`;
