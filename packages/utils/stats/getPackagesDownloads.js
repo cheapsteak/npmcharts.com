@@ -1,9 +1,7 @@
 const _ = require('lodash');
 const isScopedPackageName = require('../isScopedPackageName');
 const fetchPackagesStats = require('./fetchPackagesStats');
-
-const standardizePackageResponse = response =>
-  'package' in response ? [response] : Object.values(response);
+const standardizeNpmPackageResponse = require('./standardizeNpmPackageResponse');
 
 async function getPackagesDownloads(packageNames, { startDate, endDate }) {
   const [scopedPackageNames, standardPackageNames] = _.partition(
@@ -24,10 +22,10 @@ async function getPackagesDownloads(packageNames, { startDate, endDate }) {
     ...scopedPackagesResponse
   ] = await Promise.all([standardPackagesRequest, ...scopedPackagesRequests]);
 
-  const standardPackagesStats = standardizePackageResponse(
+  const standardPackagesStats = standardizeNpmPackageResponse(
     standardPackagesResponse,
   );
-  const scopedPackagesStats = standardizePackageResponse(
+  const scopedPackagesStats = standardizeNpmPackageResponse(
     scopedPackagesResponse,
   );
 
