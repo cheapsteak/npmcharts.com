@@ -1,5 +1,5 @@
 import 'whatwg-fetch';
-import 'babelify/polyfill';
+import '@babel/polyfill';
 import Vue from 'vue';
 import { format as formatDate } from 'date-fns';
 import router from './router.js';

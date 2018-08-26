@@ -88,7 +88,7 @@ function handleError(err) {
 var browserifyAppBundle = function() {
   return browserify(browserifyConfig)
     .transform(stringify(['.html', '.svg', '.vue', '.template', '.tmpl']))
-    .transform(babelify.configure({ stage: 0 }));
+    .transform(babelify.configure({ presets: ['@babel/preset-env'] }));
 };
 
 gulp.task('scripts', function() {

@@ -32,11 +32,6 @@
     "whatwg-fetch": "^0.9.0"
   },
   "devDependencies": {
-    "babel-core": "^6.26.3",
-    "babel-eslint": "^7.2.3",
-    "babel-jest": "^23.4.2",
-    "babel-preset-env": "^1.7.0",
-    "babelify": "^6.1.1",
     "browser-sync": "^2.7.2",
     "browserify": "^10.2.1",
     "connect-modrewrite": "^0.8.2",
@@ -62,7 +57,6 @@
     "gulp-uglify": "~1.0.1",
     "gulp-util": "~3.0.1",
     "gulp-watch": "^4.3.4",
-    "jest": "^22.4.0",
     "minimist": "^1.2.0",
     "node-notifier": "^4.2.1",
     "npm-run-all": "^4.0.2",
