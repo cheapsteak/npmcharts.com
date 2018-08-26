@@ -85,6 +85,7 @@
         <li
           v-for="packages in shuffle(presetPackages)"
           v-link="'/compare/' + packages.join(',') + '?' + queryString"
+          @click="track('click-preset', packages.join(','))"
           class="match"
         >
           <template v-for="package in packages">
