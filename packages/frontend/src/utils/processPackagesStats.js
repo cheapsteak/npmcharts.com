@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from 'lodash/fp';
 import { startOfDay } from 'date-fns';
 
 export const processPackageStats = npmModuleData => {
@@ -13,7 +13,9 @@ export const processPackageStats = npmModuleData => {
   };
 };
 
-export const processPackagesStats = packagesDownloads =>
-  _.compact(packagesDownloads).map(processPackageStats);
+export const processPackagesStats = _.flow(
+  _.compact,
+  _.map(processPackageStats),
+);
 
 export default processPackagesStats;
