@@ -6,6 +6,8 @@ import config from 'configs';
 import { setPackages } from '../packages/packages.js';
 import processPackagesStats from 'frontend/src/utils/processPackagesStats';
 import getPackagesDownloads from 'utils/stats/getPackagesDownloads';
+import isPackageName from 'utils/isPackageName';
+import fetchReposCommitsStats from 'frontend/src/home/fetchReposCommitStats';
 
 const palette = config.palette;
 
@@ -64,21 +66,24 @@ export default Vue.extend({
       const endDate = formatDate(new Date(), DATE_FORMAT);
       const startDate = formatDate(subYears(new Date(), 1), DATE_FORMAT);
 
-      // can't use 'await' here or will trigger vue router error
-      getPackagesDownloads(packageNames, {
-        startDate,
-        endDate,
-      }).then(packagesDownloads => {
-        const processedPackagesStats = processPackagesStats(packagesDownloads);
+      const operation = _.every(packageNames, isPackageName)
+        ? // packageNames are npm packages
+          getPackagesDownloads(packageNames, {
+            startDate,
+            endDate,
+          }).then(processPackagesStats)
+        : // packageNames are github repo names
+          fetchReposCommitsStats(packageNames);
 
+      operation.then(stats =>
         next({
           isMinimalMode,
           periodLength,
           moduleNames: packageNames,
-          moduleData: processedPackagesStats,
+          moduleData: stats,
           isUsingPresetPackages: !to.params.packages,
-        });
-      });
+        }),
+      );
     },
   },
   template: require('./home.html'),
