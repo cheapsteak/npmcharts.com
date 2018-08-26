@@ -1,13 +1,10 @@
 import Vue from 'vue';
 import querystring from 'querystring';
 import _ from 'lodash';
-import { format as formatDate, subYears } from 'date-fns';
 import config from 'configs';
+
+import getOperation from './getOperation';
 import { setPackages } from '../packages/packages.js';
-import processPackagesStats from 'frontend/src/utils/processPackagesStats';
-import getPackagesDownloads from 'utils/stats/getPackagesDownloads';
-import isPackageName from 'utils/isPackageName';
-import fetchReposCommitsStats from 'frontend/src/home/fetchReposCommitStats';
 
 const palette = config.palette;
 
@@ -62,20 +59,7 @@ export default Vue.extend({
       // set notify to false to prevent triggering route change
       setPackages(packageNames, false);
 
-      const DATE_FORMAT = 'YYYY-MM-DD';
-      const endDate = formatDate(new Date(), DATE_FORMAT);
-      const startDate = formatDate(subYears(new Date(), 1), DATE_FORMAT);
-
-      const operation = _.every(packageNames, isPackageName)
-        ? // packageNames are npm packages
-          getPackagesDownloads(packageNames, {
-            startDate,
-            endDate,
-          }).then(processPackagesStats)
-        : // packageNames are github repo names
-          fetchReposCommitsStats(packageNames);
-
-      operation.then(stats =>
+      getOperation(packageNames).then(stats =>
         next({
           isMinimalMode,
           periodLength,
