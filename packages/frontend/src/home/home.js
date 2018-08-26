@@ -13,7 +13,7 @@ var {
   default: packageInput,
   emitter: packageEvents,
   packages,
-} = require('../packages/packages.js');
+} = require('../packages/packages');
 
 export default Vue.extend({
   route: {
@@ -193,6 +193,6 @@ export default Vue.extend({
   },
   components: {
     'package-input': packageInput,
-    graph: require('../graph/graph.js'),
+    graph: require('../graph/graph').default,
   },
 });

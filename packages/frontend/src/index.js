@@ -1,8 +1,10 @@
 import 'whatwg-fetch';
 import '@babel/polyfill';
+
 import Vue from 'vue';
 import { format as formatDate } from 'date-fns';
 import router from './router.js';
+
 
 Vue.config.debug = true;
 

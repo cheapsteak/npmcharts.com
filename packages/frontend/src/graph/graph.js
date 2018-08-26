@@ -302,6 +302,6 @@ export default Vue.extend({
     },
   },
   components: {
-    legend: require('./legend/legend.js'),
+    legend: require('./legend/legend').default,
   },
 });
