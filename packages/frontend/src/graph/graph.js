@@ -256,7 +256,10 @@ export default Vue.extend({
       );
 
       return this.processedData[0].values[
-        this.processedData[0].values.length - startOfPeriodBucket - 1
+        Math.max(
+          0,
+          this.processedData[0].values.length - startOfPeriodBucket - 1,
+        )
       ].day;
     },
     getDataAtDate(date) {
