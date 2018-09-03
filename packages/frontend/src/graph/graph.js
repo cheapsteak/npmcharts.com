@@ -244,10 +244,9 @@ export default Vue.extend({
       });
     },
     getStartOfPeriod(date) {
-      date = startOfDay(date);
       const indexInModuleData = _.findIndex(
         this.moduleData[0].downloads,
-        entry => entry.day.getTime() === date.getTime(),
+        entry => entry.day.getTime() === startOfDay(date).getTime(),
       );
 
       const startOfPeriodBucket = Math.floor(
