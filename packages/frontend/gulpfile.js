@@ -9,8 +9,6 @@ var jade = require('gulp-jade');
 var notifier = require('node-notifier');
 var path = require('path');
 var prefix = require('gulp-autoprefixer');
-var replace = require('gulp-replace');
-var rev = require('gulp-rev');
 var rimraf = require('rimraf');
 var source = require('vinyl-source-stream');
 var exorcist = require('exorcist');
@@ -228,32 +226,9 @@ gulp.task('watch', function() {
 
 var buildTasks = ['templates', 'styles', 'assets'];
 
-gulp.task('revision', buildTasks.concat(['scripts']), function() {
-  return gulp
-    .src(config.revision.source, { base: config.revision.base })
-    .pipe(rev())
-    .pipe(gulp.dest(config.revision.destination))
-    .pipe(rev.manifest())
-    .pipe(gulp.dest('./'));
-});
-
-gulp.task('replace-revision-references', ['revision', 'templates'], function() {
-  var revisions = require('./rev-manifest.json');
-
-  var pipeline = gulp.src(config.templates.revision);
-
-  pipeline = Object.keys(revisions).reduce(function(stream, key) {
-    return stream.pipe(replace(key, revisions[key]));
-  }, pipeline);
-
-  return pipeline.pipe(gulp.dest(config.templates.destination));
-});
-
 gulp.task('build', function() {
   rimraf.sync(config.destination);
-  gulp.start(
-    buildTasks.concat(['scripts', 'revision', 'replace-revision-references']),
-  );
+  gulp.start(buildTasks.concat(['scripts']));
 });
 
 gulp.task('default', buildTasks.concat(['watch', 'server']));
