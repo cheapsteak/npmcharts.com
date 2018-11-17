@@ -22,6 +22,7 @@ app.use(
 );
 
 app.use('/', require('./routes/index'));
+app.use('/api', require('./routes/api'));
 app.use('/oembed', require('./routes/oembed'));
 app.use('/chart-image', require('./routes/chartImage'));
 
