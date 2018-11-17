@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import _ from 'lodash';
 import { removePackage } from '../../packages/packages.js';
 import { isSameMonth, format as formatDate, addDays } from 'date-fns';
 
@@ -7,6 +8,11 @@ export default Vue.extend({
     modules: Array,
     date: Date,
     periodLength: Number,
+  },
+  computed: {
+    sortedModules() {
+      return _.orderBy(this.modules, module => module.downloads, ['desc']);
+    },
   },
   template: require('./legend.html'),
   methods: {

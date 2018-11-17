@@ -75,15 +75,16 @@ export default Vue.extend({
         : // packageNames are github repo names
           fetchReposCommitsStats(packageNames);
 
-      operation.then(stats =>
+      operation.then(stats => {
         next({
           isMinimalMode,
           periodLength,
           moduleNames: packageNames,
           moduleData: stats,
           isUsingPresetPackages: !to.params.packages,
-        }),
-      );
+        });
+        this.isLoading = false;
+      });
     },
   },
   template: require('./home.html'),
@@ -93,6 +94,7 @@ export default Vue.extend({
       samplePreset: [],
       moduleNames: null,
       moduleData: null,
+      isLoading: true,
       palette,
       showWeekends: true,
       periodLength: 7,
@@ -132,7 +134,7 @@ export default Vue.extend({
       this.$refs.graph.render();
     },
   },
-  ready() {
+  mounted() {
     if (this.isMinimalMode) {
       document.body.classList.add('minimal');
     } else {
@@ -141,7 +143,7 @@ export default Vue.extend({
     packageEvents.on('change', () => {
       const nextRouteSansQuery = `/compare/${packages.join(',')}`;
       if (this.$route.router.app.$route.path !== nextRouteSansQuery) {
-        this.$route.router.go(`${nextRouteSansQuery}?${this.queryString}`);
+        this.$route.router.push(`${nextRouteSansQuery}?${this.queryString}`);
       }
     });
     // expose router so puppeteer can trigger route changes
@@ -163,15 +165,15 @@ export default Vue.extend({
         `${packageName} existing:${this.moduleNames}`,
       );
       if (this.$route.params && this.$route.params.packages) {
-        this.$route.router.go(
+        this.$route.router.push(
           '/compare/' + this.$route.params.packages + ',' + packageName,
         );
       } else {
-        this.$route.router.go('/compare/' + packageName);
+        this.$route.router.push('/compare/' + packageName);
       }
     },
     clearPackages() {
-      this.$route.router.go('/compare');
+      this.$route.router.push('/compare');
     },
     handleClickTwitter() {
       ga('send', 'event', 'share', 'twitter', this.twitterShareUrl);

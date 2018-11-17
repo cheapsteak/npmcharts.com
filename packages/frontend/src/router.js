@@ -3,16 +3,11 @@ import VueRouter from 'vue-router';
 
 Vue.use(VueRouter);
 
-const router = (module.exports = new VueRouter({ history: true }));
-
-router.map({
-  '/': {
-    component: require('./home/home').default,
-  },
-  '/compare': {
-    component: require('./home/home').default,
-  },
-  '/compare/*packages': {
-    component: require('./home/home').default,
-  },
+module.exports = new VueRouter({
+  mode: 'history',
+  route: [
+    { path: '/', component: require('./home/home').default },
+    { path: '/compare', component: require('./home/home').default },
+    { path: '/compare/*packages', component: require('./home/home').default },
+  ],
 });

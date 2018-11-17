@@ -26,7 +26,7 @@ export default Vue.extend({
     <span>
       <input
         class="package-input"
-        v-el:textbox
+        ref="textbox"
         @keyup="validate"
         @keyup.enter="handleEnter"
         placeholder="enter a package name"
@@ -52,14 +52,14 @@ export default Vue.extend({
       this.submit();
     },
     submit(val) {
-      this.onSubmit(this.$els.textbox.value.trim());
-      this.$els.textbox.value = '';
+      this.onSubmit(this.$refs.textbox.value.trim());
+      this.$refs.textbox.value = '';
     },
     handleEnter() {
       this.isValid && this.submit();
     },
     validate() {
-      this.isValid = this.$els.textbox.value.trim() !== '';
+      this.isValid = this.$refs.textbox.value.trim() !== '';
     },
   },
 });
