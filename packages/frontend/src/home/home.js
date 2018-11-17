@@ -135,6 +135,7 @@ export default Vue.extend({
     },
   },
   mounted() {
+    console.log('home mounted');
     if (this.isMinimalMode) {
       document.body.classList.add('minimal');
     } else {

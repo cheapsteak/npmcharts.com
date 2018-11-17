@@ -1,0 +1,75 @@
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const glob = require('glob');
+
+module.exports = {
+  entry: {
+    app: ['./src/index.js', ...glob.sync('./src/**/*.styl')],
+  },
+  module: {
+    rules: [
+      {
+        oneOf: [
+          {
+            test: /\.vue$/,
+            exclude: /node_modules/,
+            loader: 'vue-loader',
+          },
+          {
+            test: /\.js$/,
+            exclude: /node_modules/,
+            use: {
+              loader: 'babel-loader',
+            },
+          },
+          {
+            test: /\.(styl|css)$/,
+            use: [
+              MiniCssExtractPlugin.loader,
+              'css-loader',
+              'stylus-loader',
+            ].filter(Boolean),
+          },
+          { test: /\.pug$/, loader: 'pug-loader' },
+          {
+            test: /\.(html)$/,
+            use: {
+              loader: 'html-loader',
+              options: {
+                attrs: [':data-src'],
+              },
+            },
+          },
+          {
+            test: /\.svg$/,
+            loader: 'svg-inline-loader',
+          },
+          {
+            loader: require.resolve('file-loader'),
+            exclude: [/\.js$/, /\.html$/, /\.json$/],
+            options: {
+              name: 'static/media/[name].[hash:8].[ext]',
+            },
+          },
+        ],
+      },
+    ],
+  },
+  plugins: [
+    new MiniCssExtractPlugin({
+      // Options similar to the same options in webpackOptions.output
+      filename: '[name].css',
+      chunkFilename: '[id].css',
+    }),
+
+    new HtmlWebpackPlugin({
+      filename: 'index.html',
+      template: 'src/index.pug',
+    }),
+  ],
+  resolve: {
+    alias: {
+      vue$: 'vue/dist/vue.esm.js',
+    },
+  },
+};

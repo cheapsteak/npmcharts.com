@@ -1,3 +1,4 @@
+<fragment>
 <header
   class="page-header"
   :class="{
@@ -65,7 +66,7 @@
       >
         <input type="radio" :checked="periodLength === 30"> monthly
       </router-link>
-      <router-link tag="button" class="minimal-mode" :to="{ query: { minimal: true }}" @click="track('enter-minimal-mode')">enter minimal mode</button>
+      <router-link tag="button" class="minimal-mode" :to="{ query: { minimal: true }}" @click="track('enter-minimal-mode')">enter minimal mode</router-link>
 
     </div>
   </form>
@@ -86,14 +87,16 @@
       <div class="caption">or try</div>
       <ul class="matches">
         <router-link
-          :tag="li"
+          tag="li"
           v-for="packages in shuffle(presetPackages)"
           :to="'/compare/' + packages.join(',') + '?' + queryString"
           @click="track('click-preset', packages.join(','))"
           class="match"
+          :key="packages.join(',')"
         >
           <template v-for="(package, index) in packages">
-            <span class="vs" v-if="index !==0"> vs </span><span
+            <span class="vs" v-if="index !==0" :key="package + 'vs'"> vs </span><span
+              :key="package"
               class="package-name"
               :style="{
                 color: moduleNames && moduleNames.indexOf(package) > -1 ? palette[moduleNames.indexOf(package) % palette.length] : ''
@@ -144,3 +147,4 @@
   </div>
   <small class="disclaimer">npm is a trademark of npm, Inc.</small>
 </footer>
+</fragment>
