@@ -19,6 +19,7 @@
     "filenamify": "^2.0.0",
     "filesize": "^3.6.0",
     "fs-extra": "^5.0.0",
+    "gulp": "~3.8.1",
     "hammerjs": "^2.0.4",
     "isomorphic-fetch": "^2.2.1",
     "lodash": "^4.17.4",
