@@ -1,10 +1,25 @@
+const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const glob = require('glob');
 
+const outDir = path.resolve(__dirname, 'public');
+
 module.exports = {
   entry: {
     app: ['./src/index.js', ...glob.sync('./src/**/*.styl')],
+  },
+  output: {
+    path: outDir,
+    pathinfo: true,
+    filename: 'static/[name].bundle.js',
+    publicPath: '/',
+  },
+  devServer: {
+    historyApiFallback: true,
+    contentBase: [path.join(__dirname, 'src/assets')],
+    compress: true,
+    port: 9001,
   },
   module: {
     rules: [

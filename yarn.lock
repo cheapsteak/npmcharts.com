@@ -11110,10 +11110,6 @@ void-elements@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/void-elements/-/void-elements-1.0.0.tgz#6e5db1e35d591f5ac690ce1a340f793a817b2c2a"
 
-vue-fragment@1.2.2:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/vue-fragment/-/vue-fragment-1.2.2.tgz#dbc74ece37a3433e377a74ff776b98db6db29dd5"
-
 vue-router@2:
   version "2.8.1"
   resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-2.8.1.tgz#9833c9ee57ac83beb0269056fefee71713f20695"

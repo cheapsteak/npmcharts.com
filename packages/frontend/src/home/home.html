@@ -1,4 +1,5 @@
-<fragment>
+<!-- this div is only here because vue 2 doesn't support multiple root elements -->
+<div id="home">
 <header
   class="page-header"
   :class="{
@@ -66,7 +67,12 @@
       >
         <input type="radio" :checked="periodLength === 30"> monthly
       </router-link>
-      <router-link tag="button" class="minimal-mode" :to="{ query: { minimal: true }}" @click="track('enter-minimal-mode')">enter minimal mode</router-link>
+      <router-link
+        tag="button"
+        class="minimal-mode"
+        :to="{ query: { minimal: 'true' }}"
+        @click="track('enter-minimal-mode')"
+      >enter minimal mode</router-link>
 
     </div>
   </form>
@@ -117,7 +123,7 @@
       :is-minimal-mode="isMinimalMode === 'true'"
     >
     </graph>
-    <div class="no-packages-selected" v-if="!moduleData">
+    <div class="no-packages-selected" v-if="!moduleData && !isLoading">
       <p>No packages selected.</p>
       <p>Why not try
         <router-link tag="span" class="match" :to="'/compare/' + samplePreset.join(',')">
@@ -147,4 +153,4 @@
   </div>
   <small class="disclaimer">npm is a trademark of npm, Inc.</small>
 </footer>
-</fragment>
+</div>

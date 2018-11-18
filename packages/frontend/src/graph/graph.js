@@ -230,7 +230,7 @@ export default Vue.extend({
             xAccessor,
           );
           const point = this.seriesWithMostDataPoints.values[nearestPointIndex];
-          this.$set('legendData', this.getDataAtDate(xAccessor(point)));
+          this.legendData = this.getDataAtDate(xAccessor(point));
         } catch (e) {
           console.warn(`error retrieving data for ${date}`);
         }

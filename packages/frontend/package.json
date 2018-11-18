@@ -38,7 +38,6 @@
     "stylus-loader": "^3.0.2",
     "svg-inline-loader": "0.8.0",
     "vue": "2",
-    "vue-fragment": "1.2.2",
     "vue-router": "2",
     "webpack": "^4.25.1",
     "webpack-cli": "^3.1.2",
