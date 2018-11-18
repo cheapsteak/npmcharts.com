@@ -114,7 +114,7 @@
     </div>
     <graph
       class="chart"
-      v-if="moduleNames"
+      v-if="!isLoading"
       ref="graph"
       :module-names="moduleNames"
       :module-data="moduleData"

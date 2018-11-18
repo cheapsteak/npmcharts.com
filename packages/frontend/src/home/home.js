@@ -37,8 +37,6 @@ const getAsyncDataForRoute = async to => {
 
   setTimeout(() => ga('send', 'pageview'));
 
-  const periodLength = Number(to.query.periodLength || 7);
-
   // set notify to false to prevent triggering route change
   setPackages(packageNames, false);
 
@@ -58,10 +56,7 @@ const getAsyncDataForRoute = async to => {
   const stats = await operation;
 
   return {
-    periodLength,
-    moduleNames: packageNames,
     moduleData: stats,
-    isUsingPresetPackages: !to.params.packages,
   };
 };
 
@@ -78,13 +73,10 @@ export default {
     return {
       presetPackages,
       samplePreset: [],
-      moduleNames: null,
       moduleData: null,
       isLoading: true,
       palette,
       showWeekends: true,
-      periodLength: 7,
-      isUsingPresetPackages: undefined,
       hoverCount: 0,
       twitterIcon: require('../assets/images/icon-twitter.svg'),
       shouldShowComments:
@@ -112,6 +104,20 @@ export default {
     },
     queryString() {
       return querystring.stringify(this.$route.query);
+    },
+    periodLength() {
+      return Number(this.$route.query.periodLength || 7);
+    },
+    isUsingPresetPackages() {
+      return !this.$route.params.packages;
+    },
+    moduleNames() {
+      const moduleNames = this.isUsingPresetPackages
+        ? _.sample(presetPackages)
+        : this.$route.params.packages
+            .split(',')
+            .map(packageName => window.decodeURIComponent(packageName));
+      return moduleNames;
     },
     isMinimalMode() {
       return this.$route.query.minimal === 'true';
