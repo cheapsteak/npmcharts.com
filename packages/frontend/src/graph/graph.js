@@ -1,9 +1,9 @@
 import d3 from 'd3';
 import nv from 'nvd3';
-import Vue from 'vue';
 import _ from 'lodash';
 import { format as formatDate, subMonths, startOfDay } from 'date-fns';
 import { line, curveCatmullRom } from 'd3-shape';
+import withRender from './graph.html';
 
 const { palette } = require('configs');
 
@@ -53,7 +53,7 @@ const processEntriesMemo = _.memoize(processEntries, function resolver() {
   return Array.prototype.slice.call(arguments, -1)[0];
 });
 
-export default Vue.extend({
+export default withRender({
   props: {
     isMinimalMode: {
       type: Boolean,
@@ -70,7 +70,6 @@ export default Vue.extend({
     moduleNames: Array,
     moduleData: Array,
   },
-  template: require('./graph.html'),
   data() {
     return {
       chart: nv.models.lineChart(),
@@ -103,7 +102,7 @@ export default Vue.extend({
       this.render();
     },
   },
-  ready() {
+  mounted() {
     const margin = (this.margin = { top: 0, right: 36, bottom: 30, left: 16 });
     svg = d3.select('#chart svg');
     const chart = this.chart;
@@ -230,7 +229,7 @@ export default Vue.extend({
             xAccessor,
           );
           const point = this.seriesWithMostDataPoints.values[nearestPointIndex];
-          this.$set('legendData', this.getDataAtDate(xAccessor(point)));
+          this.legendData = this.getDataAtDate(xAccessor(point));
         } catch (e) {
           console.warn(`error retrieving data for ${date}`);
         }
@@ -301,6 +300,6 @@ export default Vue.extend({
     },
   },
   components: {
-    legend: require('./legend/legend').default,
+    graphLegend: require('./legend/legend').default,
   },
 });

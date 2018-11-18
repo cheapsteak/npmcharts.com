@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import querystring from 'querystring';
 import _ from 'lodash';
 import { format as formatDate, subYears } from 'date-fns';
@@ -8,8 +7,10 @@ import processPackagesStats from 'frontend/src/utils/processPackagesStats';
 import getPackagesDownloads from 'utils/stats/getPackagesDownloads';
 import isPackageName from 'utils/isPackageName';
 import fetchReposCommitsStats from 'frontend/src/home/fetchReposCommitStats';
+import withRender from './home.html';
 
 const palette = config.palette;
+const presetPackages = _.shuffle(config.presetPackages);
 
 var {
   default: packageInput,
@@ -17,87 +18,45 @@ var {
   packages,
 } = require('../packages/packages');
 
-export default Vue.extend({
-  route: {
-    waitForData: true,
-    canReuse(...args) {
-      // hack to solve https://github.com/cheapsteak/npmcharts.com/issues/23
-      // > Dots on graph don't update when a package is added/removed
-      return false;
-    },
-    data({ to, next, redirect }) {
-      const packageNames =
-        to.path === '/' || !to.params.packages
-          ? _.sample(this.presetPackages)
-          : to.params.packages
-              .split(',')
-              .map(packageName => window.decodeURIComponent(packageName));
+const getModuleDataByNames = async names => {
+  setTimeout(() => ga('send', 'pageview'));
 
-      if (to.path === '/' || !to.params.packages) {
-        document.title = 'Compare download stats for npm packages - npmcharts';
-        this.isUsingPresetPackages = true;
-      } else {
-        document.title =
-          'Compare npm downloads for ' +
-          to.params.packages.split(',').join(', ') +
-          ' - npmcharts';
-      }
+  // set notify to false to prevent triggering route change
+  setPackages(names, false);
 
-      setTimeout(() => ga('send', 'pageview'));
+  const DATE_FORMAT = 'YYYY-MM-DD';
+  const endDate = formatDate(new Date(), DATE_FORMAT);
+  const startDate = formatDate(subYears(new Date(), 1), DATE_FORMAT);
 
-      const isMinimalMode = to.query.minimal === 'true';
-      const periodLength = Number(to.query.periodLength || 7);
+  const operation = _.every(names, isPackageName)
+    ? // names are npm packages
+      getPackagesDownloads(names, {
+        startDate,
+        endDate,
+      }).then(processPackagesStats)
+    : // names are github repo names
+      fetchReposCommitsStats(names);
 
-      if (!packageNames) {
-        next({
-          isMinimalMode,
-          periodLength,
-          moduleNames: null,
-          moduleData: null,
-          samplePreset: _.sample(this.presetPackages),
-        });
-        return;
-      }
+  return operation;
+};
 
-      // set notify to false to prevent triggering route change
-      setPackages(packageNames, false);
-
-      const DATE_FORMAT = 'YYYY-MM-DD';
-      const endDate = formatDate(new Date(), DATE_FORMAT);
-      const startDate = formatDate(subYears(new Date(), 1), DATE_FORMAT);
-
-      const operation = _.every(packageNames, isPackageName)
-        ? // packageNames are npm packages
-          getPackagesDownloads(packageNames, {
-            startDate,
-            endDate,
-          }).then(processPackagesStats)
-        : // packageNames are github repo names
-          fetchReposCommitsStats(packageNames);
-
-      operation.then(stats =>
-        next({
-          isMinimalMode,
-          periodLength,
-          moduleNames: packageNames,
-          moduleData: stats,
-          isUsingPresetPackages: !to.params.packages,
-        }),
-      );
-    },
+export default withRender({
+  created() {
+    this.isLoading = true;
+    getModuleDataByNames(this.moduleNames).then(moduleData => {
+      this.isLoading = false;
+      this.moduleData = moduleData;
+    });
   },
-  template: require('./home.html'),
+  render: withRender.default,
   data() {
     return {
-      presetPackages: config.presetPackages,
+      presetPackages,
       samplePreset: [],
-      moduleNames: null,
       moduleData: null,
+      isLoading: true,
       palette,
       showWeekends: true,
-      periodLength: 7,
-      isMinimalMode: false,
-      isUsingPresetPackages: undefined,
       hoverCount: 0,
       twitterIcon: require('../assets/images/icon-twitter.svg'),
       shouldShowComments:
@@ -126,26 +85,49 @@ export default Vue.extend({
     queryString() {
       return querystring.stringify(this.$route.query);
     },
+    periodLength() {
+      return Number(this.$route.query.periodLength || 7);
+    },
+    isUsingPresetPackages() {
+      return !this.$route.params.packages;
+    },
+    moduleNames() {
+      const moduleNames = this.isUsingPresetPackages
+        ? _.sample(presetPackages)
+        : this.$route.params.packages
+            .split(',')
+            .map(packageName => window.decodeURIComponent(packageName));
+      return moduleNames;
+    },
+    isMinimalMode() {
+      return this.$route.query.minimal === 'true';
+    },
   },
   watch: {
     shouldShowComments() {
       this.$refs.graph.render();
     },
+    isMinimalMode(isMinimalMode, prevIsMinimalMode) {
+      console.log('watch isMinimalMode');
+      if (isMinimalMode) {
+        document.body.classList.add('minimal');
+      } else {
+        document.body.classList.remove('minimal');
+      }
+    },
   },
-  ready() {
+  mounted() {
     if (this.isMinimalMode) {
       document.body.classList.add('minimal');
     } else {
       document.body.classList.remove('minimal');
     }
-    packageEvents.on('change', () => {
-      const nextRouteSansQuery = `/compare/${packages.join(',')}`;
-      if (this.$route.router.app.$route.path !== nextRouteSansQuery) {
-        this.$route.router.go(`${nextRouteSansQuery}?${this.queryString}`);
-      }
-    });
+    packageEvents.on('change', this.handlePackagesChange);
     // expose router so puppeteer can trigger route changes
-    window.router = this.$route.router;
+    window.router = this.$router;
+  },
+  beforeDestroy() {
+    packageEvents.removeListener('change', this.handlePackagesChange);
   },
   methods: {
     track(eventName, value) {
@@ -153,6 +135,12 @@ export default Vue.extend({
     },
     getMergedQueryParams(params) {
       return { ...this.$route.query, ...params };
+    },
+    handlePackagesChange() {
+      const nextRouteSansQuery = `/compare/${packages.join(',')}`;
+      if (this.$router.app.$route.path !== nextRouteSansQuery) {
+        this.$router.push(`${nextRouteSansQuery}?${this.queryString}`);
+      }
     },
     addPackage(packageName) {
       ga(
@@ -163,15 +151,15 @@ export default Vue.extend({
         `${packageName} existing:${this.moduleNames}`,
       );
       if (this.$route.params && this.$route.params.packages) {
-        this.$route.router.go(
+        this.$router.push(
           '/compare/' + this.$route.params.packages + ',' + packageName,
         );
       } else {
-        this.$route.router.go('/compare/' + packageName);
+        this.$router.push('/compare/' + packageName);
       }
     },
     clearPackages() {
-      this.$route.router.go('/compare');
+      this.$router.push('/compare');
     },
     handleClickTwitter() {
       ga('send', 'event', 'share', 'twitter', this.twitterShareUrl);

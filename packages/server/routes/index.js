@@ -33,10 +33,14 @@ const sendSPA = async function(req, res, next) {
     ogImage,
     isEmbed: !!req.query.minimal,
     canonicalUrl: `https://npmcharts.com${fullUrl.pathname}`,
-    bundleAddress:
+    jsBundleSrc:
       process.env.NODE_ENV !== 'production'
-        ? '/js/bundle.js'
-        : 'https://npmcharts.netlify.com/js/bundle.js',
+        ? '/static/app.bundle.js'
+        : 'https://npmcharts.netlify.com/static/app.bundle.js',
+    cssBundleSrc:
+      process.env.NODE_ENV !== 'production'
+        ? '/app.css'
+        : 'https://npmcharts.netlify.com/app.css',
   });
 };
 

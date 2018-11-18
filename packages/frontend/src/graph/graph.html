@@ -1,5 +1,5 @@
-<div v-el:chart id="chart" class="with-3d-shadow with-transitions">
-  <legend
+<div ref="chart" id="chart" class="with-3d-shadow with-transitions">
+  <graphLegend
     v-if="moduleData.length && legendData"
     :modules="legendData.modules"
     :period-length="periodLength"
@@ -9,6 +9,6 @@
     @legend-blur="handleLegendBlur"
     @legend-focus="handleLegendFocus"
   >
-  </legend>
+  </graphLegend>
   <svg></svg>
 </div>

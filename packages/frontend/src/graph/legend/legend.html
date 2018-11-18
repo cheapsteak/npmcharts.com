@@ -6,8 +6,8 @@
       <th class="" colspan="2">{{formatWeekByStartingDate(date)}}</th>
     </thead>
     <thead class="date" v-else>
-      <th class="package-downloads-heading">{{date | formatDate 'dddd'}}</th>
-      <th class="package-name-heading">{{date | formatDate 'MMMM Do'}}</th>
+      <th class="package-downloads-heading">{{date | formatDate('dddd')}}</th>
+      <th class="package-name-heading">{{date | formatDate('MMMM Do')}}</th>
     </thead>
     <tbody
       @mouseEnter="handleMouseEnterLegend()"
@@ -15,7 +15,7 @@
     >
       <tr
         class="module"
-        v-for="module in modules | orderBy 'downloads' -1"
+        v-for="module in sortedModules"
         track-by="name"
         :style="{color: module.color}"
         @click="removePackage(module.name)"

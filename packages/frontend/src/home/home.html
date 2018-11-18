@@ -1,13 +1,15 @@
+<!-- this div is only here because vue 2 doesn't support multiple root elements -->
+<div id="home">
 <header
   class="page-header"
   :class="{
-    loading: $loadingRouteData,
+    loading: isLoading,
   }"
 >
   <h1 class="heading">
-    <a v-if="!isEmbedded" href="/" class="identity" v-link="{ path: '/'}" title="npmcharts">
+    <router-link v-if="!isEmbedded" href="/" class="identity" to="/" title="npmcharts">
       <img src="/images/logo.svg" width="190" alt="npmcharts"/>
-    </a>
+    </router-link>
     <a v-else :href=" $route.params.packages ? '/compare/' + $route.params.packages : '/' " class="identity" title="npmcharts">
       <img src="/images/logo.svg" width="190" alt="npmcharts"/>
     </a>
@@ -22,7 +24,7 @@
         v-else
         class="package-linkout"
         v-for="moduleName in moduleNames"
-        title="Open {{ moduleName }}'s npm page"
+        v-bind:title="'Open ' + moduleName + '\'s npm page'"
         :href="'https://www.npmjs.com/package/'+moduleName"
         target="_blank"
       >{{ moduleName }}</a>
@@ -41,34 +43,42 @@
       <label class="include-item" @change="track(showWeekends ? 'show-weekends' : 'hide-weekends')"><input type="checkbox" v-model="showWeekends"/>include weekends</label>
       -->
 
-      <label
+      <router-link
+        tag="label"
         v-if="moduleNames"
-        v-link="{ path: '/compare/' + moduleNames.join(',') + '?', query: getMergedQueryParams({periodLength: 1})}"
+        :to="{ path: '/compare/' + moduleNames.join(','), query: getMergedQueryParams({periodLength: 1})}"
         @change="track('set periodLength', periodLength)"
       >
         <input type="radio" :checked="periodLength === 1"> daily
-      </label>
-      <label
+      </router-link>
+      <router-link
+        tag="label"
         v-if="moduleNames"
-        v-link="{ path: '/compare/' + moduleNames.join(',') + '?', query: getMergedQueryParams({periodLength: 7})}"
+        :to="{ path: '/compare/' + moduleNames.join(',') + '?', query: getMergedQueryParams({periodLength: 7})}"
         @change="track('set periodLength', periodLength)"
       >
         <input type="radio" :checked="periodLength === 7"> weekly
-      </label>
-      <label
+      </router-link>
+      <router-link
+        tag="label"
         v-if="moduleNames"
-        v-link="{ path: '/compare/' + moduleNames.join(',') + '?', query: getMergedQueryParams({periodLength: 30})}"
+        :to="{ path: '/compare/' + moduleNames.join(',') + '?', query: getMergedQueryParams({periodLength: 30})}"
         @change="track('set periodLength', periodLength)"
       >
         <input type="radio" :checked="periodLength === 30"> monthly
-      </label>
-      <button class="minimal-mode" v-link="{ query: { minimal: true }}" @click="track('enter-minimal-mode')">enter minimal mode</button>
+      </router-link>
+      <router-link
+        tag="button"
+        class="minimal-mode"
+        :to="{ query: { minimal: 'true', periodLength: periodLength }}"
+        @click="track('enter-minimal-mode')"
+      >enter minimal mode</router-link>
 
     </div>
   </form>
 </header>
 <main :class="{
-  loading: $loadingRouteData,
+  loading: isLoading,
 }">
   <div class="chart-container">
     <div class="sample-matches">
@@ -82,27 +92,30 @@
       </span>
       <div class="caption">or try</div>
       <ul class="matches">
-        <li
-          v-for="packages in shuffle(presetPackages)"
-          v-link="'/compare/' + packages.join(',') + '?' + queryString"
+        <router-link
+          tag="li"
+          v-for="packages in presetPackages"
+          :to="'/compare/' + packages.join(',') + '?' + queryString"
           @click="track('click-preset', packages.join(','))"
           class="match"
+          :key="packages.join(',')"
         >
-          <template v-for="package in packages">
-            <span class="vs" v-if="$index !==0"> vs </span><span
+          <template v-for="(packageItem, index) in packages">
+            <span class="vs" v-if="index !==0" :key="packageItem + 'vs'"> vs </span><span
+              :key="packageItem"
               class="package-name"
               :style="{
-                color: moduleNames && moduleNames.indexOf(package) > -1 ? palette[moduleNames.indexOf(package) % palette.length] : ''
+                color: moduleNames && moduleNames.indexOf(packageItem) > -1 ? palette[moduleNames.indexOf(packageItem) % palette.length] : ''
               }"
-              >{{package}}</span>
+              >{{packageItem}}</span>
           </template>
-        </li>
+        </router-link>
       </ul>
     </div>
     <graph
       class="chart"
-      v-if="moduleNames"
-      v-ref:graph
+      v-if="!isLoading"
+      ref="graph"
       :module-names="moduleNames"
       :module-data="moduleData"
       :show-weekends="showWeekends"
@@ -110,19 +123,19 @@
       :is-minimal-mode="isMinimalMode === 'true'"
     >
     </graph>
-    <div class="no-packages-selected" v-if="!moduleData">
+    <div class="no-packages-selected" v-if="!moduleData && !isLoading">
       <p>No packages selected.</p>
       <p>Why not try
-        <span class="match" v-link="'/compare/' + samplePreset.join(',')">
-          <template v-for="package in samplePreset">
-            <span class="vs" v-if="$index !==0"> vs </span><span
+        <router-link tag="span" class="match" :to="'/compare/' + samplePreset.join(',')">
+          <template v-for="(packageItem, index) in samplePreset">
+            <span class="vs" v-if="index !==0"> vs </span><span
               class="package-name"
               :style="{
-                color: palette[$index % palette.length]
+                color: palette[index % palette.length]
               }"
-              >{{package}}</span>
+              >{{packageItem}}</span>
           </template>
-        </span>?
+        </router-link>?
       </p>
     </div>
   </div>
@@ -140,3 +153,4 @@
   </div>
   <small class="disclaimer">npm is a trademark of npm, Inc.</small>
 </footer>
+</div>
