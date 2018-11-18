@@ -12,4 +12,9 @@ Vue.filter('formatDate', function(date, format) {
 new Vue({
   el: '#root',
   router,
+  render(h) {
+    return h('router-view', {
+      key: this.$route.fullPath,
+    });
+  },
 });

@@ -8,6 +8,7 @@ import processPackagesStats from 'frontend/src/utils/processPackagesStats';
 import getPackagesDownloads from 'utils/stats/getPackagesDownloads';
 import isPackageName from 'utils/isPackageName';
 import fetchReposCommitsStats from 'frontend/src/home/fetchReposCommitStats';
+import withRender from './home.html';
 
 const palette = config.palette;
 const presetPackages = _.shuffle(config.presetPackages);
@@ -40,7 +41,7 @@ const getModuleDataByNames = async names => {
   return operation;
 };
 
-export default {
+export default withRender({
   created() {
     this.isLoading = true;
     getModuleDataByNames(this.moduleNames).then(moduleData => {
@@ -48,7 +49,7 @@ export default {
       this.moduleData = moduleData;
     });
   },
-  template: require('./home.html'),
+  render: withRender.default,
   data() {
     return {
       presetPackages,
@@ -188,4 +189,4 @@ export default {
     'package-input': packageInput,
     graph: require('../graph/graph').default,
   },
-};
+});

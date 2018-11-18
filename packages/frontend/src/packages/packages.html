@@ -1,0 +1,17 @@
+<span>
+  <input
+    class="package-input"
+    ref="textbox"
+    @keyup="validate"
+    @keyup.enter="handleEnter"
+    placeholder="enter a package name"
+    autofocus
+  >
+  <button
+    class="add-package-btn"
+    :disabled="!isValid"
+    @click="handleClickSubmit($event)"
+  >
+    {{isUsingPresetPackages ? 'set' : 'add'}}
+  </button>
+</span>

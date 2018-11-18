@@ -1,9 +1,9 @@
 import d3 from 'd3';
 import nv from 'nvd3';
-import Vue from 'vue';
 import _ from 'lodash';
 import { format as formatDate, subMonths, startOfDay } from 'date-fns';
 import { line, curveCatmullRom } from 'd3-shape';
+import withRender from './graph.html';
 
 const { palette } = require('configs');
 
@@ -53,7 +53,7 @@ const processEntriesMemo = _.memoize(processEntries, function resolver() {
   return Array.prototype.slice.call(arguments, -1)[0];
 });
 
-export default Vue.extend({
+export default withRender({
   props: {
     isMinimalMode: {
       type: Boolean,
@@ -70,7 +70,6 @@ export default Vue.extend({
     moduleNames: Array,
     moduleData: Array,
   },
-  template: require('./graph.html'),
   data() {
     return {
       chart: nv.models.lineChart(),

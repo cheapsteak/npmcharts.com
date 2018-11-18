@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import withRender from './packages.html';
 export const packages = [];
 export const emitter = new (require('events')).EventEmitter();
 
@@ -17,30 +17,11 @@ export function setPackages(val, notify = true) {
   notify && emitter.emit('change');
 }
 
-export default Vue.extend({
+export default withRender({
   props: {
     onSubmit: Function,
     isUsingPresetPackages: Boolean,
   },
-  template: `
-    <span>
-      <input
-        class="package-input"
-        ref="textbox"
-        @keyup="validate"
-        @keyup.enter="handleEnter"
-        placeholder="enter a package name"
-        autofocus
-      >
-      <button
-        class="add-package-btn"
-        :disabled="!isValid"
-        @click="handleClickSubmit($event)"
-      >
-        {{isUsingPresetPackages ? 'set' : 'add'}}
-      </button>
-    </span>
-  `,
   data() {
     return {
       isValid: false,

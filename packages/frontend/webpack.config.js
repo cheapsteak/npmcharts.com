@@ -26,9 +26,17 @@ module.exports = {
       {
         oneOf: [
           {
-            test: /\.vue$/,
-            exclude: /node_modules/,
-            loader: 'vue-loader',
+            test: /\.html$/,
+            use: {
+              loader: 'vue-template-loader',
+              options: {
+                transformAssetUrls: {
+                  // The key should be an element name
+                  // The value should be an attribute name or an array of attribute names
+                  img: 'src',
+                },
+              },
+            },
           },
           {
             test: /\.js$/,
@@ -82,9 +90,9 @@ module.exports = {
       template: 'src/index.pug',
     }),
   ],
-  resolve: {
-    alias: {
-      vue$: 'vue/dist/vue.esm.js',
-    },
-  },
+  // resolve: {
+  //   alias: {
+  //     vue$: 'vue/dist/vue.esm.js',
+  //   },
+  // },
 };
