@@ -21,6 +21,9 @@ module.exports = {
     contentBase: [path.join(__dirname, 'src/assets')],
     compress: true,
     port: 9001,
+    proxy: {
+      '/api': 'http://localhost:3000'
+    }
   },
   module: {
     rules: [
