@@ -5,6 +5,14 @@ module.exports = (packageNames, startDate, endDate) => {
   const url = `https://api.npmjs.org/downloads/range/${startDate}:${endDate}/${packageNamesParam}`;
   const fallbackUrl = `/api/downloads/range/${startDate}:${endDate}/${packageNamesParam}`;
   return fetch(url)
-    .then(response => response.json())
-    .catch(exception => fetch(fallbackUrl));
+    .then(response => {
+      if (!response.ok) {
+        return fetch(fallbackUrl);
+      }
+      return response.json();
+    })
+    .catch(exception => {
+      console.error(exception);
+      return fetch(fallbackUrl);
+    });
 };
