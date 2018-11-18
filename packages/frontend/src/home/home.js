@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import querystring from 'querystring';
 import _ from 'lodash';
 import { format as formatDate, subYears } from 'date-fns';
