@@ -1,6 +1,7 @@
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const glob = require('glob');
 
 const outDir = path.resolve(__dirname, 'public');
@@ -85,6 +86,16 @@ module.exports = {
       filename: 'index.html',
       template: 'src/index.pug',
     }),
+
+    new CopyWebpackPlugin(
+      [
+        {
+          from: '**/*',
+          to: outDir,
+        },
+      ],
+      { context: './src/assets' },
+    ),
   ],
   // resolve: {
   //   alias: {
