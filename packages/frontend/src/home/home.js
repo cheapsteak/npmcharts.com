@@ -124,7 +124,7 @@ export default withRender({
     }
     packageEvents.on('change', this.handlePackagesChange);
     // expose router so puppeteer can trigger route changes
-    window.router = this.$route.router;
+    window.router = this.$router;
   },
   beforeDestroy() {
     packageEvents.removeListener('change', this.handlePackagesChange);
@@ -138,8 +138,8 @@ export default withRender({
     },
     handlePackagesChange() {
       const nextRouteSansQuery = `/compare/${packages.join(',')}`;
-      if (this.$route.router.app.$route.path !== nextRouteSansQuery) {
-        this.$route.router.push(`${nextRouteSansQuery}?${this.queryString}`);
+      if (this.$router.app.$route.path !== nextRouteSansQuery) {
+        this.$router.push(`${nextRouteSansQuery}?${this.queryString}`);
       }
     },
     addPackage(packageName) {
