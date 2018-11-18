@@ -18,54 +18,34 @@ var {
   packages,
 } = require('../packages/packages');
 
-const getAsyncDataForRoute = async to => {
-  const packageNames =
-    to.path === '/' || !to.params.packages
-      ? _.sample(presetPackages)
-      : to.params.packages
-          .split(',')
-          .map(packageName => window.decodeURIComponent(packageName));
-
-  if (to.path === '/' || !to.params.packages) {
-    document.title = 'Compare download stats for npm packages - npmcharts';
-  } else {
-    document.title =
-      'Compare npm downloads for ' +
-      to.params.packages.split(',').join(', ') +
-      ' - npmcharts';
-  }
-
+const getModuleDataByNames = async names => {
   setTimeout(() => ga('send', 'pageview'));
 
   // set notify to false to prevent triggering route change
-  setPackages(packageNames, false);
+  setPackages(names, false);
 
   const DATE_FORMAT = 'YYYY-MM-DD';
   const endDate = formatDate(new Date(), DATE_FORMAT);
   const startDate = formatDate(subYears(new Date(), 1), DATE_FORMAT);
 
-  const operation = _.every(packageNames, isPackageName)
-    ? // packageNames are npm packages
-      getPackagesDownloads(packageNames, {
+  const operation = _.every(names, isPackageName)
+    ? // names are npm packages
+      getPackagesDownloads(names, {
         startDate,
         endDate,
       }).then(processPackagesStats)
-    : // packageNames are github repo names
-      fetchReposCommitsStats(packageNames);
+    : // names are github repo names
+      fetchReposCommitsStats(names);
 
-  const stats = await operation;
-
-  return {
-    moduleData: stats,
-  };
+  return operation;
 };
 
 export default {
   created() {
     this.isLoading = true;
-    getAsyncDataForRoute(this.$route).then(data => {
+    getModuleDataByNames(this.moduleNames).then(moduleData => {
       this.isLoading = false;
-      Object.assign(this, data);
+      this.moduleData = moduleData;
     });
   },
   template: require('./home.html'),
