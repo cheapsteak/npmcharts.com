@@ -94,7 +94,7 @@
       <ul class="matches">
         <router-link
           tag="li"
-          v-for="packages in shuffle(presetPackages)"
+          v-for="packages in presetPackages"
           :to="'/compare/' + packages.join(',') + '?' + queryString"
           @click="track('click-preset', packages.join(','))"
           class="match"

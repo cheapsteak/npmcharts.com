@@ -10,7 +10,7 @@ import isPackageName from 'utils/isPackageName';
 import fetchReposCommitsStats from 'frontend/src/home/fetchReposCommitStats';
 
 const palette = config.palette;
-const presetPackages = config.presetPackages;
+const presetPackages = _.shuffle(config.presetPackages);
 
 var {
   default: packageInput,
