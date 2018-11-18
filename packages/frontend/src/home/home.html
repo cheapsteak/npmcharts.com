@@ -100,14 +100,14 @@
           class="match"
           :key="packages.join(',')"
         >
-          <template v-for="(package, index) in packages">
-            <span class="vs" v-if="index !==0" :key="package + 'vs'"> vs </span><span
-              :key="package"
+          <template v-for="(packageItem, index) in packages">
+            <span class="vs" v-if="index !==0" :key="packageItem + 'vs'"> vs </span><span
+              :key="packageItem"
               class="package-name"
               :style="{
-                color: moduleNames && moduleNames.indexOf(package) > -1 ? palette[moduleNames.indexOf(package) % palette.length] : ''
+                color: moduleNames && moduleNames.indexOf(packageItem) > -1 ? palette[moduleNames.indexOf(packageItem) % palette.length] : ''
               }"
-              >{{package}}</span>
+              >{{packageItem}}</span>
           </template>
         </router-link>
       </ul>
@@ -127,13 +127,13 @@
       <p>No packages selected.</p>
       <p>Why not try
         <router-link tag="span" class="match" :to="'/compare/' + samplePreset.join(',')">
-          <template v-for="(package, index) in samplePreset">
+          <template v-for="(packageItem, index) in samplePreset">
             <span class="vs" v-if="index !==0"> vs </span><span
               class="package-name"
               :style="{
                 color: palette[index % palette.length]
               }"
-              >{{package}}</span>
+              >{{packageItem}}</span>
           </template>
         </router-link>?
       </p>

@@ -27,16 +27,21 @@ module.exports = {
         oneOf: [
           {
             test: /\.html$/,
-            use: {
-              loader: 'vue-template-loader',
-              options: {
-                transformAssetUrls: {
-                  // The key should be an element name
-                  // The value should be an attribute name or an array of attribute names
-                  img: 'src',
+            use: [
+              {
+                loader: 'babel-loader',
+              },
+              {
+                loader: 'vue-template-loader',
+                options: {
+                  transformAssetUrls: {
+                    // The key should be an element name
+                    // The value should be an attribute name or an array of attribute names
+                    img: 'src',
+                  },
                 },
               },
-            },
+            ],
           },
           {
             test: /\.js$/,
@@ -54,15 +59,6 @@ module.exports = {
             ].filter(Boolean),
           },
           { test: /\.pug$/, loader: 'pug-loader' },
-          {
-            test: /\.(html)$/,
-            use: {
-              loader: 'html-loader',
-              options: {
-                attrs: [':data-src'],
-              },
-            },
-          },
           {
             test: /\.svg$/,
             loader: 'svg-inline-loader',
