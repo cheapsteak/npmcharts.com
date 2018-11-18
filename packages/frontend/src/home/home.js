@@ -151,15 +151,15 @@ export default withRender({
         `${packageName} existing:${this.moduleNames}`,
       );
       if (this.$route.params && this.$route.params.packages) {
-        this.$route.router.push(
+        this.$router.push(
           '/compare/' + this.$route.params.packages + ',' + packageName,
         );
       } else {
-        this.$route.router.push('/compare/' + packageName);
+        this.$router.push('/compare/' + packageName);
       }
     },
     clearPackages() {
-      this.$route.router.push('/compare');
+      this.$router.push('/compare');
     },
     handleClickTwitter() {
       ga('send', 'event', 'share', 'twitter', this.twitterShareUrl);
