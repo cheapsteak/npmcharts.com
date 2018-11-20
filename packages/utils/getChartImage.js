@@ -32,7 +32,7 @@ module.exports = async url => {
     debug('acquiring page');
     const page = await browserPagePool.acquire();
 
-    const navigationCommand = `router.go('/compare/${packages.join(
+    const navigationCommand = `router.push('/compare/${packages.join(
       ',',
     )}?minimal=true')`;
     debug('evaluating:', navigationCommand);
