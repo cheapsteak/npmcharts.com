@@ -20,7 +20,7 @@ const {
   packages,
 } = require('../packages/packages');
 
-const getModuleDataByNames = async names => {
+const getModuleDataByNames = async (names, start, end) => {
   setTimeout(() => ga('send', 'pageview'));
 
   // set notify to false to prevent triggering route change
@@ -28,7 +28,7 @@ const getModuleDataByNames = async names => {
 
   const operation = _.every(names, isPackageName)
     ? // names are npm packages
-      getPackagesDownloadsOverPeriod(names, 2 * maxRequestPeriod, 0)
+      getPackagesDownloadsOverPeriod(names, start, end)
         .then(processPackagesStats)
     : // names are github repo names
       fetchReposCommitsStats(names);
@@ -85,10 +85,13 @@ function getPackagesDownloadsOverPeriod(names, startDay, endDay) {
 export default withRender({
   created() {
     this.isLoading = true;
-    getModuleDataByNames(this.moduleNames).then(moduleData => {
-      this.isLoading = false;
-      this.moduleData = moduleData;
-    });
+    getModuleDataByNames(this.moduleNames,
+        this.$route.query.start ? this.$route.query.start : 365,
+        this.$route.query.end ? this.$route.query.start : 0)
+      .then(moduleData => {
+        this.isLoading = false;
+        this.moduleData = moduleData;
+      });
   },
   render: withRender.default,
   data() {
