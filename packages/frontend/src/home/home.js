@@ -58,6 +58,10 @@ function mergePeriods(period0, period1) {
   return sumPackages;
 }
 
+function maxDate(a, b) {
+  return new Date(Math.max(a.getTime(), b.getTime()));
+}
+
 /**
  * @param names    {string} Package names
  * @param startDay {number} Start of period, 1 is yesterday
@@ -69,9 +73,17 @@ function getPackagesDownloadsOverPeriod(names, startDay, endDay) {
   const requestPeriod = Math.min(maxRequestPeriod, startDay - endDay);
   const requestEndDay = startDay - requestPeriod;
 
+  const startStats = new Date(Date.UTC(2015, 1, 10));
+  console.log(`start stats: ${startStats}`)
+
   const DATE_FORMAT = 'YYYY-MM-DD';
-  const startDate = formatDate(subDays(new Date(), startDay), DATE_FORMAT);
-  const endDate = formatDate(subDays(new Date(), requestEndDay), DATE_FORMAT);
+  const timezone = 'UTC';
+
+  let startDate = maxDate(startStats, subDays(new Date(), startDay));
+  let endDate = maxDate(startStats, subDays(new Date(), requestEndDay));
+
+  startDate = formatDate(startDate, DATE_FORMAT, null, timezone);
+  endDate = formatDate(endDate, DATE_FORMAT, null, timezone);
 
   const period1 = getPackagesDownloads(names, {startDate, endDate,});
 
