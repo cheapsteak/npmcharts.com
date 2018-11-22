@@ -74,7 +74,6 @@ function getPackagesDownloadsOverPeriod(names, startDay, endDay) {
   const requestEndDay = startDay - requestPeriod;
 
   const startStats = new Date(Date.UTC(2015, 1, 10));
-  console.log(`start stats: ${startStats}`)
 
   const DATE_FORMAT = 'YYYY-MM-DD';
   const timezone = 'UTC';
