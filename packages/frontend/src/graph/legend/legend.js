@@ -7,7 +7,7 @@ export default withRender({
   props: {
     modules: Array,
     date: Date,
-    periodLength: Number,
+    interval: Number,
   },
   computed: {
     sortedModules() {
@@ -41,7 +41,7 @@ export default withRender({
         return `${startDate} - ${endDate}`;
       }
       const endDate = formatDate(
-        addDays(startOfPeriod, this.periodLength - 1),
+        addDays(startOfPeriod, this.interval - 1),
         'MMMM Do',
       );
       return `${startDate} - ${endDate}`;

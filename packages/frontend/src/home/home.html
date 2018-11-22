@@ -46,31 +46,31 @@
       <router-link
         tag="label"
         v-if="moduleNames"
-        :to="{ path: '/compare/' + moduleNames.join(','), query: getMergedQueryParams({periodLength: 1})}"
-        @change="track('set periodLength', periodLength)"
+        :to="{ path: '/compare/' + moduleNames.join(','), query: getMergedQueryParams({interval: 1})}"
+        @change="track('set interval', interval)"
       >
-        <input type="radio" :checked="periodLength === 1"> daily
+        <input type="radio" :checked="interval === 1"> daily
       </router-link>
       <router-link
         tag="label"
         v-if="moduleNames"
-        :to="{ path: '/compare/' + moduleNames.join(',') + '?', query: getMergedQueryParams({periodLength: 7})}"
-        @change="track('set periodLength', periodLength)"
+        :to="{ path: '/compare/' + moduleNames.join(',') + '?', query: getMergedQueryParams({interval: 7})}"
+        @change="track('set interval', interval)"
       >
-        <input type="radio" :checked="periodLength === 7"> weekly
+        <input type="radio" :checked="interval === 7"> weekly
       </router-link>
       <router-link
         tag="label"
         v-if="moduleNames"
-        :to="{ path: '/compare/' + moduleNames.join(',') + '?', query: getMergedQueryParams({periodLength: 30})}"
-        @change="track('set periodLength', periodLength)"
+        :to="{ path: '/compare/' + moduleNames.join(',') + '?', query: getMergedQueryParams({interval: 30})}"
+        @change="track('set interval', interval)"
       >
-        <input type="radio" :checked="periodLength === 30"> monthly
+        <input type="radio" :checked="interval === 30"> monthly
       </router-link>
       <router-link
         tag="button"
         class="minimal-mode"
-        :to="{ query: { minimal: 'true', periodLength: periodLength }}"
+        :to="{ query: { minimal: 'true', interval: interval }}"
         @click="track('enter-minimal-mode')"
       >enter minimal mode</router-link>
 
@@ -119,7 +119,7 @@
       :module-names="moduleNames"
       :module-data="moduleData"
       :show-weekends="showWeekends"
-      :period-length="periodLength"
+      :period-length="interval"
       :is-minimal-mode="isMinimalMode === 'true'"
     >
     </graph>

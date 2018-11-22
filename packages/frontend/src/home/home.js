@@ -130,8 +130,8 @@ export default withRender({
     queryString() {
       return querystring.stringify(this.$route.query);
     },
-    periodLength() {
-      return Number(this.$route.query.periodLength || 7);
+    interval() {
+      return Number(this.$route.query.interval || this.$route.query.periodLength || 7);
     },
     isUsingPresetPackages() {
       return !this.$route.params.packages;
@@ -179,7 +179,9 @@ export default withRender({
       ga('send', 'event', eventName, value);
     },
     getMergedQueryParams(params) {
-      return { ...this.$route.query, ...params };
+      const merged = { ...this.$route.query, ...params };
+      delete merged.periodLength;
+      return merged;
     },
     handlePackagesChange() {
       const nextRouteSansQuery = `/compare/${packages.join(',')}`;
