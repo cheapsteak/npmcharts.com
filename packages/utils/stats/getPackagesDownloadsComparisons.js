@@ -5,18 +5,18 @@ const getPackagesDownloads = require('./getPackagesDownloads');
 
 const DATE_FORMAT = 'YYYY-MM-DD';
 
-const getDownloadComparisonForPeriod = (downloads, periodLengthInDays) => {
+const getDownloadComparisonForPeriod = (downloads, intervalInDays) => {
   const trimmedDownloads =
     _.last(downloads).downloads === 0 ? _.initial(downloads) : downloads;
 
   const currentPeriodDownloads = _.sumBy(
-    trimmedDownloads.slice(-periodLengthInDays),
+    trimmedDownloads.slice(-intervalInDays),
     x => x.downloads,
   );
   const previousPeriodDownloads = _.sumBy(
     _.difference(
-      trimmedDownloads.slice(-periodLengthInDays * 2),
-      trimmedDownloads.slice(-periodLengthInDays),
+      trimmedDownloads.slice(-intervalInDays * 2),
+      trimmedDownloads.slice(-intervalInDays),
     ),
     x => x.downloads,
   );

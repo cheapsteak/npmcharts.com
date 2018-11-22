@@ -2,12 +2,12 @@
   class="legend"
 >
   <table class="modules">
-    <thead class="date" v-if="periodLength > 1">
+    <thead class="date" v-if="interval > 1">
       <th class="" colspan="2">{{formatWeekByStartingDate(date)}}</th>
     </thead>
     <thead class="date" v-else>
       <th class="package-downloads-heading">{{date | formatDate('dddd')}}</th>
-      <th class="package-name-heading">{{date | formatDate('MMMM Do')}}</th>
+      <th class="package-name-heading">{{date | formatDate('MMMM Do, YYYY')}}</th>
     </thead>
     <tbody
       @mouseEnter="handleMouseEnterLegend()"

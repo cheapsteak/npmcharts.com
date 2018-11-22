@@ -17,13 +17,13 @@ const catmulRomInterpolation = (points, tension) =>
     .curve(curveCatmullRom)(points)
     .replace(/^M/, '');
 
-function processEntries(entries, { showWeekends = false, periodLength = 7 }) {
-  if (periodLength !== 1) {
+function processEntries(entries, { showWeekends = false, interval = 7 }) {
+  if (interval !== 1) {
     entries = _.flow([
       entries =>
         _.groupBy(entries, entry =>
           Math.floor(
-            (entries.length - entries.indexOf(entry) - 1) / periodLength,
+            (entries.length - entries.indexOf(entry) - 1) / interval,
           ),
         ),
       _.values,
@@ -63,7 +63,7 @@ export default withRender({
       type: Boolean,
       default: true,
     },
-    periodLength: {
+    interval: {
       type: Number,
       default: 7,
     },
@@ -98,7 +98,7 @@ export default withRender({
     moduleData() {
       this.render();
     },
-    periodLength() {
+    interval() {
       this.render();
     },
   },
@@ -163,9 +163,9 @@ export default withRender({
           module.downloads,
           {
             showWeekends: this.showWeekends,
-            periodLength: this.periodLength,
+            interval: this.interval,
           },
-          [module.name, this.showWeekends, this.periodLength].join(','),
+          [module.name, this.showWeekends, this.interval].join(','),
         ),
       }));
     },
@@ -174,7 +174,7 @@ export default withRender({
       const processedData = this.processForD3(this.moduleData);
       this.processedData = processedData;
       const interpolation =
-        this.periodLength > 1 ? catmulRomInterpolation : 'linear';
+        this.interval > 1 ? catmulRomInterpolation : 'linear';
 
       chart.interpolate(interpolation);
 
@@ -250,7 +250,7 @@ export default withRender({
 
       const startOfPeriodBucket = Math.floor(
         (this.moduleData[0].downloads.length - indexInModuleData) /
-          this.periodLength,
+          this.interval,
       );
 
       return this.processedData[0].values[

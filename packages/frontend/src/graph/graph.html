@@ -2,7 +2,7 @@
   <graphLegend
     v-if="moduleData.length && legendData"
     :modules="legendData.modules"
-    :period-length="periodLength"
+    :interval="interval"
     :date="legendData.date"
     @package-focus="handlePackageFocus"
     @package-blur="handlePackageBlur"

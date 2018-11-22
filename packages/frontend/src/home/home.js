@@ -1,6 +1,6 @@
 import querystring from 'querystring';
 import _ from 'lodash';
-import { format as formatDate, subYears } from 'date-fns';
+import { format as formatDate, subDays } from 'date-fns';
 import config from 'configs';
 import { setPackages } from '../packages/packages.js';
 import processPackagesStats from 'frontend/src/utils/processPackagesStats';
@@ -12,41 +12,97 @@ import withRender from './home.html';
 const palette = config.palette;
 const presetPackages = _.shuffle(config.presetPackages);
 
-var {
+const maxRequestPeriod = 365; // ~1 year
+
+const {
   default: packageInput,
   emitter: packageEvents,
   packages,
 } = require('../packages/packages');
 
-const getModuleDataByNames = async names => {
+const getModuleDataByNames = async (names, start, end) => {
   setTimeout(() => ga('send', 'pageview'));
 
   // set notify to false to prevent triggering route change
   setPackages(names, false);
 
-  const DATE_FORMAT = 'YYYY-MM-DD';
-  const endDate = formatDate(new Date(), DATE_FORMAT);
-  const startDate = formatDate(subYears(new Date(), 1), DATE_FORMAT);
-
   const operation = _.every(names, isPackageName)
     ? // names are npm packages
-      getPackagesDownloads(names, {
-        startDate,
-        endDate,
-      }).then(processPackagesStats)
+      getPackagesDownloadsOverPeriod(names, start, end)
+        .then(processPackagesStats)
     : // names are github repo names
       fetchReposCommitsStats(names);
 
   return operation;
 };
 
+/**
+ * Merge 2 statistic periods
+ * @param period0 Period before period1
+ * @param period1 Period after period0
+ * @returns The merged period
+ */
+function mergePeriods(period0, period1) {
+
+  const sumPackages = [];
+
+  for(let p=0; p<period0.length; ++p) {
+    sumPackages.push({
+      downloads: period0[p].downloads.concat(period1[p].downloads),
+      package: period0[p].package,
+      start: period0[p].start,
+      end: period1[p].end
+    });
+  }
+
+  return sumPackages;
+}
+
+function maxDate(a, b) {
+  return new Date(Math.max(a.getTime(), b.getTime()));
+}
+
+/**
+ * @param names    {string} Package names
+ * @param startDay {number} Start of period, 1 is yesterday
+ * @param endDay   {number} End of period 0 is today
+ * @returns {Promise<any>}
+ */
+function getPackagesDownloadsOverPeriod(names, startDay, endDay) {
+
+  const requestPeriod = Math.min(maxRequestPeriod, startDay - endDay);
+  const requestEndDay = startDay - requestPeriod;
+
+  const startStats = new Date(Date.UTC(2015, 1, 10));
+
+  const DATE_FORMAT = 'YYYY-MM-DD';
+  const timezone = 'UTC';
+
+  let startDate = maxDate(startStats, subDays(new Date(), startDay));
+  let endDate = maxDate(startStats, subDays(new Date(), requestEndDay));
+
+  startDate = formatDate(startDate, DATE_FORMAT, null, timezone);
+  endDate = formatDate(endDate, DATE_FORMAT, null, timezone);
+
+  const period1 = getPackagesDownloads(names, {startDate, endDate,});
+
+  if (requestEndDay > 0) {
+    const period2 = getPackagesDownloadsOverPeriod(names, startDay - requestPeriod - 1, endDay);
+    return Promise.all([period1, period2]).then(res => mergePeriods(res[0], res[1]));
+  }
+  return period1;
+}
+
 export default withRender({
   created() {
     this.isLoading = true;
-    getModuleDataByNames(this.moduleNames).then(moduleData => {
-      this.isLoading = false;
-      this.moduleData = moduleData;
-    });
+    getModuleDataByNames(this.moduleNames,
+        this.$route.query.start ? this.$route.query.start : 365,
+        this.$route.query.end ? this.$route.query.start : 0)
+      .then(moduleData => {
+        this.isLoading = false;
+        this.moduleData = moduleData;
+      });
   },
   render: withRender.default,
   data() {
@@ -85,8 +141,8 @@ export default withRender({
     queryString() {
       return querystring.stringify(this.$route.query);
     },
-    periodLength() {
-      return Number(this.$route.query.periodLength || 7);
+    interval() {
+      return Number(this.$route.query.interval || this.$route.query.periodLength || 7);
     },
     isUsingPresetPackages() {
       return !this.$route.params.packages;
@@ -134,7 +190,9 @@ export default withRender({
       ga('send', 'event', eventName, value);
     },
     getMergedQueryParams(params) {
-      return { ...this.$route.query, ...params };
+      const merged = { ...this.$route.query, ...params };
+      delete merged.periodLength;
+      return merged;
     },
     handlePackagesChange() {
       const nextRouteSansQuery = `/compare/${packages.join(',')}`;

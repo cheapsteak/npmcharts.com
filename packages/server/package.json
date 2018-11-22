@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "dev": "DEBUG=server:* nodemon --exec npm start"
+    "dev": "cross-env DEBUG=server:* nodemon --exec npm start"
   },
   "dependencies": {
     "body-parser": "~1.17.1",
@@ -20,6 +20,7 @@
     "serve-favicon": "~2.4.2"
   },
   "devDependencies": {
+    "cross-env": "5.2.0",
     "nodemon": "^1.11.0"
   }
 }
