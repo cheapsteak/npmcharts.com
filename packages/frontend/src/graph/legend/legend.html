@@ -7,7 +7,7 @@
     </thead>
     <thead class="date" v-else>
       <th class="package-downloads-heading">{{date | formatDate('dddd')}}</th>
-      <th class="package-name-heading">{{date | formatDate('MMMM Do')}}</th>
+      <th class="package-name-heading">{{date | formatDate('MMMM Do, YYYY')}}</th>
     </thead>
     <tbody
       @mouseEnter="handleMouseEnterLegend()"

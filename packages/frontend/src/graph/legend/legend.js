@@ -34,7 +34,7 @@ export default withRender({
       this.$emit('package-blur', packageName);
     },
     formatWeekByStartingDate(startOfPeriod) {
-      const startDate = formatDate(startOfPeriod, 'MMMM Do');
+      const startDate = formatDate(startOfPeriod, 'MMMM Do, YYYY');
       const endOfPeriod = addDays(startOfPeriod, 6);
       if (isSameMonth(startOfPeriod, endOfPeriod)) {
         const endDate = formatDate(endOfPeriod, 'Do');
