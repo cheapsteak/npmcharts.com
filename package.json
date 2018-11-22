@@ -10,6 +10,7 @@
   "license": "MIT",
   "scripts": {
     "production": "PORT=3896 pm2 start ecosystem.config.js --env production",
+    "prod:reload": "pm2 reload ecosystem.config.js --update-env --only npmcharts --env production",
     "startup": "pm2 startup",
     "stop:production": "pm2 stop npmcharts",
     "start": "yarn dev",
