@@ -1,9 +1,9 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-module.exports = (baseConfig, env, config) => ({
-  ...config,
+module.exports = (storybookBaseConfig, configType, defaultConfig) => ({
+  ...defaultConfig,
   module: {
-    ...config.module,
+    ...defaultConfig.module,
     rules: [
       {
         test: /\.(styl|css)$/,
@@ -31,11 +31,11 @@ module.exports = (baseConfig, env, config) => ({
           },
         ],
       },
-      ...config.module.rules,
+      ...defaultConfig.module.rules,
     ],
   },
   plugins: [
-    ...config.plugins,
+    ...defaultConfig.plugins,
     new MiniCssExtractPlugin({
       // Options similar to the same options in webpackOptions.output
       filename: '[name].css',
@@ -43,9 +43,9 @@ module.exports = (baseConfig, env, config) => ({
     }),
   ],
   resolve: {
-    ...config.resolve,
+    ...defaultConfig.resolve,
     alias: {
-      ...config.alias,
+      ...defaultConfig.alias,
       vue$: 'vue/dist/vue.esm.js',
     },
   },
