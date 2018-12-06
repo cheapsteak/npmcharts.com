@@ -10,7 +10,8 @@
     "lint": "eslint .",
     "test": "jest",
     "storybook": "start-storybook -p 6006 -s src/assets",
-    "build-storybook": "build-storybook -s src/assets"
+    "build-storybook": "build-storybook -s src/assets",
+    "chromatic": "CHROMATIC_APP_CODE=f8ytond4pc5 chromatic test"
   },
   "dependencies": {
     "array-to-sentence": "^1.1.0",
@@ -70,7 +71,8 @@
     "eslint-plugin-react": "^7.6.1",
     "npm-run-all": "^4.0.2",
     "prettier": "^1.10.2",
-    "regenerator-runtime": "^0.12.1"
+    "regenerator-runtime": "^0.12.1",
+    "storybook-chromatic": "1.2.1"
   },
   "prettier": {
     "trailingComma": "all",

@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import 'storybook-chromatic';
 import { configure } from '@storybook/vue';
 
 
