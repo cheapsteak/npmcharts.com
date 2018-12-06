@@ -10718,6 +10718,11 @@ stealthy-require@^1.1.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/stealthy-require/-/stealthy-require-1.1.1.tgz#35b09875b4ff49f26a777e509b3090a3226bf24b"
 
+storybook-vue-router@1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/storybook-vue-router/-/storybook-vue-router-1.0.2.tgz#c1ab0eb8a8f9399a5cbf907357457b03e8ecd77c"
+  integrity sha512-ECOBkM8w+duh/Bh/qj+Ysitt0t7v8kwpRsYZ5jb05kgwTlLEuz88zl5gdsZSgszYuvU2jwfpb7Fc/YL2AVRcZQ==
+
 stream-browserify@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/stream-browserify/-/stream-browserify-1.0.0.tgz#bf9b4abfb42b274d751479e44e0ff2656b6f1193"
