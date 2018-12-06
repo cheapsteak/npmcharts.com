@@ -8,7 +8,9 @@
     "dev": "webpack-dev-server --mode development --progress --hot",
     "build": "webpack --mode production",
     "lint": "eslint .",
-    "test": "jest"
+    "test": "jest",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "dependencies": {
     "array-to-sentence": "^1.1.0",
@@ -61,7 +63,13 @@
     "eslint-plugin-react": "^7.6.1",
     "npm-run-all": "^4.0.2",
     "prettier": "^1.10.2",
-    "regenerator-runtime": "^0.12.1"
+    "regenerator-runtime": "^0.12.1",
+    "@storybook/vue": "^4.0.12",
+    "@storybook/addon-actions": "^4.0.12",
+    "@storybook/addon-links": "^4.0.12",
+    "@storybook/addons": "^4.0.12",
+    "babel-preset-vue": "^2.0.2",
+    "@babel/core": "^7.2.0"
   },
   "prettier": {
     "trailingComma": "all",
