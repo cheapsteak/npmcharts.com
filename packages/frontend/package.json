@@ -9,8 +9,8 @@
     "build": "webpack --mode production",
     "lint": "eslint .",
     "test": "jest",
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "storybook": "start-storybook -p 6006 -s src/assets",
+    "build-storybook": "build-storybook -s src/assets"
   },
   "dependencies": {
     "array-to-sentence": "^1.1.0",
