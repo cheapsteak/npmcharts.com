@@ -6,3 +6,4 @@ rev-manifest.json
 error.log
 npm-debug.log*
 screenshots/*
+storybook-static
