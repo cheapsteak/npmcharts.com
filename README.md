@@ -2,11 +2,12 @@
   <img src="./packages/frontend/src/assets/images/logo.svg" alt="npmcharts" width="200"/>
 </a>
 
-### Thanks to
+### Thanks and appreciation to
 
 - npm for making their data available to hack on
 - [Chromatic](https://www.chromaticqa.com/) for providing component screenshot testing
 - [Embed.ly](https://embed.ly/) for bringing npmcharts embeds to Medium and Reddit
+- All the open source projects that have linked their READMEs' download-count badges to npmcharts 🙏
 
 ### Hidden features
 
