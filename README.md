@@ -12,7 +12,7 @@ A few things that might not be apparent just by looking at the site
 
 - Tweets of a chart should contain previews of the actual chart
 
-  <img src="./assets/twitter.gif" width="300"/>
+  <img src="./assets/ttr.gif" width="300"/>
 
 - Same with slack  
 
