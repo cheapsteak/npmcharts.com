@@ -2,6 +2,12 @@
   <img src="./packages/frontend/src/assets/images/logo.svg" alt="npmcharts" width="200"/>
 </a>
 
+### Thanks to
+
+- npm for making their data available to hack on
+- [Chromatic](https://www.chromaticqa.com/) for providing component screenshot testing
+- [Embed.ly](https://embed.ly/) for bringing npmcharts embeds to Medium and Reddit
+
 ### Hidden features
 
 A few things that might not be apparent just by looking at the site
@@ -17,10 +23,3 @@ A few things that might not be apparent just by looking at the site
 - Same with slack  
 
   <img src="./assets/slack.png" width="500"/>
-
-
-### Thanks to
-
-- npm for making their data available to hack on
-- [Chromatic](https://www.chromaticqa.com/) for providing component screenshot testing
-- [Embed.ly](https://embed.ly/) for bringing npmcharts embeds to Medium and Reddit
