@@ -1,5 +1,10 @@
 {
   "javascript.validate.enable": false,
   "eslint.enable": true,
-  "eslint.autoFixOnSave": true
+  "eslint.autoFixOnSave": true,
+  "workbench.colorCustomizations": {
+    "activityBar.background": "#073427",
+    "titleBar.activeBackground": "#0A4937",
+    "titleBar.activeForeground": "#EEFDF9"
+  }
 }
