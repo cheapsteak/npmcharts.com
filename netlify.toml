@@ -1,0 +1,5 @@
+# example netlify.toml
+[build]
+  command = "cd packages/frontend && yarn build"
+  functions = "lambdas"
+  publish = "packages/frontend/public/"
