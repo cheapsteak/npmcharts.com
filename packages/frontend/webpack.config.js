@@ -22,8 +22,8 @@ module.exports = {
     compress: true,
     port: 9001,
     proxy: {
-      '/api': 'http://localhost:3000'
-    }
+      '/api': 'http://localhost:3000',
+    },
   },
   module: {
     rules: [
@@ -88,6 +88,14 @@ module.exports = {
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: 'src/index.pug',
+      minify: {
+        collapseWhitespace: false,
+        removeComments: false,
+        removeRedundantAttributes: true,
+        removeScriptTypeAttributes: true,
+        removeStyleLinkTypeAttributes: true,
+        useShortDoctype: true,
+      },
     }),
 
     new CopyWebpackPlugin(
