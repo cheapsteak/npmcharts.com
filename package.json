@@ -17,6 +17,7 @@
     "start:server": "cd packages/server && yarn start",
     "dev:frontend": "cd packages/frontend && yarn dev",
     "dev:server": "cd packages/server && yarn dev",
+    "dev:lambda": "netlify-lambda serve packages/lambdas",
     "dev": "npm-run-all --parallel dev:*",
     "build": "NODE_ENV=production yarn build:frontend",
     "build:frontend": "cd packages/frontend && yarn build",
@@ -47,6 +48,7 @@
   "devDependencies": {
     "@babel/core": "7.1.6",
     "@babel/plugin-proposal-object-rest-spread": "7.0.0",
+    "@babel/plugin-transform-object-assign": "7.2.0",
     "@babel/polyfill": "7.0.0",
     "@babel/preset-env": "7.1.6",
     "@babel/runtime": "7.1.5",
@@ -61,6 +63,7 @@
     "eslint-plugin-prettier": "^2.6.0",
     "eslint-plugin-react": "^7.6.1",
     "jest": "23.5.0",
+    "netlify-lambda": "1.4.2",
     "npm-run-all": "^4.0.2",
     "prettier": "^1.10.2"
   },
