@@ -81,8 +81,8 @@ module.exports = {
   plugins: [
     new MiniCssExtractPlugin({
       // Options similar to the same options in webpackOptions.output
-      filename: '[name].css',
-      chunkFilename: '[id].css',
+      filename: 'static/[name].css',
+      chunkFilename: 'static/[id].css',
     }),
 
     new HtmlWebpackPlugin({

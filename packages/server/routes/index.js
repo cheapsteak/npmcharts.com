@@ -39,8 +39,8 @@ const sendSPA = async function(req, res, next) {
         : 'https://npmcharts.netlify.com/static/app.bundle.js',
     cssBundleSrc:
       process.env.NODE_ENV !== 'production'
-        ? '/app.css'
-        : 'https://npmcharts.netlify.com/app.css',
+        ? '/static/app.css'
+        : 'https://npmcharts.netlify.com/static/app.css',
   });
 };
 
