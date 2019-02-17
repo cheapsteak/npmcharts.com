@@ -10,16 +10,6 @@
   status = 200
 
 [[redirects]]
-  from = "/"
-  to = "/.netlify/functions/test"
-  status = 200
-  # By default, redirects won't be applied if there's a file with the same 
-  # path as the one defined in the `from` property. 
-  # It looks like `/` gets maps to index.html, a file that does exist.
-  # Setting `force` to `true` ensures that goes through the lambda instead
-  force = true
-
-[[redirects]]
   from = "/*"
   to = "/.netlify/functions/test"
   status = 200

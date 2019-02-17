@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/no-webpack-loader-syntax
-const html = require('raw-loader!frontend/public/index.html');
+const html = require('raw-loader!frontend/public/index.template.html');
 
 exports.handler = async (event, context) => {
   return {

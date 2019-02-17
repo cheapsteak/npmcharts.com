@@ -86,7 +86,7 @@ module.exports = {
     }),
 
     new HtmlWebpackPlugin({
-      filename: 'index.html',
+      filename: 'index.template.html',
       template: 'src/index.pug',
       minify: {
         collapseWhitespace: false,
