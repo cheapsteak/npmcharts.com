@@ -3,14 +3,3 @@
   command = "cd packages/frontend && yarn build"
   functions = "lambdas"
   publish = "packages/frontend/public/"
-
-[[redirects]]
-  from = "/api"
-  to = " https://npmcharts.com/api"
-  status = 200
-
-[[redirects]]
-  from = "/*"
-  to = "/.netlify/functions/test"
-  status = 200
-  force = false
