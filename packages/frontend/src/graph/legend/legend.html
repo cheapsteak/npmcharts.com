@@ -3,7 +3,7 @@
 >
   <table class="modules">
     <thead class="date" v-if="interval > 1">
-      <th class="" colspan="2">{{formatWeekByStartingDate(date)}}</th>
+      <th class="" colspan="2">{{formatInterval(date)}}</th>
     </thead>
     <thead class="date" v-else>
       <th class="package-downloads-heading">{{date | formatDate('dddd')}}</th>

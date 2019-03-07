@@ -1,6 +1,11 @@
 import _ from 'lodash';
 import { removePackage } from '../../packages/packages.js';
-import { isSameMonth, format as formatDate, addDays } from 'date-fns';
+import {
+  isSameMonth,
+  format as formatDate,
+  addDays,
+  isSameYear,
+} from 'date-fns';
 import withRender from './legend.html';
 
 export default withRender({
@@ -33,18 +38,23 @@ export default withRender({
     handleMouseLeavePackage(packageName) {
       this.$emit('package-blur', packageName);
     },
-    formatWeekByStartingDate(startOfPeriod) {
-      const startDate = formatDate(startOfPeriod, 'MMMM Do, YYYY');
-      const endOfPeriod = addDays(startOfPeriod, 6);
+    formatInterval(startOfPeriod) {
+      const endOfPeriod = addDays(startOfPeriod, this.interval - 1);
       if (isSameMonth(startOfPeriod, endOfPeriod)) {
-        const endDate = formatDate(endOfPeriod, 'Do');
-        return `${startDate} - ${endDate}`;
+        return `${formatDate(startOfPeriod, 'MMMM Do')} - ${formatDate(
+          endOfPeriod,
+          'Do',
+        )}, ${formatDate(startOfPeriod, 'YYYY')}`;
+      } else if (isSameYear(startOfPeriod, endOfPeriod)) {
+        return `${formatDate(startOfPeriod, 'MMMM Do')} - ${formatDate(
+          endOfPeriod,
+          'MMMM Do',
+        )}, ${formatDate(startOfPeriod, 'YYYY')}`;
       }
-      const endDate = formatDate(
-        addDays(startOfPeriod, this.interval - 1),
-        'MMMM Do',
-      );
-      return `${startDate} - ${endDate}`;
+      return `${formatDate(startOfPeriod, 'MMMM Do, YYYY')} - ${formatDate(
+        endOfPeriod,
+        'MMMM Do, YYYY',
+      )}`;
     },
   },
 });
