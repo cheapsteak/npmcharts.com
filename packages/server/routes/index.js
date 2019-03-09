@@ -2,6 +2,7 @@ const url = require('url');
 const querystring = require('querystring');
 const express = require('express');
 const router = express.Router();
+const debug = require('debug')('server:server');
 
 const getTitle = require('utils/getTitle');
 const getMinimalUrl = require('utils/getMinimalUrl');
@@ -10,6 +11,8 @@ const getPackagesDownloadsDescriptions = require('utils/stats/getPackagesDownloa
 const getPackgesFromUrl = require('utils/getPackagesFromUrl');
 
 const sendSPA = async function(req, res, next) {
+  debug('sendSPA: is prod node env?', process.env.NODE_ENV);
+
   const packages = getPackgesFromUrl(req.originalUrl);
   const fullUrl = url.parse(
     req.protocol + '://' + req.get('host') + req.originalUrl,
@@ -23,6 +26,7 @@ const sendSPA = async function(req, res, next) {
       )}`
     : 'https://npmcharts.com/images/og-image-3.png';
   const pageDescription = await getPackagesDownloadsDescriptions(packages);
+
   res.render('index', {
     title: getTitle(packages),
     description: pageDescription,

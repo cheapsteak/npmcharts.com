@@ -39,9 +39,20 @@ module.exports = async url => {
 
     await page.evaluate(navigationCommand);
     debug('waiting for graph to render');
-    await page.waitForFunction(
-      `window.__currently_rendered_graph__ === '${packages.join(',')}';`,
-    );
+    try {
+      await page.waitForFunction(
+        `window.__currently_rendered_graph__ === '${packages.join(',')}';`,
+      );
+    } catch (e) {
+      debug(
+        'exception while waiting for currently rendered graph, possibly timed out',
+      );
+      debug(e);
+      debug(
+        'window.__currently_rendered_graph__ is ' +
+          (await page.evaluate(() => window.__currently_rendered_graph__)),
+      );
+    }
     await page.waitFor(300);
 
     fs.ensureDirSync(SCREENSHOT_DIR);
