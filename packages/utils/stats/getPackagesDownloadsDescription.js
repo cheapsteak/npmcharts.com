@@ -26,16 +26,7 @@ const getPackagesDescriptions = async packages => {
     )} (${formatPercentage(packageStats.monthly.change)})`;
   } else {
     description =
-      'Comparison of monthly downloads - ' +
-      _.orderBy(trimmedComparisons, x => x.monthly.downloads, 'desc')
-        .map(
-          packageStats =>
-            `${packageStats.package}: ${formatDownloadCount(
-              packageStats.monthly.downloads,
-            )} (${formatPercentage(packageStats.monthly.change)})`,
-        )
-        .join(', ') +
-      '; weekly downloads - ' +
+      'Weekly downloads - ' +
       _.orderBy(trimmedComparisons, x => x.weekly.downloads, 'desc')
         .map(
           packageStats =>
