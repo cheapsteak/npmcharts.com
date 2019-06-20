@@ -28,8 +28,9 @@ const getModuleDataByNames = async (names, start, end) => {
 
   const operation = _.every(names, isPackageName)
     ? // names are npm packages
-      getPackagesDownloadsOverPeriod(names, start, end)
-        .then(processPackagesStats)
+      getPackagesDownloadsOverPeriod(names, start, end).then(
+        processPackagesStats,
+      )
     : // names are github repo names
       fetchReposCommitsStats(names);
 
@@ -43,15 +44,14 @@ const getModuleDataByNames = async (names, start, end) => {
  * @returns The merged period
  */
 function mergePeriods(period0, period1) {
-
   const sumPackages = [];
 
-  for(let p=0; p<period0.length; ++p) {
+  for (let p = 0; p < period0.length; ++p) {
     sumPackages.push({
       downloads: period0[p].downloads.concat(period1[p].downloads),
       package: period0[p].package,
       start: period0[p].start,
-      end: period1[p].end
+      end: period1[p].end,
     });
   }
 
@@ -69,7 +69,6 @@ function maxDate(a, b) {
  * @returns {Promise<any>}
  */
 function getPackagesDownloadsOverPeriod(names, startDay, endDay) {
-
   const requestPeriod = Math.min(maxRequestPeriod, startDay - endDay);
   const requestEndDay = startDay - requestPeriod;
 
@@ -84,11 +83,17 @@ function getPackagesDownloadsOverPeriod(names, startDay, endDay) {
   startDate = formatDate(startDate, DATE_FORMAT, null, timezone);
   endDate = formatDate(endDate, DATE_FORMAT, null, timezone);
 
-  const period1 = getPackagesDownloads(names, {startDate, endDate,});
+  const period1 = getPackagesDownloads(names, { startDate, endDate });
 
   if (requestEndDay > 0) {
-    const period2 = getPackagesDownloadsOverPeriod(names, startDay - requestPeriod - 1, endDay);
-    return Promise.all([period1, period2]).then(res => mergePeriods(res[0], res[1]));
+    const period2 = getPackagesDownloadsOverPeriod(
+      names,
+      startDay - requestPeriod - 1,
+      endDay,
+    );
+    return Promise.all([period1, period2]).then(res =>
+      mergePeriods(res[0], res[1]),
+    );
   }
   return period1;
 }
@@ -96,13 +101,14 @@ function getPackagesDownloadsOverPeriod(names, startDay, endDay) {
 export default withRender({
   created() {
     this.isLoading = true;
-    getModuleDataByNames(this.moduleNames,
-        this.$route.query.start ? this.$route.query.start : 365,
-        this.$route.query.end ? this.$route.query.start : 0)
-      .then(moduleData => {
-        this.isLoading = false;
-        this.moduleData = moduleData;
-      });
+    getModuleDataByNames(
+      this.moduleNames,
+      this.$route.query.start ? this.$route.query.start : 365,
+      this.$route.query.end ? this.$route.query.start : 0,
+    ).then(moduleData => {
+      this.isLoading = false;
+      this.moduleData = moduleData;
+    });
   },
   render: withRender.default,
   data() {
@@ -142,7 +148,9 @@ export default withRender({
       return querystring.stringify(this.$route.query);
     },
     interval() {
-      return Number(this.$route.query.interval || this.$route.query.periodLength || 7);
+      return Number(
+        this.$route.query.interval || this.$route.query.periodLength || 7,
+      );
     },
     isUsingPresetPackages() {
       return !this.$route.params.packages;
