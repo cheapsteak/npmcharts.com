@@ -47,7 +47,7 @@
         tag="label"
         v-if="moduleNames"
         :to="{ path: '/compare/' + moduleNames.join(','), query: getMergedQueryParams({interval: 1})}"
-        @change="track('set interval', interval)"
+        @click.native="track('set interval', interval)"
       >
         <input type="radio" :checked="interval === 1"> daily
       </router-link>
@@ -55,7 +55,7 @@
         tag="label"
         v-if="moduleNames"
         :to="{ path: '/compare/' + moduleNames.join(',') + '?', query: getMergedQueryParams({interval: 7})}"
-        @change="track('set interval', interval)"
+        @click.native="track('set interval', interval)"
       >
         <input type="radio" :checked="interval === 7"> weekly
       </router-link>
@@ -63,7 +63,7 @@
         tag="label"
         v-if="moduleNames"
         :to="{ path: '/compare/' + moduleNames.join(',') + '?', query: getMergedQueryParams({interval: 30})}"
-        @change="track('set interval', interval)"
+        @click.native="track('set interval', interval)"
       >
         <input type="radio" :checked="interval === 30"> monthly
       </router-link>
@@ -71,7 +71,7 @@
         tag="button"
         class="minimal-mode"
         :to="{ query: { minimal: 'true', interval: interval }}"
-        @click="track('enter-minimal-mode')"
+        @click.native="track('enter-minimal-mode')"
       >enter minimal mode</router-link>
 
     </div>
@@ -96,7 +96,7 @@
           tag="li"
           v-for="packages in presetPackages"
           :to="'/compare/' + packages.join(',') + '?' + queryString"
-          @click="track('click-preset', packages.join(','))"
+          @click.native="track('click-preset', packages.join(','))"
           class="match"
           :key="packages.join(',')"
         >
