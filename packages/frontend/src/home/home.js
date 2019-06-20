@@ -208,13 +208,15 @@ export default withRender({
         'add',
         `${packageName} existing:${this.moduleNames}`,
       );
-      if (this.$route.params && this.$route.params.packages) {
-        this.$router.push(
-          '/compare/' + this.$route.params.packages + ',' + packageName,
-        );
-      } else {
-        this.$router.push('/compare/' + packageName);
-      }
+
+      this.$router.push({
+        path: `/compare/${
+          this.$route.params && this.$route.params.packages
+            ? this.$route.params.packages + ',' + packageName
+            : packageName
+        }`,
+        query: this.$route.query,
+      });
     },
     clearPackages() {
       this.$router.push('/compare');
