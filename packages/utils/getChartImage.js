@@ -12,7 +12,7 @@ const sanitizeScreenshotFilename = url =>
   sanitizeFilename(getPackagesFromUrl(url).join(','));
 
 const fileIsNotStale = filePath =>
-  differenceInWeeks(new Date(), Date(fs.statSync(filePath).mtime)) < 1;
+  differenceInWeeks(new Date(), Date(fs.statSync(filePath).mtime)) < 2;
 
 module.exports = async url => {
   try {
