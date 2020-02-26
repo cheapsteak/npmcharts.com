@@ -38,10 +38,14 @@ module.exports = async url => {
     debug('evaluating:', navigationCommand);
 
     await page.evaluate(navigationCommand);
-    debug('waiting for graph to render');
+    debug(
+      `waiting for graph to render ('window.__currently_rendered_graph__' to equal '${packages.join(
+        ',',
+      )}')`,
+    );
     try {
       await page.waitForFunction(
-        `window.__currently_rendered_graph__ === '${packages.join(',')}';`,
+        `window.__currently_rendered_graph__ === '${packages.join(',')}'`,
       );
     } catch (e) {
       debug(
@@ -56,7 +60,7 @@ module.exports = async url => {
     await page.waitFor(300);
 
     fs.ensureDirSync(SCREENSHOT_DIR);
-    debug('taking screenshot');
+    debug(`taking screenshot and saving to: ${screenshotPath}`);
     const screenshot = await page.screenshot({
       path: screenshotPath,
     });
