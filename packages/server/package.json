@@ -20,6 +20,7 @@
     "serve-favicon": "~2.4.2"
   },
   "devDependencies": {
+    "@types/puppeteer": "2.0.1",
     "cross-env": "5.2.0",
     "nodemon": "^1.11.0"
   }
