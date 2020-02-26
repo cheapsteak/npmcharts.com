@@ -1,31 +1,10 @@
-const path = require('path');
-const fs = require('fs-extra');
 const debug = require('debug')('server:getChartImage');
-const differenceInWeeks = require('date-fns/difference_in_weeks');
-const sanitizeFilename = require('filenamify');
-
 const browserPagePool = require('./services/browserPagePool');
 const getPackagesFromUrl = require('./getPackagesFromUrl');
-const SCREENSHOT_DIR = require('configs/SCREENSHOT_DIR');
-
-const sanitizeScreenshotFilename = url =>
-  sanitizeFilename(getPackagesFromUrl(url).join(','));
-
-const fileIsNotStale = filePath =>
-  differenceInWeeks(new Date(), Date(fs.statSync(filePath).mtime)) < 2;
 
 module.exports = async url => {
   try {
     debug('checking if screenshot exists');
-    const screenshotPath = path.join(
-      SCREENSHOT_DIR,
-      `${sanitizeScreenshotFilename(url)}.png`,
-    );
-
-    if (fs.existsSync(screenshotPath) && fileIsNotStale(screenshotPath)) {
-      debug('returning existing screenshot');
-      return fs.readFileSync(screenshotPath);
-    }
 
     const packages = getPackagesFromUrl(url);
 
@@ -59,11 +38,8 @@ module.exports = async url => {
     }
     await page.waitFor(300);
 
-    fs.ensureDirSync(SCREENSHOT_DIR);
-    debug(`taking screenshot and saving to: ${screenshotPath}`);
-    const screenshot = await page.screenshot({
-      path: screenshotPath,
-    });
+    debug(`taking screenshot`);
+    const screenshot = await page.screenshot();
     debug('releasing page');
     await browserPagePool.release(page);
     debug('returning screenshot');

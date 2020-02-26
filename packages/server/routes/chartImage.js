@@ -1,26 +1,8 @@
-const fs = require('fs');
-const url = require('url');
 const querystring = require('querystring');
 const express = require('express');
-const filesize = require('filesize');
 const debug = require('debug')('server:server');
-
-const SCREENSHOT_DIR = require('configs/SCREENSHOT_DIR');
 const getChartImage = require('utils/getChartImage');
-const getMinimalUrl = require('utils/getMinimalUrl');
-const shouldScreencapUrl = require('utils/shouldScreencapUrl');
-
 const router = express.Router();
-
-router.get('/folder-size', function(req, res, next) {
-  debug('sending screenshot directory folder-size');
-  try {
-    res.send({ size: filesize(fs.statSync(SCREENSHOT_DIR).size) });
-  } catch (e) {
-    debug('error sending folder size', e);
-    res.status(500).send({ error: e.toString() });
-  }
-});
 
 router.get('/:packages*', async function(req, res, next) {
   debug('chart image route');
