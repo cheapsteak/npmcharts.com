@@ -6,5 +6,10 @@ module.exports = urlString => {
   if (pathname === '/') {
     return [];
   }
-  return pathname.replace(/^\/compare\//, '').split(',') || [];
+  return (
+    pathname
+      .replace(/^\/compare\//, '')
+      .split(',')
+      .filter(x => !!x) || []
+  );
 };

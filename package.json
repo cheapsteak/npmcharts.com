@@ -44,12 +44,11 @@
     "whatwg-fetch": "^0.9.0"
   },
   "devDependencies": {
-    "@babel/core": "7.1.6",
-    "@babel/plugin-proposal-object-rest-spread": "7.0.0",
-    "@babel/polyfill": "7.0.0",
-    "@babel/preset-env": "7.1.6",
-    "@babel/runtime": "7.1.5",
-    "babel-eslint": "10.0.1",
+    "@babel/core": "7.9.6",
+    "@babel/plugin-proposal-object-rest-spread": "7.9.6",
+    "@babel/preset-env": "7.9.6",
+    "@babel/runtime": "7.9.6",
+    "babel-eslint": "10.1.0",
     "debug": "^3.1.0",
     "eslint": "3.19",
     "eslint-config-prettier": "^2.9.0",
@@ -59,7 +58,7 @@
     "eslint-plugin-jsx-a11y": "^5.0.3",
     "eslint-plugin-prettier": "^2.6.0",
     "eslint-plugin-react": "^7.6.1",
-    "jest": "23.5.0",
+    "jest": "26.0.1",
     "npm-run-all": "^4.0.2",
     "prettier": "^1.10.2"
   },
