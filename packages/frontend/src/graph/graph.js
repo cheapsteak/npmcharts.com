@@ -1,7 +1,7 @@
 import d3 from 'd3';
 import nv from 'nvd3';
 import _ from 'lodash';
-import { format as formatDate, subMonths, startOfDay } from 'date-fns';
+import { format as formatDate, startOfDay } from 'date-fns';
 import { line, curveCatmullRom } from 'd3-shape';
 import withRender from './graph.html';
 
