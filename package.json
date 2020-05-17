@@ -50,7 +50,7 @@
     "@babel/runtime": "7.9.6",
     "babel-eslint": "10.1.0",
     "debug": "^3.1.0",
-    "eslint": "3.19",
+    "eslint": "4.18",
     "eslint-config-prettier": "^2.9.0",
     "eslint-config-react-app": "^2.1.0",
     "eslint-plugin-flowtype": "^2.45.0",
