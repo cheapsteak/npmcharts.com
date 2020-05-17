@@ -1,5 +1,3 @@
-import 'whatwg-fetch';
-
 import Vue from 'vue';
 import { format as formatDate } from 'date-fns';
 import router from './router.js';
