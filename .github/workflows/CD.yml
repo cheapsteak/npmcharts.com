@@ -54,5 +54,6 @@ jobs:
       env:
         PROJECT_ID: npmcharts-210003
         APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
-      run: |
-        gsutil -m cp -r packages/frontend/public gs://npmcharts/deployments/branches/${$(git rev-parse --abbrev-ref HEAD)//\//-}
+        CLI: gsutil
+      with:
+        args: -m cp -r packages/frontend/public gs://npmcharts/deployments/branches/${$(git rev-parse --abbrev-ref HEAD)//\//-}
