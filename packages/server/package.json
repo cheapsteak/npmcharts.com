@@ -13,11 +13,14 @@
     "debug": "~2.6.3",
     "express": "~4.15.2",
     "generic-pool": "^3.4.2",
+    "http-proxy": "1.18.1",
     "lru-cache": "^4.1.3",
     "morgan": "~1.9.1",
+    "psl": "1.8.0",
     "pug": "~2.0.0-beta11",
     "puppeteer": "^2.1.1",
-    "serve-favicon": "~2.4.2"
+    "serve-favicon": "~2.4.2",
+    "vhost": "3.0.2"
   },
   "devDependencies": {
     "@types/puppeteer": "2.0.1",

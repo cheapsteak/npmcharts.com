@@ -1,6 +1,7 @@
 const url = require('url');
 const querystring = require('querystring');
 const express = require('express');
+const vhost = require('vhost');
 const router = express.Router();
 const debug = require('debug')('server:server');
 
@@ -59,6 +60,13 @@ router.get('//compare/:packages*', (req, res) =>
         req.get('host') +
         req.originalUrl.replace(/\/\/compare/, '/compare'),
     ).href,
+  ),
+);
+
+router.use(
+  vhost(
+    '*.deploys.npmcharts.com',
+    require('./routeSubdomains').routeSubdomains,
   ),
 );
 
