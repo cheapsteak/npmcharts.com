@@ -50,4 +50,5 @@ jobs:
         APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
         CLI: gsutil
       with:
-        args: -m cp -r packages/frontend/public gs://npmcharts/deployments/branches/${$(git rev-parse --abbrev-ref HEAD)//\//-}
+        # branch name, replacing `/`s with `-`s
+        args: -m cp -r packages/frontend/public gs://npmcharts/deployments/branches/$(git rev-parse --abbrev-ref HEAD | tr '/' '-')
