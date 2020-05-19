@@ -43,6 +43,11 @@ jobs:
     - name: Test
       run: yarn test
 
+    - name: Escaped Branch Name
+      id: collect_subdomain
+      # branch name, replacing `/`s with `-`s
+      run: echo "::set-output name=branch_name_escaped::$(git rev-parse --abbrev-ref HEAD | tr '/' '-')"
+
     - name: Deploy Artifacts to GCP
       uses: actions-hub/gcloud@289.0.0
       env:
@@ -50,5 +55,7 @@ jobs:
         APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
         CLI: gsutil
       with:
-        # branch name, replacing `/`s with `-`s
-        args: -m cp -r packages/frontend/public gs://npmcharts/deployments/branches/$(git rev-parse --abbrev-ref HEAD | tr '/' '-')
+        args: -m cp -r packages/frontend/public gs://npmcharts/deployments/branches/${{ steps.collect_subdomain.outputs.branch_name_escaped }}
+
+    - name: Log deploy preview URL
+      run: echo "https://deploy-preview--${{ steps.collect_subdomain.outputs.branch_name_escaped }}.deploys.npmcharts.com"
