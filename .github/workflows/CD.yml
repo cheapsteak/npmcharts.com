@@ -1,8 +1,8 @@
 name: CD
 
 on:
-  push:
-    branches: [ '**' ]
+  # push:
+  #   branches: [ '**' ]
   pull_request:
     branches: [ '**' ]
 
@@ -21,41 +21,76 @@ jobs:
     - name: Set node version env var
       run: echo ::set-env name=NODE_VERSION::$(node --version)
 
-    - uses: actions/cache@v1
-      id: cache-dependencies
+    - uses: actions/github-script@v1
+      id: deploy_preview
       with:
-        # intentionally cache node_modules instead of yarn cache
-        path: node_modules
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}-${{ env.NODE_VERSION }}
-        restore-keys: |
-          ${{ runner.os }}-yarn-
+        previews: "ant-man"
+        script: |
+          console.log('context.repo.sha', context.sha);
+          const createDeploymentResponse = await github.repos.createDeployment({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            ref: context.sha,
+            environment: "deploy preview",
+            required_contexts: [],
+          });
 
-    - name: Install
-      if: steps.cache-dependencies.outputs.cache-hit != 'true'
-      run: yarn --frozen-lockfile
+          console.log('createDeploymentResponse', createDeploymentResponse.data)
 
-    - name: Build
-      run: yarn build
+          console.log('createDeploymentStatus..');
 
-    - name: Lint
-      run: yarn lint
+          const createSuccessDeploymentStatus = await github.repos.createDeploymentStatus({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
 
-    - name: Test
-      run: yarn test
+            deployment_id: createDeploymentResponse.data.id,
+            state: "success",
+            // environment: "deploy preview",
+            environment_url: "https://environment_url.npmcharts.com/",
+            description: "some description",
+            headers: {
+                "Accept": "application/vnd.github.ant-man-preview+json"
+            },
+          });
 
-    - name: Escaped Branch Name
-      id: collect_subdomain
-      # branch name, replacing `/`s with `-`s
-      run: echo "::set-output name=branch_name_escaped::$(git rev-parse --abbrev-ref HEAD | tr '/' '-')"
+          console.log('createSuccessDeploymentStatus', createSuccessDeploymentStatus.data)
 
-    - name: Deploy Artifacts to GCP
-      uses: actions-hub/gcloud@289.0.0
-      env:
-        PROJECT_ID: npmcharts-210003
-        APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
-        CLI: gsutil
-      with:
-        args: -m cp -r packages/frontend/public gs://npmcharts/deployments/branches/${{ steps.collect_subdomain.outputs.branch_name_escaped }}
 
-    - name: Log deploy preview URL
-      run: echo "https://deploy-preview--${{ steps.collect_subdomain.outputs.branch_name_escaped }}.deploys.npmcharts.com"
+    # - uses: actions/cache@v1
+    #   id: cache-dependencies
+    #   with:
+    #     # intentionally cache node_modules instead of yarn cache
+    #     path: node_modules
+    #     key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}-${{ env.NODE_VERSION }}
+    #     restore-keys: |
+    #       ${{ runner.os }}-yarn-
+
+    # - name: Install
+    #   if: steps.cache-dependencies.outputs.cache-hit != 'true'
+    #   run: yarn --frozen-lockfile
+
+    # - name: Build
+    #   run: yarn build
+
+    # - name: Lint
+    #   run: yarn lint
+
+    # - name: Test
+    #   run: yarn test
+
+    # - name: Escaped Branch Name
+    #   id: collect_subdomain
+    #   # branch name, replacing `/`s with `-`s
+    #   run: echo "::set-output name=branch_name_escaped::$(git rev-parse --abbrev-ref HEAD | tr '/' '-')"
+
+    # - name: Deploy Artifacts to GCP
+    #   uses: actions-hub/gcloud@289.0.0
+    #   env:
+    #     PROJECT_ID: npmcharts-210003
+    #     APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+    #     CLI: gsutil
+    #   with:
+    #     args: -m cp -r packages/frontend/public gs://npmcharts/deployments/branches/${{ steps.collect_subdomain.outputs.branch_name_escaped }}
+
+    # - name: Log deploy preview URL
+    #   run: echo "https://deploy-preview--${{ steps.collect_subdomain.outputs.branch_name_escaped }}.deploys.npmcharts.com"
