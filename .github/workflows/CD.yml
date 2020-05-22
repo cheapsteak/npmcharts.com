@@ -3,8 +3,6 @@ name: CD
 on:
   push:
     branches: [ '**' ]
-  pull_request:
-    branches: [ '**' ]
 
 jobs:
   build-frontend:
@@ -13,6 +11,25 @@ jobs:
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
+
+    # Start a deployment
+    - uses: actions/github-script@v1
+      id: deploy_preview_start
+      with:
+        previews: "ant-man"
+        result-encoding: string
+        script: |
+          const createDeploymentResponse = await github.repos.createDeployment({
+            ...context.repo,
+            ref: context.sha,
+            environment: "deploy preview",
+            required_contexts: [],
+          });
+
+          console.log('deployment id: ', createDeploymentResponse.data.id)
+
+          return createDeploymentResponse.data.id
+
     - name: Use Node.js
       uses: actions/setup-node@v1
       with:
@@ -43,6 +60,11 @@ jobs:
     - name: Test
       run: yarn test
 
+    - name: Escaped Branch Name
+      id: collect_subdomain
+      # branch name, replacing `/`s with `-`s
+      run: echo "::set-output name=branch_name_escaped::$(git rev-parse --abbrev-ref HEAD | tr '/' '-')"
+
     - name: Deploy Artifacts to GCP
       uses: actions-hub/gcloud@289.0.0
       env:
@@ -50,5 +72,28 @@ jobs:
         APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
         CLI: gsutil
       with:
-        # branch name, replacing `/`s with `-`s
-        args: -m cp -r packages/frontend/public gs://npmcharts/deployments/branches/$(git rev-parse --abbrev-ref HEAD | tr '/' '-')
+        args: -m cp -r packages/frontend/public gs://npmcharts/deployments/branches/${{ steps.collect_subdomain.outputs.branch_name_escaped }}
+
+    - name: Store deploy preview URL
+      id: store_deploy_url
+      run: |
+        echo "::set-output name=deploy_preview_url::https://deploy-preview--${{ steps.collect_subdomain.outputs.branch_name_escaped }}.deploys.npmcharts.com"
+
+
+    - uses: actions/github-script@v1
+      id: deploy_preview_complete
+      with:
+        previews: "ant-man"
+        result-encoding: string
+        script: |
+          const createSuccessDeploymentStatus = await github.repos.createDeploymentStatus({
+            ...context.repo,
+            deployment_id: "${{ steps.deploy_preview_start.outputs.result }}",
+            state: "success",
+            environment_url: "${{ steps.store_deploy_url.outputs.deploy_preview_url }}",
+            headers: {
+                "Accept": "application/vnd.github.ant-man-preview+json"
+            },
+          });
+
+          console.log('createSuccessDeploymentStatus', createSuccessDeploymentStatus.data)
