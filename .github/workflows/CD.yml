@@ -1,10 +1,10 @@
 name: CD
 
 on:
-  # push:
-  #   branches: [ '**' ]
-  pull_request:
+  push:
     branches: [ '**' ]
+  # pull_request:
+  #   branches: [ '**' ]
 
 jobs:
   build-frontend:
@@ -20,6 +20,48 @@ jobs:
 
     - name: Set node version env var
       run: echo ::set-env name=NODE_VERSION::$(node --version)
+
+    - uses: actions/cache@v1
+      id: cache-dependencies
+      with:
+        # intentionally cache node_modules instead of yarn cache
+        path: node_modules
+        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}-${{ env.NODE_VERSION }}
+        restore-keys: |
+          ${{ runner.os }}-yarn-
+
+    - name: Install
+      if: steps.cache-dependencies.outputs.cache-hit != 'true'
+      run: yarn --frozen-lockfile
+
+    - name: Build
+      run: yarn build
+
+    - name: Lint
+      run: yarn lint
+
+    - name: Test
+      run: yarn test
+
+    - name: Escaped Branch Name
+      id: collect_subdomain
+      # branch name, replacing `/`s with `-`s
+      run: echo "::set-output name=branch_name_escaped::$(git rev-parse --abbrev-ref HEAD | tr '/' '-')"
+
+    - name: Deploy Artifacts to GCP
+      uses: actions-hub/gcloud@289.0.0
+      env:
+        PROJECT_ID: npmcharts-210003
+        APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+        CLI: gsutil
+      with:
+        args: -m cp -r packages/frontend/public gs://npmcharts/deployments/branches/${{ steps.collect_subdomain.outputs.branch_name_escaped }}
+
+    - name: Store deploy preview URL
+      id: store_deploy_url
+      run: |
+        echo "::set-output name=deploy_preview_url::https://deploy-preview--${{ steps.collect_subdomain.outputs.branch_name_escaped }}.deploys.npmcharts.com"
+
 
     - uses: actions/github-script@v1
       id: deploy_preview
@@ -45,52 +87,10 @@ jobs:
 
             deployment_id: createDeploymentResponse.data.id,
             state: "success",
-            // environment: "deploy preview",
-            environment_url: "https://environment_url.npmcharts.com/",
-            description: "some description",
+            environment_url: "${{ steps.store_deploy_url.outputs.deploy_preview_url }}",
             headers: {
                 "Accept": "application/vnd.github.ant-man-preview+json"
             },
           });
 
           console.log('createSuccessDeploymentStatus', createSuccessDeploymentStatus.data)
-
-
-    # - uses: actions/cache@v1
-    #   id: cache-dependencies
-    #   with:
-    #     # intentionally cache node_modules instead of yarn cache
-    #     path: node_modules
-    #     key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}-${{ env.NODE_VERSION }}
-    #     restore-keys: |
-    #       ${{ runner.os }}-yarn-
-
-    # - name: Install
-    #   if: steps.cache-dependencies.outputs.cache-hit != 'true'
-    #   run: yarn --frozen-lockfile
-
-    # - name: Build
-    #   run: yarn build
-
-    # - name: Lint
-    #   run: yarn lint
-
-    # - name: Test
-    #   run: yarn test
-
-    # - name: Escaped Branch Name
-    #   id: collect_subdomain
-    #   # branch name, replacing `/`s with `-`s
-    #   run: echo "::set-output name=branch_name_escaped::$(git rev-parse --abbrev-ref HEAD | tr '/' '-')"
-
-    # - name: Deploy Artifacts to GCP
-    #   uses: actions-hub/gcloud@289.0.0
-    #   env:
-    #     PROJECT_ID: npmcharts-210003
-    #     APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
-    #     CLI: gsutil
-    #   with:
-    #     args: -m cp -r packages/frontend/public gs://npmcharts/deployments/branches/${{ steps.collect_subdomain.outputs.branch_name_escaped }}
-
-    # - name: Log deploy preview URL
-    #   run: echo "https://deploy-preview--${{ steps.collect_subdomain.outputs.branch_name_escaped }}.deploys.npmcharts.com"
