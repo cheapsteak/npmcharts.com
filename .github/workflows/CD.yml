@@ -3,8 +3,6 @@ name: CD
 on:
   push:
     branches: [ '**' ]
-  # pull_request:
-  #   branches: [ '**' ]
 
 jobs:
   build-frontend:
@@ -13,6 +11,25 @@ jobs:
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
+
+    # Start a deployment
+    - uses: actions/github-script@v1
+      id: deploy_preview_start
+      with:
+        previews: "ant-man"
+        result-encoding: string
+        script: |
+          const createDeploymentResponse = await github.repos.createDeployment({
+            ...context.repo,
+            ref: context.sha,
+            environment: "deploy preview",
+            required_contexts: [],
+          });
+
+          console.log('deployment id: ', createDeploymentResponse.data.id)
+
+          return createDeploymentResponse.data.id
+
     - name: Use Node.js
       uses: actions/setup-node@v1
       with:
@@ -64,28 +81,14 @@ jobs:
 
 
     - uses: actions/github-script@v1
-      id: deploy_preview
+      id: deploy_preview_complete
       with:
         previews: "ant-man"
+        result-encoding: string
         script: |
-          console.log('context.repo.sha', context.sha);
-          const createDeploymentResponse = await github.repos.createDeployment({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            ref: context.sha,
-            environment: "deploy preview",
-            required_contexts: [],
-          });
-
-          console.log('createDeploymentResponse', createDeploymentResponse.data)
-
-          console.log('createDeploymentStatus..');
-
           const createSuccessDeploymentStatus = await github.repos.createDeploymentStatus({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-
-            deployment_id: createDeploymentResponse.data.id,
+            ...context.repo,
+            deployment_id: "${{ steps.deploy_preview_start.outputs.result }}",
             state: "success",
             environment_url: "${{ steps.store_deploy_url.outputs.deploy_preview_url }}",
             headers: {
