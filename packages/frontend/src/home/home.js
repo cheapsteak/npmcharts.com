@@ -274,6 +274,7 @@ export default withRender({
           }),
         )
         .join('\n');
+      this.track('download csv', moduleNames);
       downloadCsv(csv, `${moduleNames}.csv`);
     },
     shuffle: _.shuffle,
