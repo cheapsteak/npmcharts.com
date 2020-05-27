@@ -73,6 +73,9 @@
         :to="{ query: { minimal: 'true', interval: interval }}"
         @click.native="track('enter-minimal-mode')"
       >enter minimal mode</router-link>
+      <button class="download-btn" v-on:click="handleDownloadCsv">
+        download csv
+      </button>
 
     </div>
   </form>

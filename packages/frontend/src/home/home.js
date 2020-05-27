@@ -8,6 +8,7 @@ import getPackagesDownloads from 'utils/stats/getPackagesDownloads';
 import isPackageName from 'utils/isPackageName';
 import fetchReposCommitsStats from 'frontend/src/home/fetchReposCommitStats';
 import withRender from './home.html';
+import { downloadCsv } from './downloadCsv';
 
 const palette = config.palette;
 const presetPackages = _.shuffle(config.presetPackages);
@@ -249,6 +250,31 @@ export default withRender({
     },
     handleMouseLeaveTwitter() {
       clearTimeout(this.twitterEventTimeout);
+    },
+    handleDownloadCsv(e) {
+      e.preventDefault();
+      const moduleNames = this.moduleData.map(x => x.name);
+      const moduleWithLongestHistory = _.maxBy(
+        this.moduleData,
+        x => x.downloads.length,
+      );
+      var csv = [['Date', ...moduleNames]]
+        .concat(
+          moduleWithLongestHistory.downloads.map(({ day, downloads }) => {
+            return [day.toLocaleDateString()].concat(
+              this.moduleData
+                .map(
+                  moduleData =>
+                    moduleData.downloads.find(
+                      x => x.day.toISOString() === day.toISOString(),
+                    ).count || '',
+                )
+                .join(','),
+            );
+          }),
+        )
+        .join('\n');
+      downloadCsv(csv, `${moduleNames}.csv`);
     },
     shuffle: _.shuffle,
   },
