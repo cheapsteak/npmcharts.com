@@ -37,7 +37,7 @@
     "filesize": "^3.6.0",
     "fs-extra": "^5.0.0",
     "isomorphic-fetch": "^2.2.1",
-    "lodash": "^4.17.13",
+    "lodash": "^4.17.19",
     "numeral": "^2.0.6",
     "nvd3": "1.8.3",
     "pm2": "3.2.2",
