@@ -1,22 +1,31 @@
 module.exports = {
   presetPackages: [
-    ['browserify', 'webpack', 'rollup', 'parcel-bundler'],
-    ['recompose', 'mobx'],
-    [
-      'glamor',
-      'aphrodite',
-      'radium',
-      'glamorous',
-      'styled-components',
-      'jss',
-      'emotion',
-    ],
-    // ['lodash', 'underscore'],
-    ['node-sass', 'less', 'stylus'],
-    // ['gulp', 'grunt'],
+    // build tools
+    ['webpack', 'rollup', 'parcel-bundler', 'vite', 'snowpack'],
+    // state managament
+    ['mobx', 'redux', 'immer', 'immutable'],
+    // styling
+    ['styled-components', '@emotion/core', 'jss', 'emotion', 'tailwindcss'],
+    // indicators?
+    ['lodash', 'debug', 'typescript'],
+    // frontend frameworks
     ['react', 'angular', '@angular/core', 'ember-cli', 'vue'],
-    ['log4js', 'winston'],
-    // ['meteor-node-stubs', 'sails'],
+    // logging
+    ['log4js', 'winston', 'bunyan', 'morgan', 'pino'],
+    // database
+    ['knex', 'sequelize', 'pg', 'typeorm', '@prisma/client', 'slonik'],
+    // toolchain
+    ['@babel/core', 'eslint', 'rome', 'jest'],
+    // component libraries
+    [
+      '@chakra-ui/core',
+      '@material-ui/core',
+      'semantic-ui-react',
+      '@fluentui/react',
+      '@blueprintjs/core',
+      '@adobe/react-spectrum',
+      'antd',
+    ],
   ],
   palette: [
     '#2196F3',
