@@ -104,7 +104,7 @@
           :key="packages.join(',')"
         >
           <template v-for="(packageItem, index) in packages">
-            <span class="vs" v-if="index !==0" :key="packageItem + 'vs'"> vs </span><span
+            <span class="vs" v-if="index !==0" :key="packageItem + 'vs'">, </span><span
               :key="packageItem"
               class="package-name"
               :style="{
