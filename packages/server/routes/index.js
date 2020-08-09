@@ -11,18 +11,18 @@ const shouldScreencapUrl = require('utils/shouldScreencapUrl');
 const getPackagesDownloadsDescriptions = require('utils/stats/getPackagesDownloadsDescription');
 const getPackgesFromUrl = require('utils/getPackagesFromUrl');
 
+// req.protocol is returning 'http' when it shouldn't
+const protocol = 'https';
+
 const sendSPA = async function(req, res, next) {
   debug('sendSPA: is prod node env?', process.env.NODE_ENV);
-
   const packages = getPackgesFromUrl(req.originalUrl);
   const fullUrl = url.parse(
-    req.protocol + '://' + req.get('host') + req.originalUrl,
+    protocol + '://' + req.get('host') + req.originalUrl,
   );
   const minimalModeUrl = getMinimalUrl(fullUrl.href);
   const ogImage = shouldScreencapUrl(minimalModeUrl)
-    ? `${req.protocol}://${req.get('host')}/chart-image/${packages.join(
-        ',',
-      )}.png`
+    ? `${protocol}://${req.get('host')}/chart-image/${packages.join(',')}.png`
     : 'https://npmcharts.com/images/og-image-3.png';
   const pageDescription = await getPackagesDownloadsDescriptions(packages);
 
@@ -55,7 +55,7 @@ router.get('//compare/:packages*', (req, res) =>
   res.redirect(
     301,
     url.parse(
-      req.protocol +
+      protocol +
         '://' +
         req.get('host') +
         req.originalUrl.replace(/\/\/compare/, '/compare'),
