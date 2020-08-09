@@ -26,6 +26,9 @@ module.exports = async url => {
       await page.waitForFunction(
         `window.__currently_rendered_graph__ === '${packages.join(',')}'`,
       );
+      // XXX: found the following line on the server, can't remember why it was added
+      // commenting out. if og image starts misbehaving then should uncomment it and investigate
+      // await new Promise(resolve => setTimeout(resolve, 100));
     } catch (e) {
       debug(
         'exception while waiting for currently rendered graph, possibly timed out',
