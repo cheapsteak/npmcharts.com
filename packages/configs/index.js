@@ -10,6 +10,8 @@ module.exports = {
     ['lodash', 'debug', 'typescript'],
     // frontend frameworks
     ['react', 'vue', '@angular/core', 'ember-cli', 'svelte', 'angular'],
+    // .. SSR frameworks?
+    ['gatsby', 'next'],
     // logging
     ['log4js', 'winston', 'bunyan', 'morgan', 'pino'],
     // database
@@ -26,6 +28,8 @@ module.exports = {
       'antd',
       '@adobe/react-spectrum',
     ],
+    // http frameworks
+    ['express', 'koa', '@hapi/hapi', 'connect', '@nestjs/core', 'fastify'],
   ],
   palette: [
     '#2196F3',
