@@ -1,102 +1,114 @@
 <!-- this div is only here because vue 2 doesn't support multiple root elements -->
 <div id="home">
-<header
-  class="page-header"
-  :class="{
+  <header
+    class="page-header"
+    :class="{
     loading: isLoading,
   }"
->
-  <h1 class="heading">
-    <router-link v-if="!isEmbedded" href="/" class="identity" to="/" title="npmcharts">
-      <img src="/images/logo.svg" width="190" alt="npmcharts"/>
-    </router-link>
-    <a v-else :href=" $route.params.packages ? '/compare/' + $route.params.packages : '/' " class="identity" title="npmcharts">
-      <img src="/images/logo.svg" width="190" alt="npmcharts"/>
-    </a>
-    <p class="sub-heading">
-      <template v-if="moduleNames && moduleNames.length > 1">
-        compare 
-      </template>
-      <template v-if="isUsingPresetPackages">
-        npm
-      </template>
+  >
+    <h1 class="heading">
+      <router-link
+        v-if="!isEmbedded"
+        href="/"
+        class="identity"
+        to="/"
+        title="npmcharts"
+      >
+        <img src="/images/logo.svg" width="190" alt="npmcharts" />
+      </router-link>
       <a
         v-else
-        class="package-linkout"
-        v-for="moduleName in moduleNames"
-        v-bind:title="'Open ' + moduleName + '\'s npm page'"
-        :href="'https://www.npmjs.com/package/'+moduleName"
-        target="_blank"
-      >{{ moduleName }}</a>
-      download trends
-
-    </p>
-  </h1>
-  <form class="header-controls-wrapper">
-    <package-input
-      class="package-input"
-      :on-submit="addPackage"
-      :is-using-preset-packages="isUsingPresetPackages"
-    ></package-input>
-    <div class="graph-config">
-      <!--
+        :href=" $route.params.packages ? '/compare/' + $route.params.packages : '/' "
+        class="identity"
+        title="npmcharts"
+      >
+        <img src="/images/logo.svg" width="190" alt="npmcharts" />
+      </a>
+      <p class="sub-heading">
+        <template v-if="moduleNames && moduleNames.length > 1">
+          compare
+        </template>
+        <template v-if="isUsingPresetPackages">
+          npm
+        </template>
+        <a
+          v-else
+          class="package-linkout"
+          v-for="moduleName in moduleNames"
+          v-bind:title="'Open ' + moduleName + '\'s npm page'"
+          :href="'https://www.npmjs.com/package/'+moduleName"
+          target="_blank"
+          >{{ moduleName }}</a
+        >
+        download trends
+      </p>
+    </h1>
+    <form class="header-controls-wrapper">
+      <package-input
+        class="package-input"
+        :on-submit="addPackage"
+        :is-using-preset-packages="isUsingPresetPackages"
+      ></package-input>
+      <div class="graph-config">
+        <!--
       <label class="include-item" @change="track(showWeekends ? 'show-weekends' : 'hide-weekends')"><input type="checkbox" v-model="showWeekends"/>include weekends</label>
       -->
 
-      <router-link
-        tag="label"
-        v-if="moduleNames"
-        :to="{ path: '/compare/' + moduleNames.join(','), query: getMergedQueryParams({interval: 1})}"
-        @click.native="track('set interval', interval)"
-      >
-        <input type="radio" :checked="interval === 1"> daily
-      </router-link>
-      <router-link
-        tag="label"
-        v-if="moduleNames"
-        :to="{ path: '/compare/' + moduleNames.join(',') + '?', query: getMergedQueryParams({interval: 7})}"
-        @click.native="track('set interval', interval)"
-      >
-        <input type="radio" :checked="interval === 7"> weekly
-      </router-link>
-      <router-link
-        tag="label"
-        v-if="moduleNames"
-        :to="{ path: '/compare/' + moduleNames.join(',') + '?', query: getMergedQueryParams({interval: 30})}"
-        @click.native="track('set interval', interval)"
-      >
-        <input type="radio" :checked="interval === 30"> monthly
-      </router-link>
-      <router-link
-        tag="button"
-        class="minimal-mode"
-        :to="{ query: { minimal: 'true', interval: interval }}"
-        @click.native="track('enter-minimal-mode')"
-      >enter minimal mode</router-link>
-      <button class="download-btn" v-on:click="handleDownloadCsv">
-        download csv
-      </button>
-
-    </div>
-  </form>
-</header>
-<main :class="{
-  loading: isLoading,
-}">
-  <div class="chart-container">
-    <div class="sample-matches">
-      <span
-        class="tweet-this-chart"
-        @click="handleClickTwitter"
-        @mouseenter="handleMouseEnterTwitter"
-        @mouseleave="handleMouseLeaveTwitter"
-      >
-        <i v-html="twitterIcon"></i> this chart
-      </span>
-      <div class="caption">or try</div>
-      <ul class="matches">
         <router-link
-          tag="li"
+          tag="label"
+          v-if="moduleNames"
+          :to="{ path: '/compare/' + moduleNames.join(','), query: getMergedQueryParams({interval: 1})}"
+          @click.native="track('set interval', interval)"
+        >
+          <input type="radio" :checked="interval === 1" /> daily
+        </router-link>
+        <router-link
+          tag="label"
+          v-if="moduleNames"
+          :to="{ path: '/compare/' + moduleNames.join(',') + '?', query: getMergedQueryParams({interval: 7})}"
+          @click.native="track('set interval', interval)"
+        >
+          <input type="radio" :checked="interval === 7" /> weekly
+        </router-link>
+        <router-link
+          tag="label"
+          v-if="moduleNames"
+          :to="{ path: '/compare/' + moduleNames.join(',') + '?', query: getMergedQueryParams({interval: 30})}"
+          @click.native="track('set interval', interval)"
+        >
+          <input type="radio" :checked="interval === 30" /> monthly
+        </router-link>
+        <router-link
+          tag="button"
+          class="minimal-mode"
+          :to="{ query: { minimal: 'true', interval: interval }}"
+          @click.native="track('enter-minimal-mode')"
+          >enter minimal mode</router-link
+        >
+        <button class="download-btn" v-on:click="handleDownloadCsv">
+          download csv
+        </button>
+      </div>
+    </form>
+  </header>
+  <main
+    :class="{
+  loading: isLoading,
+}"
+  >
+    <div class="chart-container">
+      <div class="sample-matches">
+        <span
+          class="tweet-this-chart"
+          @click="handleClickTwitter"
+          @mouseenter="handleMouseEnterTwitter"
+          @mouseleave="handleMouseLeaveTwitter"
+        >
+          <i v-html="twitterIcon"></i> this chart
+        </span>
+        <div class="caption">or try</div>
+
+        <router-link
           v-for="packages in presetPackages"
           :to="'/compare/' + packages.join(',') + '?' + queryString"
           @click.native="track('click-preset', packages.join(','))"
@@ -104,56 +116,81 @@
           :key="packages.join(',')"
         >
           <template v-for="(packageItem, index) in packages">
-            <span class="vs" v-if="index !==0" :key="packageItem + 'vs'">, </span><span
+            <span class="vs" v-if="index !==0" :key="packageItem + 'vs'"
+              >, </span
+            ><span
               :key="packageItem"
               class="package-name"
               :style="{
                 color: moduleNames && moduleNames.indexOf(packageItem) > -1 ? palette[moduleNames.indexOf(packageItem) % palette.length] : ''
               }"
-              >{{packageItem}}</span>
+              >{{packageItem}}</span
+            >
           </template>
         </router-link>
-      </ul>
-    </div>
-    <graph
-      class="chart"
-      v-if="!isLoading"
-      ref="graph"
-      :module-names="moduleNames"
-      :module-data="moduleData"
-      :show-weekends="showWeekends"
-      :interval="interval"
-      :is-minimal-mode="isMinimalMode === 'true'"
-    >
-    </graph>
-    <div class="no-packages-selected" v-if="!moduleData && !isLoading">
-      <p>No packages selected.</p>
-      <p>Why not try
-        <router-link tag="span" class="match" :to="'/compare/' + samplePreset.join(',')">
-          <template v-for="(packageItem, index) in samplePreset">
-            <span class="vs" v-if="index !==0"> vs </span><span
-              class="package-name"
-              :style="{
+      </div>
+      <graph
+        class="chart"
+        v-if="!isLoading"
+        ref="graph"
+        :module-names="moduleNames"
+        :module-data="moduleData"
+        :show-weekends="showWeekends"
+        :interval="interval"
+        :is-minimal-mode="isMinimalMode === 'true'"
+      >
+      </graph>
+      <div class="no-packages-selected" v-if="!moduleData && !isLoading">
+        <p>No packages selected.</p>
+        <p>
+          Why not try
+          <router-link
+            tag="span"
+            class="match"
+            :to="'/compare/' + samplePreset.join(',')"
+          >
+            <template v-for="(packageItem, index) in samplePreset">
+              <span class="vs" v-if="index !==0"> vs </span
+              ><span
+                class="package-name"
+                :style="{
                 color: palette[index % palette.length]
               }"
-              >{{packageItem}}</span>
-          </template>
-        </router-link>?
-      </p>
+                >{{packageItem}}</span
+              >
+            </template> </router-link
+          >?
+        </p>
+      </div>
     </div>
-  </div>
-</main>
-<footer>
-  <div class="about">
-    <a href="https://twitter.com/CheapSteak" target="_blank" class="created-by">
-      Crafted in <img class="maple-leaf-icon" src="/images/icon-maple-leaf.svg" alt="Canada" width="16"/> by Chang Wang
-    </a>
-  </div>
-  <div>
-    <a class="repo-link" href="https://github.com/cheapsteak/npmcharts.com/" target="_blank" title="Github Repo, star, fork, do what you will 😄">
-      <img src="/images/icon-github.svg" alt="Github Repo" width="16">
-    </a>
-  </div>
-  <small class="disclaimer">npm is a trademark of npm, Inc.</small>
-</footer>
+  </main>
+  <footer>
+    <div class="about">
+      <a
+        href="https://twitter.com/CheapSteak"
+        target="_blank"
+        class="created-by"
+      >
+        Crafted in
+        <img
+          class="maple-leaf-icon"
+          src="/images/icon-maple-leaf.svg"
+          alt="Canada"
+          width="16"
+        />
+        by Chang Wang
+      </a>
+    </div>
+    <div>
+      <a
+        class="repo-link"
+        href="https://github.com/cheapsteak/npmcharts.com/"
+        target="_blank"
+        title="Github Repo, star, fork, do what you will 😄"
+      >
+        <img src="/images/icon-github.svg" alt="Github Repo" width="16" />
+      </a>
+    </div>
+    <small class="disclaimer">npm is a trademark of npm, Inc.</small>
+  </footer>
 </div>
