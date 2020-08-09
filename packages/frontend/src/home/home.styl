@@ -1,7 +1,7 @@
 // $bgcolor = #272B34
 $fgColor = #333
 $unimportantFgColor = #5f809c
-$unimportantFgColorLight = #829bb0
+$unimportantFgColorLight = #829bb0bb
 $bgcolor = #F1F1F1
 $popupTextColor = $fgColor
 // $logoColor = #1288EF
@@ -173,6 +173,9 @@ main
       flex-grow: 1
   .sample-matches
     margin: 6px 16px 12px
+    &:hover
+      & .caption, & .match, & .tweet-this-chart
+        opacity: 0.6
     @media (max-width: $small)
       font-size: 12px
     .caption
@@ -181,24 +184,30 @@ main
       // margin: 0
       font-weight: 500
       font-size: 11px
-      text-indent: 8px
+      text-indent: 4px
+      margin-right: -4px
     .match
       display: inline
       text-decoration none
       color: $unimportantFgColorLight
-      list-style-type: disc
+      padding: 4px 8px
+      margin: 0 -3px
+      font-size: 13px
+      border-radius: 20px
+      &:hover
+        color: $unimportantFgColor
+        opacity: 1 !important
+        transform: scale(1.05)
+        box-shadow: 0px 1px 2px 0px rgba(0,0,0,0.2)
+        background-color: rgba(255,255,255,1)
 
-      &.v-link-active
+      &.router-link-active
         cursor: default
-      &:not(:last-child)
-        margin-right: 14px
+        opacity: 1 !important
+
       @media (max-width: $small)
-        &:nth-child(n+3)
+        &:nth-child(n+5)
           display: none
-  .match
-    cursor: pointer
-    &:hover:not(.v-link-active)
-      text-shadow: 1px 1px 3px #D9E7EF
   .package-name
     font-weight: 500
     transition: color 1s
@@ -260,9 +269,9 @@ footer
     height: auto
   ~ .caption
     margin-left: -12px
-  ~ .caption, ~ .matches
-    transition: all 0.2s
   &:hover
+    &&
+      opacity: 1
     transform: scale(1.05)
     box-shadow: 0px 1px 2px 0px rgba(0,0,0,0.2)
     background-color: rgba(255,255,255,1)
@@ -270,8 +279,6 @@ footer
       animation-name: swing
       animation-duration: 1.3s
       animation-fill-mode: both
-    ~ .caption, ~ .matches
-      opacity: 0.3
   &:active
     box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.2)
 
