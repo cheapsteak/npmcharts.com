@@ -9,7 +9,7 @@ module.exports = {
     // indicators?
     ['lodash', 'debug', 'typescript'],
     // frontend frameworks
-    ['react', 'angular', '@angular/core', 'ember-cli', 'vue'],
+    ['react', 'vue', '@angular/core', 'ember-cli', 'svelte', 'angular'],
     // logging
     ['log4js', 'winston', 'bunyan', 'morgan', 'pino'],
     // database
@@ -23,8 +23,8 @@ module.exports = {
       'semantic-ui-react',
       '@fluentui/react',
       '@blueprintjs/core',
-      '@adobe/react-spectrum',
       'antd',
+      '@adobe/react-spectrum',
     ],
   ],
   palette: [
