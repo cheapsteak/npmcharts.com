@@ -170,7 +170,6 @@ export default withRender({
       svg
         .data([processedData])
         .transition()
-        .duration(500)
         .call(chart);
 
       this.legendData = this.getDataAtDate(this.chart.xAxis.domain()[1]);
