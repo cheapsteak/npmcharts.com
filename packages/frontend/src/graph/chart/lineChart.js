@@ -1,5 +1,6 @@
 import nv from 'nvd3';
 import d3 from 'd3';
+import { line } from './line';
 
 export const xAccessor = point => point.day;
 export const yAccessor = point => point.count;
@@ -12,7 +13,7 @@ export function lineChart() {
   // Public Variables with Default Settings
   //------------------------------------------------------------
 
-  var lines = nv.models.line(),
+  var lines = line(),
     xAxis = nv.models.axis(),
     yAxis = nv.models.axis(),
     interactiveLayer = nv.interactiveGuideline();
