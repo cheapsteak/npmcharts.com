@@ -21,7 +21,7 @@ export function lineChart() {
     height = null,
     showXAxis = true,
     showYAxis = true,
-    rightAlignYAxis = false,
+    rightAlignYAxis = true,
     useInteractiveGuideline = true,
     x,
     y,
@@ -519,15 +519,6 @@ export function lineChart() {
         },
         set: function(_) {
           lines.y(_);
-        },
-      },
-      rightAlignYAxis: {
-        get: function() {
-          return rightAlignYAxis;
-        },
-        set: function(_) {
-          rightAlignYAxis = _;
-          yAxis.orient(rightAlignYAxis ? 'right' : 'left');
         },
       },
     },

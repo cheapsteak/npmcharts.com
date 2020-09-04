@@ -192,16 +192,6 @@ export default withRender({
       }
       const chart = this.chart;
 
-      svg
-        .select('.nv-y.nv-axis')
-        .attr(
-          'transform',
-          'translate(' +
-            nv.utils.availableWidth(null, svg, this.margin) +
-            ',0)',
-        );
-      svg.select('.nv-context .nv-y.nv-axis').remove();
-
       // Update legend on mousemove
       var prevMousemove = chart.interactiveLayer.dispatch.on(
         'elementMousemove',
