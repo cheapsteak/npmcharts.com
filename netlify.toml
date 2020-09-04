@@ -4,25 +4,28 @@
   functions = "lambdas"
   publish = "packages/frontend/public/"
 
-[[headers]]
-   for = "/api/npm-api/*"
-   [headers.values]
-      Access-Control-Allow-Origin = "*"
-
 [[redirects]]
   from = "/api/npm-registry/*"
   to = "https://registry.npmjs.org/:splat"
   status = 200
 
-[[headers]]
-   for = "/api/npm-registry/*"
-   [headers.values]
-      Access-Control-Allow-Origin = "*"
+# This does not work
+# Custom headers only apply to files netlify serves from their own backing store
+# https://community.netlify.com/t/cant-set-headers-on-proxied-redirect/669/6
+# [[headers]]
+#    for = "/api/npm-api/*"
+#    [headers.values]
+#       Access-Control-Allow-Origin = "*"
+# [[headers]]
+#    for = "/api/npm-registry/*"
+#    [headers.values]
+#       Access-Control-Allow-Origin = "*"
 
 [[redirects]]
   from = "/api/npm-api/*"
   to = "https://api.npmjs.org/:splat"
   status = 200
+
 
 [[redirects]]
   from = "/*"
