@@ -21,7 +21,7 @@ const {
   packages,
 } = require('../packages/packages');
 
-const getModuleDataByNames = async (names, start, end) => {
+const getPackagesDownloadDataByNames = async (names, start, end) => {
   setTimeout(() => ga('send', 'pageview'));
 
   // set notify to false to prevent triggering route change
@@ -102,7 +102,7 @@ function getPackagesDownloadsOverPeriod(names, startDay, endDay) {
 export default withRender({
   created() {
     this.isLoading = true;
-    getModuleDataByNames(
+    getPackagesDownloadDataByNames(
       this.moduleNames,
       this.$route.query.start ? this.$route.query.start : 365,
       this.$route.query.end ? this.$route.query.start : 0,
