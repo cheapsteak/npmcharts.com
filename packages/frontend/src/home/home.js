@@ -1,6 +1,6 @@
 import querystring from 'querystring';
 import _ from 'lodash';
-import { format as formatDate, subDays } from 'date-fns';
+import { format as formatDate, subDays, isWithinRange } from 'date-fns';
 import config from 'configs';
 import { setPackages } from '../packages/packages.js';
 import processPackagesStats from 'frontend/src/utils/processPackagesStats';
@@ -38,8 +38,32 @@ const getPackagesDownloadDataByNames = async (names, start, end) => {
   return operation;
 };
 
-const getPackagesReleaseDataByNames = async (names, start, end) => {
-  console.log({ names, start, end });
+const getPackagesReleaseDataByNames = async (
+  packageNames,
+  startDaysOffset,
+  endDaysOffset,
+) => {
+  const startDate = subDays(Date.now(), startDaysOffset);
+  const endDate = subDays(Date.now(), endDaysOffset);
+  const packageReleaseResponses = await Promise.all(
+    packageNames.map(packageName =>
+      fetch(`/api/npm-registry/${packageName}`)
+        .then(response => response.json())
+        .then(versionDateMap => ({
+          packageName,
+          versions: Object.entries(versionDateMap).flatMap(
+            ([versionName, datePublished]) => {
+              if (!isWithinRange(datePublished, startDate, endDate)) return [];
+              return {
+                day: formatDate(datePublished, 'YYYY-MM-DD', null, 'UTC'),
+                versionName,
+              };
+            },
+          ),
+        })),
+    ),
+  );
+  return packageReleaseResponses;
 };
 
 /**
@@ -79,14 +103,11 @@ function getPackagesDownloadsOverPeriod(names, startDay, endDay) {
 
   const startStats = new Date(Date.UTC(2015, 1, 10));
 
-  const DATE_FORMAT = 'YYYY-MM-DD';
-  const timezone = 'UTC';
-
   let startDate = maxDate(startStats, subDays(new Date(), startDay));
   let endDate = maxDate(startStats, subDays(new Date(), requestEndDay));
 
-  startDate = formatDate(startDate, DATE_FORMAT, null, timezone);
-  endDate = formatDate(endDate, DATE_FORMAT, null, timezone);
+  startDate = formatDate(startDate, 'YYYY-MM-DD', null, 'UTC');
+  endDate = formatDate(endDate, 'YYYY-MM-DD', null, 'UTC');
 
   const period1 = getPackagesDownloads(names, { startDate, endDate });
 
@@ -106,13 +127,23 @@ function getPackagesDownloadsOverPeriod(names, startDay, endDay) {
 export default withRender({
   created() {
     this.isLoading = true;
-    getPackagesDownloadDataByNames(
-      this.packageNames,
-      this.$route.query.start ? this.$route.query.start : 365,
-      this.$route.query.end ? this.$route.query.start : 0,
-    ).then(packageDownloadStats => {
-      this.isLoading = false;
+
+    Promise.all([
+      getPackagesDownloadDataByNames(
+        this.packageNames,
+        this.$route.query.start ? this.$route.query.start : 365,
+        this.$route.query.end ? this.$route.query.end : 0,
+      ),
+      this.shouldShowVersionDates &&
+        getPackagesReleaseDataByNames(
+          this.packageNames,
+          this.$route.query.start ? this.$route.query.start : 365,
+          this.$route.query.end ? this.$route.query.end : 0,
+        ),
+    ]).then(([packageDownloadStats, packageVersionDates]) => {
       this.packageDownloadStats = packageDownloadStats;
+      this.packageVersionDates = packageVersionDates || [];
+      this.isLoading = false;
     });
   },
   render: withRender.default,
@@ -121,7 +152,9 @@ export default withRender({
       presetPackages,
       samplePreset: [],
       packageDownloadStats: null,
+      packageVersionDates: null,
       isLoading: true,
+      shouldShowVersionDates: true,
       palette,
       showWeekends: true,
       hoverCount: 0,

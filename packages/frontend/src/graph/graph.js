@@ -66,6 +66,7 @@ export default withRender({
     },
     moduleNames: Array,
     packageDownloadStats: Array,
+    packageVersionDates: Array,
   },
   data() {
     return {
@@ -93,6 +94,11 @@ export default withRender({
       this.render();
     },
     packageDownloadStats() {
+      console.log('render because packageDownloadStats');
+      this.render();
+    },
+    packageVersionDates() {
+      console.log('render because packageVersionDates');
       this.render();
     },
     interval() {
@@ -144,16 +150,16 @@ export default withRender({
     });
   },
   methods: {
-    processForD3(input) {
-      return input.map(module => ({
-        key: module.name,
+    processForD3(downloadStats) {
+      return downloadStats.map(({ name, downloads }) => ({
+        key: name,
         values: processEntriesMemo(
-          module.downloads,
+          downloads,
           {
             showWeekends: this.showWeekends,
             interval: this.interval,
           },
-          [module.name, this.showWeekends, this.interval].join(','),
+          [name, this.showWeekends, this.interval].join(','),
         ),
       }));
     },
