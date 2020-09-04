@@ -1,6 +1,6 @@
 <div ref="chart" id="chart" class="with-3d-shadow with-transitions">
   <graphLegend
-    v-if="moduleData.length && legendData"
+    v-if="packageDownloadStats.length && legendData"
     :modules="legendData.modules"
     :interval="interval"
     :date="legendData.date"

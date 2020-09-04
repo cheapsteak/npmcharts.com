@@ -65,7 +65,7 @@ export default withRender({
       default: 7,
     },
     moduleNames: Array,
-    moduleData: Array,
+    packageDownloadStats: Array,
   },
   data() {
     return {
@@ -92,7 +92,7 @@ export default withRender({
     showWeekends() {
       this.render();
     },
-    moduleData() {
+    packageDownloadStats() {
       this.render();
     },
     interval() {
@@ -159,7 +159,7 @@ export default withRender({
     },
     render() {
       const chart = this.chart;
-      const processedData = this.processForD3(this.moduleData);
+      const processedData = this.processForD3(this.packageDownloadStats);
       this.processedData = processedData;
       const interpolation =
         this.interval > 1 ? catmulRomInterpolation : 'linear';
@@ -176,7 +176,7 @@ export default withRender({
       window.__currently_rendered_graph__ = this.moduleNames.join(',');
     },
     applyOverrides() {
-      if (!this.moduleData.length) {
+      if (!this.packageDownloadStats.length) {
         return;
       }
       const chart = this.chart;
@@ -210,13 +210,14 @@ export default withRender({
       });
     },
     getStartOfPeriod(date) {
-      const indexInModuleData = _.findIndex(
-        this.moduleData[0].downloads,
+      const indexInPackageDownloadStats = _.findIndex(
+        this.packageDownloadStats[0].downloads,
         entry => entry.day.getTime() === startOfDay(date).getTime(),
       );
 
       const startOfPeriodBucket = Math.floor(
-        (this.moduleData[0].downloads.length - indexInModuleData) /
+        (this.packageDownloadStats[0].downloads.length -
+          indexInPackageDownloadStats) /
           this.interval,
       );
 
