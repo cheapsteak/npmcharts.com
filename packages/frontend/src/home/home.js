@@ -107,7 +107,7 @@ export default withRender({
   created() {
     this.isLoading = true;
     getPackagesDownloadDataByNames(
-      this.moduleNames,
+      this.packageNames,
       this.$route.query.start ? this.$route.query.start : 365,
       this.$route.query.end ? this.$route.query.start : 0,
     ).then(packageDownloadStats => {
@@ -134,8 +134,8 @@ export default withRender({
   computed: {
     shareUrl() {
       return (
-        this.moduleNames &&
-        `http://npmcharts.com/compare/${this.moduleNames.join(',')}`
+        this.packageNames &&
+        `http://npmcharts.com/compare/${this.packageNames.join(',')}`
       );
     },
     twitterShareUrl() {
@@ -160,13 +160,13 @@ export default withRender({
     isUsingPresetPackages() {
       return !this.$route.params.packages;
     },
-    moduleNames() {
-      const moduleNames = this.isUsingPresetPackages
+    packageNames() {
+      const packageNames = this.isUsingPresetPackages
         ? _.sample(presetPackages)
         : this.$route.params.packages
             .split(',')
             .map(packageName => window.decodeURIComponent(packageName));
-      return moduleNames;
+      return packageNames;
     },
     isMinimalMode() {
       return this.$route.query.minimal === 'true';
@@ -219,7 +219,7 @@ export default withRender({
         'event',
         'packageInput',
         'add',
-        `${packageName} existing:${this.moduleNames}`,
+        `${packageName} existing:${this.packageNames}`,
       );
 
       this.$router.push({
@@ -257,12 +257,12 @@ export default withRender({
     },
     handleDownloadCsv(e) {
       e.preventDefault();
-      const moduleNames = this.packageDownloadStats.map(x => x.name);
+      const packageNames = this.packageDownloadStats.map(x => x.name);
       const moduleWithLongestHistory = _.maxBy(
         this.packageDownloadStats,
         x => x.downloads.length,
       );
-      var csv = [['Date', ...moduleNames]]
+      var csv = [['Date', ...packageNames]]
         .concat(
           moduleWithLongestHistory.downloads.map(({ day, downloads }) => {
             return [day.toLocaleDateString()].concat(
@@ -278,8 +278,8 @@ export default withRender({
           }),
         )
         .join('\n');
-      this.track('download csv', moduleNames);
-      downloadCsv(csv, `${moduleNames}.csv`);
+      this.track('download csv', packageNames);
+      downloadCsv(csv, `${packageNames}.csv`);
     },
     shuffle: _.shuffle,
   },
