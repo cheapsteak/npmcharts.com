@@ -37,10 +37,8 @@ export const scatter = function() {
       , sizeRange    = null
       , singlePoint  = false
       , dispatch     = d3.dispatch('elementClick', 'elementDblClick', 'elementMouseover', 'elementMouseout', 'renderEnd')
-      , useVoronoi   = true
       , duration     = 250
       , interactiveUpdateDelay = 300
-      , showLabels    = false 
       ;
 
 
@@ -192,169 +190,56 @@ export const scatter = function() {
               if (!interactive) return false;
 
               // inject series and point index for reference into voronoi
-              if (useVoronoi === true) {
-                  var vertices = d3.merge(data.map(function(group, groupIndex) {
-                          return group.values
-                              .map(function(point, pointIndex) {
-                                  // *Adding noise to make duplicates very unlikely
-                                  // *Injecting series and point index for reference
-                                  /* *Adding a 'jitter' to the points, because there's an issue in d3.geom.voronoi.
-                                   */
-                                  var pX = getX(point,pointIndex);
-                                  var pY = getY(point,pointIndex);
+          
+              // add event handlers to points instead voronoi paths
+              wrap.select('.nv-groups').selectAll('.nv-group')
+                  .selectAll('.nv-point')
+                  .on('click', function(d,i) {
+                      //nv.log('test', d, i);
+                      if (needsUpdate || !data[d.series]) return 0; //check if this is a dummy point
+                      var series = data[d.series],
+                          point  = series.values[i];
 
-                                  return [nv.utils.NaNtoZero(x(pX))+ Math.random() * 1e-4,
-                                          nv.utils.NaNtoZero(y(pY))+ Math.random() * 1e-4,
-                                      groupIndex,
-                                      pointIndex, point]; //temp hack to add noise until I think of a better way so there are no duplicates
-                              })
-                              .filter(function(pointArray, pointIndex) {
-                                  return pointActive(pointArray[4], pointIndex); // Issue #237.. move filter to after map, so pointIndex is correct!
-                              })
-                      })
-                  );
-
-                  if (vertices.length === 0) return false;  // No active points, we're done
-                  if (vertices.length < 3) {
-                      // Issue #283 - Adding 2 dummy points to the voronoi b/c voronoi requires min 3 points to work
-                      vertices.push([x.range()[0] - 20, y.range()[0] - 20, null, null]);
-                      vertices.push([x.range()[1] + 20, y.range()[1] + 20, null, null]);
-                      vertices.push([x.range()[0] - 20, y.range()[0] + 20, null, null]);
-                      vertices.push([x.range()[1] + 20, y.range()[1] - 20, null, null]);
-                  }
-
-                  // keep voronoi sections from going more than 10 outside of graph
-                  // to avoid overlap with other things like legend etc
-                  var bounds = d3.geom.polygon([
-                      [-10,-10],
-                      [-10,height + 10],
-                      [width + 10,height + 10],
-                      [width + 10,-10]
-                  ]);
-
-                  var voronoi = d3.geom.voronoi(vertices).map(function(d, i) {
-                      return {
-                          'data': bounds.clip(d),
-                          'series': vertices[i][2],
-                          'point': vertices[i][3]
-                      }
-                  });
-
-                  // nuke all voronoi paths on reload and recreate them
-                  wrap.select('.nv-point-paths').selectAll('path').remove();
-                  var pointPaths = wrap.select('.nv-point-paths').selectAll('path').data(voronoi);
-
-                  var mouseEventCallback = function(d, mDispatch) {
-                      if (needsUpdate) return 0;
-                      var series = data[d.series];
-                      if (series === undefined) return;
-                      var point  = series.values[d.point];
-                      point['color'] = color(series, d.series);
-
-                      // standardize attributes for tooltip.
-                      point['x'] = getX(point);
-                      point['y'] = getY(point);
-
-                      // can't just get box of event node since it's actually a voronoi polygon
-                      var box = container.node().getBoundingClientRect();
-                      var scrollTop  = window.pageYOffset || document.documentElement.scrollTop;
-                      var scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
-
-                      var pos = {
-                          left: x(getX(point, d.point)) + box.left + scrollLeft + margin.left + 10,
-                          top: y(getY(point, d.point)) + box.top + scrollTop + margin.top + 10
-                      };
-
-                      mDispatch({
+                      dispatch.elementClick({
                           point: point,
                           series: series,
-                          pos: pos,
-                          relativePos: [x(getX(point, d.point)) + margin.left, y(getY(point, d.point)) + margin.top],
+                          pos: [x(getX(point, i)) + margin.left, y(getY(point, i)) + margin.top], //TODO: make this pos base on the page
+                          relativePos: [x(getX(point, i)) + margin.left, y(getY(point, i)) + margin.top],
                           seriesIndex: d.series,
-                          pointIndex: d.point
+                          pointIndex: i
                       });
-                  };
+                  })
+                  .on('mouseover', function(d,i) {
+                      if (needsUpdate || !data[d.series]) return 0; //check if this is a dummy point
+                      var series = data[d.series],
+                          point  = series.values[i];
 
-                  pointPaths
-                      .on('click', function(d) {
-                          mouseEventCallback(d, dispatch.elementClick);
-                      })
-                      .on('dblclick', function(d) {
-                          mouseEventCallback(d, dispatch.elementDblClick);
-                      })
-                      .on('mouseover', function(d) {
-                          mouseEventCallback(d, dispatch.elementMouseover);
-                      })
-                      .on('mouseout', function(d, i) {
-                          mouseEventCallback(d, dispatch.elementMouseout);
+                      dispatch.elementMouseover({
+                          point: point,
+                          series: series,
+                          pos: [x(getX(point, i)) + margin.left, y(getY(point, i)) + margin.top],//TODO: make this pos base on the page
+                          relativePos: [x(getX(point, i)) + margin.left, y(getY(point, i)) + margin.top],
+                          seriesIndex: d.series,
+                          pointIndex: i,
+                          color: color(d, i)
                       });
+                  })
+                  .on('mouseout', function(d,i) {
+                      if (needsUpdate || !data[d.series]) return 0; //check if this is a dummy point
+                      var series = data[d.series],
+                          point  = series.values[i];
 
-              } else {
-                  // add event handlers to points instead voronoi paths
-                  wrap.select('.nv-groups').selectAll('.nv-group')
-                      .selectAll('.nv-point')
-                      //.data(dataWithPoints)
-                      //.style('pointer-events', 'auto') // recativate events, disabled by css
-                      .on('click', function(d,i) {
-                          //nv.log('test', d, i);
-                          if (needsUpdate || !data[d.series]) return 0; //check if this is a dummy point
-                          var series = data[d.series],
-                              point  = series.values[i];
-
-                          dispatch.elementClick({
-                              point: point,
-                              series: series,
-                              pos: [x(getX(point, i)) + margin.left, y(getY(point, i)) + margin.top], //TODO: make this pos base on the page
-                              relativePos: [x(getX(point, i)) + margin.left, y(getY(point, i)) + margin.top],
-                              seriesIndex: d.series,
-                              pointIndex: i
-                          });
-                      })
-                      .on('dblclick', function(d,i) {
-                          if (needsUpdate || !data[d.series]) return 0; //check if this is a dummy point
-                          var series = data[d.series],
-                              point  = series.values[i];
-
-                          dispatch.elementDblClick({
-                              point: point,
-                              series: series,
-                              pos: [x(getX(point, i)) + margin.left, y(getY(point, i)) + margin.top],//TODO: make this pos base on the page
-                              relativePos: [x(getX(point, i)) + margin.left, y(getY(point, i)) + margin.top],
-                              seriesIndex: d.series,
-                              pointIndex: i
-                          });
-                      })
-                      .on('mouseover', function(d,i) {
-                          if (needsUpdate || !data[d.series]) return 0; //check if this is a dummy point
-                          var series = data[d.series],
-                              point  = series.values[i];
-
-                          dispatch.elementMouseover({
-                              point: point,
-                              series: series,
-                              pos: [x(getX(point, i)) + margin.left, y(getY(point, i)) + margin.top],//TODO: make this pos base on the page
-                              relativePos: [x(getX(point, i)) + margin.left, y(getY(point, i)) + margin.top],
-                              seriesIndex: d.series,
-                              pointIndex: i,
-                              color: color(d, i)
-                          });
-                      })
-                      .on('mouseout', function(d,i) {
-                          if (needsUpdate || !data[d.series]) return 0; //check if this is a dummy point
-                          var series = data[d.series],
-                              point  = series.values[i];
-
-                          dispatch.elementMouseout({
-                              point: point,
-                              series: series,
-                              pos: [x(getX(point, i)) + margin.left, y(getY(point, i)) + margin.top],//TODO: make this pos base on the page
-                              relativePos: [x(getX(point, i)) + margin.left, y(getY(point, i)) + margin.top],
-                              seriesIndex: d.series,
-                              pointIndex: i,
-                              color: color(d, i)
-                          });
+                      dispatch.elementMouseout({
+                          point: point,
+                          series: series,
+                          pos: [x(getX(point, i)) + margin.left, y(getY(point, i)) + margin.top],//TODO: make this pos base on the page
+                          relativePos: [x(getX(point, i)) + margin.left, y(getY(point, i)) + margin.top],
+                          seriesIndex: d.series,
+                          pointIndex: i,
+                          color: color(d, i)
                       });
-              }
+                  });
+              
           }
 
           needsUpdate = true;
@@ -423,53 +308,6 @@ export const scatter = function() {
                   .size(function(d) { return z(getSize(d[0],d[1])) })
           );
           
-          // add label a label to scatter chart 
-          if(showLabels)
-          {      
-              var titles =  groups.selectAll('.nv-label')
-                  .data(function(d) {
-                      return d.values.map(
-                          function (point, pointIndex) {
-                              return [point, pointIndex]
-                          }).filter(
-                              function(pointArray, pointIndex) {
-                                  return pointActive(pointArray[0], pointIndex)
-                              })
-                      });
-
-              titles.enter().append('text')
-                  .style('fill', function (d,i) { 
-                      return d.color })
-                  .style('stroke-opacity', 0)
-                  .style('fill-opacity', 1)
-                  .attr('transform', function(d) {
-                      var dx = nv.utils.NaNtoZero(x0(getX(d[0],d[1]))) + Math.sqrt(z(getSize(d[0],d[1]))/Math.PI) + 2;
-                      return 'translate(' + dx + ',' + nv.utils.NaNtoZero(y0(getY(d[0],d[1]))) + ')';
-                  })
-                  .text(function(d,i){
-                      return d[0].label;});
-
-              titles.exit().remove();
-              groups.exit().selectAll('path.nv-label')
-                  .watchTransition(renderWatch, 'scatter exit')
-                  .attr('transform', function(d) {
-                      var dx = nv.utils.NaNtoZero(x(getX(d[0],d[1])))+ Math.sqrt(z(getSize(d[0],d[1]))/Math.PI)+2;
-                      return 'translate(' + dx + ',' + nv.utils.NaNtoZero(y(getY(d[0],d[1]))) + ')';
-                  })
-                  .remove();
-             titles.each(function(d) {
-                d3.select(this)
-                  .classed('nv-label', true)
-                  .classed('nv-label-' + d[1], false)
-                  .classed('hover',false);
-              });
-              titles.watchTransition(renderWatch, 'scatter labels')
-                  .attr('transform', function(d) {
-                      var dx = nv.utils.NaNtoZero(x(getX(d[0],d[1])))+ Math.sqrt(z(getSize(d[0],d[1]))/Math.PI)+2;
-                      return 'translate(' + dx + ',' + nv.utils.NaNtoZero(y(getY(d[0],d[1]))) + ')'
-                  });
-          }
-
           // Delay updating the invisible interactive layer for smoother animation
           if( interactiveUpdateDelay )
           {
@@ -549,7 +387,6 @@ export const scatter = function() {
       clipRadius:   {get: function(){return clipRadius;}, set: function(_){clipRadius=_;}},
       id:           {get: function(){return id;}, set: function(_){id=_;}},
       interactiveUpdateDelay: {get:function(){return interactiveUpdateDelay;}, set: function(_){interactiveUpdateDelay=_;}},
-      showLabels: {get: function(){return showLabels;}, set: function(_){ showLabels = _;}},
 
       // simple functor options
       x:     {get: function(){return getX;}, set: function(_){getX = d3.functor(_);}},
