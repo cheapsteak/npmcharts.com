@@ -1,6 +1,9 @@
 import nv from 'nvd3';
 import d3 from 'd3';
 
+// copied from from nvd3 1.8.3
+// and removed unused features
+// https://github.com/novus/nvd3/blob/254bb456667d4752947cf874e303b60beb6661b5/src/models/lineChart.js
 export function lineChart() {
   //============================================================
   // Public Variables with Default Settings
@@ -72,8 +75,7 @@ export function lineChart() {
       nv.utils.initSVG(container);
       var availableWidth = nv.utils.availableWidth(width, container, margin),
         availableHeight1 =
-          nv.utils.availableHeight(height, container, margin) - 0,
-        availableHeight2 = 0 - margin2.top - margin2.bottom;
+          nv.utils.availableHeight(height, container, margin) - 0;
 
       chart.update = function() {
         if (duration === 0) {
@@ -364,50 +366,6 @@ export function lineChart() {
 
         chart.update();
       });
-
-      //============================================================
-      // Functions
-      //------------------------------------------------------------
-
-      // Taken from crossfilter (http://square.github.com/crossfilter/)
-      function resizePath(d) {
-        var e = +(d == 'e'),
-          x = e ? 1 : -1,
-          y = availableHeight2 / 3;
-        return (
-          'M' +
-          0.5 * x +
-          ',' +
-          y +
-          'A6,6 0 0 ' +
-          e +
-          ' ' +
-          6.5 * x +
-          ',' +
-          (y + 6) +
-          'V' +
-          (2 * y - 6) +
-          'A6,6 0 0 ' +
-          e +
-          ' ' +
-          0.5 * x +
-          ',' +
-          2 * y +
-          'Z' +
-          'M' +
-          2.5 * x +
-          ',' +
-          (y + 8) +
-          'V' +
-          (2 * y - 8) +
-          'M' +
-          4.5 * x +
-          ',' +
-          (y + 8) +
-          'V' +
-          (2 * y - 8)
-        );
-      }
     });
 
     renderWatch.renderEnd('lineChart immediate');
