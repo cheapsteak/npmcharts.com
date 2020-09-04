@@ -24,9 +24,7 @@ export function lineChart() {
     useInteractiveGuideline = true,
     x,
     y,
-    state = nv.utils.state(),
-    defaultState = null,
-    dispatch = d3.dispatch('brush', 'stateChange', 'changeState', 'renderEnd'),
+    dispatch = d3.dispatch('renderEnd'),
     duration = 250;
 
   // set options on sub-objects for this chart
@@ -40,25 +38,6 @@ export function lineChart() {
   //------------------------------------------------------------
 
   var renderWatch = nv.utils.renderWatch(dispatch, duration);
-
-  var stateGetter = function(data) {
-    return function() {
-      return {
-        active: data.map(function(d) {
-          return !d.disabled;
-        }),
-      };
-    };
-  };
-
-  var stateSetter = function(data) {
-    return function(state) {
-      if (state.active !== undefined)
-        data.forEach(function(series, i) {
-          series.disabled = !state.active[i];
-        });
-    };
-  };
 
   function chart(selection) {
     renderWatch.reset();
@@ -84,26 +63,6 @@ export function lineChart() {
         }
       };
       chart.container = this;
-
-      state
-        .setter(stateSetter(data), chart.update)
-        .getter(stateGetter(data))
-        .update();
-
-      // DEPRECATED set state.disabled
-      state.disabled = data.map(function(d) {
-        return !!d.disabled;
-      });
-
-      if (!defaultState) {
-        var key;
-        defaultState = {};
-        for (key in state) {
-          if (state[key] instanceof Array)
-            defaultState[key] = state[key].slice(0);
-          else defaultState[key] = state[key];
-        }
-      }
 
       // Display noData message if there's nothing to show.
       if (
@@ -186,20 +145,12 @@ export function lineChart() {
         .width(availableWidth)
         .height(availableHeight1)
         .color(
-          data
-            .map(function(d, i) {
-              return d.color || color(d, i);
-            })
-            .filter(function(d, i) {
-              return !data[i].disabled;
-            }),
+          data.map(function(d, i) {
+            return d.color || color(d, i);
+          }),
         );
 
-      var linesWrap = g.select('.nv-linesWrap').datum(
-        data.filter(function(d) {
-          return !d.disabled;
-        }),
-      );
+      var linesWrap = g.select('.nv-linesWrap').datum(data);
 
       // Setup Main (Focus) Axes
       if (showXAxis) {
@@ -257,40 +208,33 @@ export function lineChart() {
           pointIndex,
           pointXLocation,
           allData = [];
-        data
-          .filter(function(series, i) {
-            series.seriesIndex = i;
-            return !series.disabled && !series.disableTooltip;
-          })
-          .forEach(function(series, i) {
-            var extent = x.domain();
-            var currentValues = series.values.filter(function(d, i) {
-              return (
-                lines.x()(d, i) >= extent[0] && lines.x()(d, i) <= extent[1]
-              );
-            });
-
-            pointIndex = nv.interactiveBisect(
-              currentValues,
-              e.pointXValue,
-              lines.x(),
-            );
-            var point = currentValues[pointIndex];
-            var pointYValue = chart.y()(point, pointIndex);
-            if (pointYValue !== null) {
-              lines.highlightPoint(series.seriesIndex, pointIndex, true);
-            }
-            if (point === undefined) return;
-            if (singlePoint === undefined) singlePoint = point;
-            if (pointXLocation === undefined)
-              pointXLocation = chart.xScale()(chart.x()(point, pointIndex));
-            allData.push({
-              key: series.key,
-              value: pointYValue,
-              color: color(series, series.seriesIndex),
-              data: point,
-            });
+        data.forEach(function(series, i) {
+          var extent = x.domain();
+          var currentValues = series.values.filter(function(d, i) {
+            return lines.x()(d, i) >= extent[0] && lines.x()(d, i) <= extent[1];
           });
+
+          pointIndex = nv.interactiveBisect(
+            currentValues,
+            e.pointXValue,
+            lines.x(),
+          );
+          var point = currentValues[pointIndex];
+          var pointYValue = chart.y()(point, pointIndex);
+          if (pointYValue !== null) {
+            lines.highlightPoint(series.seriesIndex, pointIndex, true);
+          }
+          if (point === undefined) return;
+          if (singlePoint === undefined) singlePoint = point;
+          if (pointXLocation === undefined)
+            pointXLocation = chart.xScale()(chart.x()(point, pointIndex));
+          allData.push({
+            key: series.key,
+            value: pointYValue,
+            color: color(series, series.seriesIndex),
+            data: point,
+          });
+        });
         //Highlight the tooltip entry based on which point the mouse is closest to.
         if (allData.length > 2) {
           var yValue = chart.yScale().invert(e.mouseY);
@@ -316,51 +260,32 @@ export function lineChart() {
         var pointXLocation,
           allData = [];
 
-        data
-          .filter(function(series, i) {
-            series.seriesIndex = i;
-            return !series.disabled;
-          })
-          .forEach(function(series) {
-            var pointIndex = nv.interactiveBisect(
-              series.values,
-              e.pointXValue,
-              chart.x(),
-            );
-            var point = series.values[pointIndex];
-            if (typeof point === 'undefined') return;
-            if (typeof pointXLocation === 'undefined')
-              pointXLocation = chart.xScale()(chart.x()(point, pointIndex));
-            var yPos = chart.yScale()(chart.y()(point, pointIndex));
-            allData.push({
-              point: point,
-              pointIndex: pointIndex,
-              pos: [pointXLocation, yPos],
-              seriesIndex: series.seriesIndex,
-              series: series,
-            });
+        data.forEach(function(series, i) {
+          series.seriesIndex = i;
+          var pointIndex = nv.interactiveBisect(
+            series.values,
+            e.pointXValue,
+            chart.x(),
+          );
+          var point = series.values[pointIndex];
+          if (typeof point === 'undefined') return;
+          if (typeof pointXLocation === 'undefined')
+            pointXLocation = chart.xScale()(chart.x()(point, pointIndex));
+          var yPos = chart.yScale()(chart.y()(point, pointIndex));
+          allData.push({
+            point: point,
+            pointIndex: pointIndex,
+            pos: [pointXLocation, yPos],
+            seriesIndex: series.seriesIndex,
+            series: series,
           });
+        });
 
         lines.dispatch.elementClick(allData);
       });
 
       interactiveLayer.dispatch.on('elementMouseout', function(e) {
         lines.clearHighlights();
-      });
-
-      dispatch.on('changeState', function(e) {
-        if (
-          typeof e.disabled !== 'undefined' &&
-          data.length === e.disabled.length
-        ) {
-          data.forEach(function(series, i) {
-            series.disabled = e.disabled[i];
-          });
-
-          state.disabled = e.disabled;
-        }
-
-        chart.update();
       });
     });
 
@@ -378,7 +303,6 @@ export function lineChart() {
   chart.xAxis = xAxis;
   chart.yAxis = yAxis;
   chart.interactiveLayer = interactiveLayer;
-  chart.state = state;
   chart.dispatch = dispatch;
   chart.options = nv.utils.optionsFunc.bind(chart);
 
