@@ -5,11 +5,6 @@
   publish = "packages/frontend/public/"
 
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-
-[[redirects]]
   from = "/api/npm-registry/*"
   to = "https://registry.npmjs.org/:splat"
   status = 200
@@ -28,3 +23,8 @@
    for = "/api/npm-registry/*"
    [headers.values]
       Access-Control-Allow-Origin = "*"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
