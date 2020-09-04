@@ -22,7 +22,6 @@ export function lineChart() {
     width = null,
     height = null,
     rightAlignYAxis = true,
-    useInteractiveGuideline = true,
     x,
     y,
     dispatch = d3.dispatch('renderEnd'),
@@ -122,15 +121,14 @@ export function lineChart() {
       }
 
       //Set up interactive layer
-      if (useInteractiveGuideline) {
-        interactiveLayer
-          .width(availableWidth)
-          .height(availableHeight1)
-          .margin({ left: margin.left, top: margin.top })
-          .svgContainer(container)
-          .xScale(x);
-        wrap.select('.nv-interactive').call(interactiveLayer);
-      }
+
+      interactiveLayer
+        .width(availableWidth)
+        .height(availableHeight1)
+        .margin({ left: margin.left, top: margin.top })
+        .svgContainer(container)
+        .xScale(x);
+      wrap.select('.nv-interactive').call(interactiveLayer);
 
       g
         .select('.nv-focus .nv-background rect')
