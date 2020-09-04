@@ -134,13 +134,13 @@
         v-if="!isLoading"
         ref="graph"
         :module-names="moduleNames"
-        :module-data="moduleData"
+        :module-data="packageDownloadStats"
         :show-weekends="showWeekends"
         :interval="interval"
         :is-minimal-mode="isMinimalMode === 'true'"
       >
       </graph>
-      <div class="no-packages-selected" v-if="!moduleData && !isLoading">
+      <div class="no-packages-selected" v-if="!packageDownloadStats && !isLoading">
         <p>No packages selected.</p>
         <p>
           Why not try

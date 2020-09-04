@@ -38,6 +38,10 @@ const getPackagesDownloadDataByNames = async (names, start, end) => {
   return operation;
 };
 
+const getPackagesReleaseDataByNames = async (names, start, end) => {
+  console.log({ names, start, end });
+};
+
 /**
  * Merge 2 statistic periods
  * @param period0 Period before period1
@@ -106,9 +110,9 @@ export default withRender({
       this.moduleNames,
       this.$route.query.start ? this.$route.query.start : 365,
       this.$route.query.end ? this.$route.query.start : 0,
-    ).then(moduleData => {
+    ).then(packageDownloadStats => {
       this.isLoading = false;
-      this.moduleData = moduleData;
+      this.packageDownloadStats = packageDownloadStats;
     });
   },
   render: withRender.default,
@@ -116,7 +120,7 @@ export default withRender({
     return {
       presetPackages,
       samplePreset: [],
-      moduleData: null,
+      packageDownloadStats: null,
       isLoading: true,
       palette,
       showWeekends: true,
@@ -253,19 +257,19 @@ export default withRender({
     },
     handleDownloadCsv(e) {
       e.preventDefault();
-      const moduleNames = this.moduleData.map(x => x.name);
+      const moduleNames = this.packageDownloadStats.map(x => x.name);
       const moduleWithLongestHistory = _.maxBy(
-        this.moduleData,
+        this.packageDownloadStats,
         x => x.downloads.length,
       );
       var csv = [['Date', ...moduleNames]]
         .concat(
           moduleWithLongestHistory.downloads.map(({ day, downloads }) => {
             return [day.toLocaleDateString()].concat(
-              this.moduleData
+              this.packageDownloadStats
                 .map(
-                  moduleData =>
-                    moduleData.downloads.find(
+                  packageDownloadStats =>
+                    packageDownloadStats.downloads.find(
                       x => x.day.toISOString() === day.toISOString(),
                     ).count || '',
                 )
