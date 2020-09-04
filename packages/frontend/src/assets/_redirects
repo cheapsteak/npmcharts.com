@@ -1,2 +1,5 @@
+/api/npm-registry/* https://registry.npmjs.org/:splat 200
+/api/npm-api/* https://api.npmjs.org/:splat 200
 /api https://npmcharts.com/api 200
 /* /index.html 200
+
