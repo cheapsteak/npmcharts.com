@@ -4,6 +4,7 @@ import _ from 'lodash';
 import { format as formatDate, startOfDay } from 'date-fns';
 import { line, curveCatmullRom } from 'd3-shape';
 import withRender from './graph.html';
+import { lineChart } from './chart/lineChart';
 
 const { palette } = require('configs');
 
@@ -70,7 +71,7 @@ export default withRender({
   },
   data() {
     return {
-      chart: nv.models.lineChart(),
+      chart: lineChart(),
       svg: null,
       useLog: false,
       legendData: null,
