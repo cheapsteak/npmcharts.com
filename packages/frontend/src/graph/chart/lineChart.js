@@ -15,7 +15,6 @@ export function lineChart() {
     interactiveLayer = nv.interactiveGuideline();
 
   var margin = { top: 30, right: 20, bottom: 50, left: 60 },
-    margin2 = { top: 0, right: 20, bottom: 20, left: 60 },
     color = nv.utils.defaultColor(),
     width = null,
     height = null,
@@ -27,7 +26,6 @@ export function lineChart() {
     y,
     state = nv.utils.state(),
     defaultState = null,
-    noData = null,
     dispatch = d3.dispatch('brush', 'stateChange', 'changeState', 'renderEnd'),
     duration = 250;
 
@@ -387,56 +385,6 @@ export function lineChart() {
   chart._options = Object.create(
     {},
     {
-      // simple options, just get/set the necessary values
-      width: {
-        get: function() {
-          return width;
-        },
-        set: function(_) {
-          width = _;
-        },
-      },
-      height: {
-        get: function() {
-          return height;
-        },
-        set: function(_) {
-          height = _;
-        },
-      },
-      showXAxis: {
-        get: function() {
-          return showXAxis;
-        },
-        set: function(_) {
-          showXAxis = _;
-        },
-      },
-      showYAxis: {
-        get: function() {
-          return showYAxis;
-        },
-        set: function(_) {
-          showYAxis = _;
-        },
-      },
-      defaultState: {
-        get: function() {
-          return defaultState;
-        },
-        set: function(_) {
-          defaultState = _;
-        },
-      },
-      noData: {
-        get: function() {
-          return noData;
-        },
-        set: function(_) {
-          noData = _;
-        },
-      },
-
       // options that require extra logic in the setter
       margin: {
         get: function() {
@@ -449,29 +397,6 @@ export function lineChart() {
           margin.left = _.left !== undefined ? _.left : margin.left;
         },
       },
-      duration: {
-        get: function() {
-          return duration;
-        },
-        set: function(_) {
-          duration = _;
-          renderWatch.reset(duration);
-          lines.duration(duration);
-          xAxis.duration(duration);
-          yAxis.duration(duration);
-        },
-      },
-      focusMargin: {
-        get: function() {
-          return margin2;
-        },
-        set: function(_) {
-          margin2.top = _.top !== undefined ? _.top : margin2.top;
-          margin2.right = _.right !== undefined ? _.right : margin2.right;
-          margin2.bottom = _.bottom !== undefined ? _.bottom : margin2.bottom;
-          margin2.left = _.left !== undefined ? _.left : margin2.left;
-        },
-      },
       color: {
         get: function() {
           return color;
@@ -479,14 +404,6 @@ export function lineChart() {
         set: function(_) {
           color = nv.utils.getColor(_);
           lines.color(color);
-        },
-      },
-      interpolate: {
-        get: function() {
-          return lines.interpolate();
-        },
-        set: function(_) {
-          lines.interpolate(_);
         },
       },
       x: {
