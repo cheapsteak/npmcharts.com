@@ -79,12 +79,9 @@ export const scatter = function() {
            // Setup Scales
            var logScale = chart.yScale().name === d3.scale.log().name ? true : false; 
            if (logScale) {
-                  var min = d3.min(seriesData.map(function(d) { if (d.y !== 0) return d.y; }));
+                  var min = d3.min(seriesData.map(d => d.y || null));
                   y.clamp(true)
-                      .domain(yDomain || d3.extent(seriesData.map(function(d) {
-                          if (d.y !== 0) return d.y;
-                          else return min * 0.1;
-                      }).concat(forceY)))
+                      .domain(yDomain || d3.extent(seriesData.map(d => d.y || min * 0.1).concat(forceY)))
                       .range(yRange || [availableHeight, 0]);
               } else {
                       y.domain(yDomain || d3.extent(seriesData.map(d => d.y).concat(forceY)))
