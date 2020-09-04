@@ -32,7 +32,7 @@ export function lineChart() {
   xAxis.orient('bottom').tickPadding(7);
   yAxis.orient(rightAlignYAxis ? 'right' : 'left');
 
-  lines.clipEdge(true).duration(0);
+  lines.clipEdge(true);
   lines.x(xAccessor);
   lines.y(yAccessor);
 
