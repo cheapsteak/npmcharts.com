@@ -192,13 +192,6 @@ export default withRender({
         return;
       }
       const chart = this.chart;
-      // tick on the 1st of the month
-      chart.x2Axis.tickValues(
-        this.moduleData[0].downloads
-          .map(item => item.day)
-          .filter(date => date.getDate() === 1),
-      );
-      chart.update();
 
       svg
         .select('.nv-y.nv-axis')

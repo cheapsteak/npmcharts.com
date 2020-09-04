@@ -9,9 +9,7 @@ export function lineChart() {
   var lines = nv.models.line(),
     xAxis = nv.models.axis(),
     yAxis = nv.models.axis(),
-    interactiveLayer = nv.interactiveGuideline(),
-    x2Axis = nv.models.axis(),
-    y2Axis = nv.models.axis();
+    interactiveLayer = nv.interactiveGuideline();
 
   var margin = { top: 30, right: 20, bottom: 50, left: 60 },
     margin2 = { top: 0, right: 20, bottom: 20, left: 60 },
@@ -37,9 +35,6 @@ export function lineChart() {
   yAxis.orient(rightAlignYAxis ? 'right' : 'left');
 
   lines.clipEdge(true).duration(0);
-
-  x2Axis.orient('bottom').tickPadding(5);
-  y2Axis.orient(rightAlignYAxis ? 'right' : 'left');
 
   //============================================================
   // Private Variables
@@ -427,9 +422,7 @@ export function lineChart() {
   chart.dispatch = dispatch;
   chart.lines = lines;
   chart.xAxis = xAxis;
-  chart.x2Axis = x2Axis;
   chart.yAxis = yAxis;
-  chart.y2Axis = y2Axis;
   chart.interactiveLayer = interactiveLayer;
   chart.state = state;
   chart.dispatch = dispatch;
@@ -525,9 +518,7 @@ export function lineChart() {
           renderWatch.reset(duration);
           lines.duration(duration);
           xAxis.duration(duration);
-          x2Axis.duration(duration);
           yAxis.duration(duration);
-          y2Axis.duration(duration);
         },
       },
       focusMargin: {
@@ -564,7 +555,6 @@ export function lineChart() {
         },
         set: function(_) {
           xAxis.tickFormat(_);
-          x2Axis.tickFormat(_);
         },
       },
       yTickFormat: {
@@ -573,7 +563,6 @@ export function lineChart() {
         },
         set: function(_) {
           yAxis.tickFormat(_);
-          y2Axis.tickFormat(_);
         },
       },
       x: {
