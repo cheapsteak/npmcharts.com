@@ -24,7 +24,6 @@ export const scatter = function() {
       , forceY       = [] // List of numbers to Force into the Y scale
       , forceSize    = [] // List of numbers to Force into the Size scale
       , interactive  = true // If true, plots a voronoi overlay for advanced point intersection
-      , pointActive  = d => !d.notActive  // any points that return false will be filtered out
       , padData      = false // If true, adds half a data points width to front and back, for lining up a line chart with a bar chart
       , padDataOuter = .1 //outerPadding to imitate ordinal scale outer padding
       , clipEdge     = false // if true, masks points within x and y scale
@@ -157,7 +156,6 @@ export const scatter = function() {
           var points = groups.selectAll('path.nv-point')
               .data((d) => d.values
                 .map((point, pointIndex) => [point, pointIndex])
-                .filter((pointArray, pointIndex) => pointActive(pointArray[0], pointIndex))
               );
           points.enter().append('path')
               .attr('class', d => 'nv-point nv-point-' + d[1])
@@ -237,7 +235,6 @@ export const scatter = function() {
       forceY:       {get: function(){return forceY;}, set: function(_){forceY=_;}},
       forcePoint:   {get: function(){return forceSize;}, set: function(_){forceSize=_;}},
       interactive:  {get: function(){return interactive;}, set: function(_){interactive=_;}},
-      pointActive:  {get: function(){return pointActive;}, set: function(_){pointActive=_;}},
       padDataOuter: {get: function(){return padDataOuter;}, set: function(_){padDataOuter=_;}},
       padData:      {get: function(){return padData;}, set: function(_){padData=_;}},
       clipEdge:     {get: function(){return clipEdge;}, set: function(_){clipEdge=_;}},
