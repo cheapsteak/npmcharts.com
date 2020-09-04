@@ -28,8 +28,6 @@ export const scatter = function() {
       , padData      = false // If true, adds half a data points width to front and back, for lining up a line chart with a bar chart
       , padDataOuter = .1 //outerPadding to imitate ordinal scale outer padding
       , clipEdge     = false // if true, masks points within x and y scale
-      , clipVoronoi  = true // if true, masks each point with a circle... can turn off to slightly increase performance
-      , showVoronoi  = false // display the voronoi areas
       , clipRadius   = function() { return 25 } // function to get the radius for voronoi point clips
       , xDomain      = null // Override x domain (skips the calculation from data)
       , yDomain      = null // Override y domain
@@ -216,7 +214,7 @@ export const scatter = function() {
                       })
                   );
 
-                  if (vertices.length == 0) return false;  // No active points, we're done
+                  if (vertices.length === 0) return false;  // No active points, we're done
                   if (vertices.length < 3) {
                       // Issue #283 - Adding 2 dummy points to the voronoi b/c voronoi requires min 3 points to work
                       vertices.push([x.range()[0] - 20, y.range()[0] - 20, null, null]);
@@ -245,40 +243,6 @@ export const scatter = function() {
                   // nuke all voronoi paths on reload and recreate them
                   wrap.select('.nv-point-paths').selectAll('path').remove();
                   var pointPaths = wrap.select('.nv-point-paths').selectAll('path').data(voronoi);
-                  var vPointPaths = pointPaths
-                      .enter().append("svg:path")
-                      .attr("d", function(d) {
-                          if (!d || !d.data || d.data.length === 0)
-                              return 'M 0 0';
-                          else
-                              return "M" + d.data.join(",") + "Z";
-                      })
-                      .attr("id", function(d,i) {
-                          return "nv-path-"+i; })
-                      .attr("clip-path", function(d,i) { return "url(#nv-clip-"+id+"-"+i+")"; })
-                      ;
-
-                  // good for debugging point hover issues
-                  if (showVoronoi) {
-                      vPointPaths.style("fill", d3.rgb(230, 230, 230))
-                          .style('fill-opacity', 0.4)
-                          .style('stroke-opacity', 1)
-                          .style("stroke", d3.rgb(200,200,200));
-                  }
-
-                  if (clipVoronoi) {
-                      // voronoi sections are already set to clip,
-                      // just create the circles with the IDs they expect
-                      wrap.select('.nv-point-clips').selectAll('*').remove(); // must do * since it has sub-dom
-                      var pointClips = wrap.select('.nv-point-clips').selectAll('clipPath').data(vertices);
-                      var vPointClips = pointClips
-                          .enter().append("svg:clipPath")
-                          .attr("id", function(d, i) { return "nv-clip-"+id+"-"+i;})
-                          .append("svg:circle")
-                          .attr('cx', function(d) { return d[0]; })
-                          .attr('cy', function(d) { return d[1]; })
-                          .attr('r', clipRadius);
-                  }
 
                   var mouseEventCallback = function(d, mDispatch) {
                       if (needsUpdate) return 0;
@@ -582,9 +546,7 @@ export const scatter = function() {
       padDataOuter: {get: function(){return padDataOuter;}, set: function(_){padDataOuter=_;}},
       padData:      {get: function(){return padData;}, set: function(_){padData=_;}},
       clipEdge:     {get: function(){return clipEdge;}, set: function(_){clipEdge=_;}},
-      clipVoronoi:  {get: function(){return clipVoronoi;}, set: function(_){clipVoronoi=_;}},
       clipRadius:   {get: function(){return clipRadius;}, set: function(_){clipRadius=_;}},
-      showVoronoi:   {get: function(){return showVoronoi;}, set: function(_){showVoronoi=_;}},
       id:           {get: function(){return id;}, set: function(_){id=_;}},
       interactiveUpdateDelay: {get:function(){return interactiveUpdateDelay;}, set: function(_){interactiveUpdateDelay=_;}},
       showLabels: {get: function(){return showLabels;}, set: function(_){ showLabels = _;}},
@@ -609,12 +571,6 @@ export const scatter = function() {
       color: {get: function(){return color;}, set: function(_){
           color = nv.utils.getColor(_);
       }},
-      useVoronoi: {get: function(){return useVoronoi;}, set: function(_){
-          useVoronoi = _;
-          if (useVoronoi === false) {
-              clipVoronoi = false;
-          }
-      }}
   });
 
   nv.utils.initOptions(chart);
