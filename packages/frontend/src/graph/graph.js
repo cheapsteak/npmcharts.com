@@ -105,10 +105,7 @@ export default withRender({
     const chart = this.chart;
 
     nv.addGraph(() => {
-      chart
-        .margin(margin)
-        .color(palette)
-        .xScale(d3.time.scale());
+      chart.margin(margin).color(palette);
 
       chart.xAxis
         .showMaxMin(false)

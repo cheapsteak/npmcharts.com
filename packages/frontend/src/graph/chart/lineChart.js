@@ -58,14 +58,7 @@ export function lineChart() {
           nv.utils.availableHeight(height, container, margin) - 0;
 
       chart.update = function() {
-        if (duration === 0) {
-          container.call(chart);
-        } else {
-          container
-            .transition()
-            .duration(duration)
-            .call(chart);
-        }
+        container.call(chart);
       };
       chart.container = this;
 
@@ -340,6 +333,8 @@ export function lineChart() {
 
   nv.utils.inheritOptions(chart, lines);
   nv.utils.initOptions(chart);
+
+  chart.xScale(d3.time.scale());
 
   return chart;
 }
