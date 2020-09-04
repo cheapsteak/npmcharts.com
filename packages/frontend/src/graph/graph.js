@@ -109,7 +109,6 @@ export default withRender({
     nv.addGraph(() => {
       chart
         .margin(margin)
-        .showLegend(false)
         .color(palette)
         .xScale(d3.time.scale())
         .x(xAccessor)

@@ -9,7 +9,6 @@ export function lineChart() {
   var lines = nv.models.line(),
     xAxis = nv.models.axis(),
     yAxis = nv.models.axis(),
-    legend = nv.models.legend(),
     interactiveLayer = nv.interactiveGuideline(),
     lines2 = nv.models.line(),
     x2Axis = nv.models.axis(),
@@ -182,38 +181,6 @@ export function lineChart() {
       contextEnter.append('g').attr('class', 'nv-linesWrap');
       contextEnter.append('g').attr('class', 'nv-brushBackground');
       contextEnter.append('g').attr('class', 'nv-x nv-brush');
-
-      // Legend
-      if (!showLegend) {
-        g
-          .select('.nv-legendWrap')
-          .selectAll('*')
-          .remove();
-      } else {
-        legend.width(availableWidth);
-
-        g
-          .select('.nv-legendWrap')
-          .datum(data)
-          .call(legend);
-
-        if (legendPosition === 'bottom') {
-          wrap
-            .select('.nv-legendWrap')
-            .attr('transform', 'translate(0,' + availableHeight1 + ')');
-        } else if (legendPosition === 'top') {
-          if (margin.top != legend.height()) {
-            margin.top = legend.height();
-            availableHeight1 =
-              nv.utils.availableHeight(height, container, margin) -
-              (focusEnable ? focusHeight : 0);
-          }
-
-          wrap
-            .select('.nv-legendWrap')
-            .attr('transform', 'translate(0,' + -margin.top + ')');
-        }
-      }
 
       wrap.attr(
         'transform',
@@ -412,12 +379,6 @@ export function lineChart() {
       //============================================================
       // Event Handling/Dispatching (in chart's scope)
       //------------------------------------------------------------
-
-      legend.dispatch.on('stateChange', function(newState) {
-        for (var key in newState) state[key] = newState[key];
-        dispatch.stateChange(state);
-        chart.update();
-      });
 
       interactiveLayer.dispatch.on('elementMousemove', function(e) {
         lines.clearHighlights();
@@ -652,7 +613,6 @@ export function lineChart() {
   chart.dispatch = dispatch;
   chart.lines = lines;
   chart.lines2 = lines2;
-  chart.legend = legend;
   chart.xAxis = xAxis;
   chart.x2Axis = x2Axis;
   chart.yAxis = yAxis;
@@ -814,7 +774,6 @@ export function lineChart() {
         },
         set: function(_) {
           color = nv.utils.getColor(_);
-          legend.color(color);
           lines.color(color);
         },
       },
