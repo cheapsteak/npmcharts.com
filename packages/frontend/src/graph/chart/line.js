@@ -41,15 +41,12 @@ export const line = function() {
   //------------------------------------------------------------
 
   var x0, y0 //used to store previous scales
-      , renderWatch = nv.utils.renderWatch(dispatch, duration)
       ;
 
   //============================================================
 
 
   function chart(selection) {
-      renderWatch.reset();
-      renderWatch.models(scatter);
       selection.each(function(data) {
           container = d3.select(this);
           var availableWidth = nv.utils.availableWidth(width, container, margin),
@@ -110,7 +107,7 @@ export const line = function() {
               .classed('hover', function(d) { return d.hover })
               .style('fill', function(d,i){ return color(d, i) })
               .style('stroke', function(d,i){ return color(d, i)});
-          groups.watchTransition(renderWatch, 'line: groups')
+          groups
               .style('stroke-opacity', 1)
               .style('fill-opacity', function(d) { return d.fillOpacity || .5});
 
@@ -131,7 +128,7 @@ export const line = function() {
                   .y(function(d,i) { return nv.utils.NaNtoZero(y0(getY(d,i))) })
           );
 
-          linePaths.watchTransition(renderWatch, 'line: linePaths')
+          linePaths
               .attr('d',
                   d3.svg.line()
                   .interpolate(interpolate)
@@ -144,7 +141,6 @@ export const line = function() {
           x0 = x.copy();
           y0 = y.copy();
       });
-      renderWatch.renderEnd('line immediate');
       return chart;
   }
 
@@ -179,7 +175,6 @@ export const line = function() {
       }},
       duration: {get: function(){return duration;}, set: function(_){
           duration = _;
-          renderWatch.reset(duration);
           scatter.duration(duration);
       }},
       x: {get: function(){return getX;}, set: function(_){

@@ -49,7 +49,6 @@ export const scatter = function() {
   var x0, y0, z0 // used to store previous scales
       , timeoutID
       , needsUpdate = false // Flag for when the points are visually updating, but the interactive layer is behind, to disable tooltips
-      , renderWatch = nv.utils.renderWatch(dispatch, duration)
       , _sizeRange_def = [16, 256]
       , _caches
       ;
@@ -80,7 +79,6 @@ export const scatter = function() {
   }
 
   function chart(selection) {
-      renderWatch.reset();
       selection.each(function(data) {
           container = d3.select(this);
           var availableWidth = nv.utils.availableWidth(width, container, margin),
@@ -253,8 +251,7 @@ export const scatter = function() {
           groups
               .attr('class', (d, i) => (d.classed || '') + ' nv-group nv-series-' + i)
               .classed('nv-noninteractive', !interactive)
-              .classed('hover', (d) => d.hover );
-          groups.watchTransition(renderWatch, 'scatter: groups')
+              .classed('hover', (d) => d.hover )
               .style('fill', (d, i) => color(d, i) )
               .style('stroke', (d, i) =>  color(d, i) )
               .style('stroke-opacity', 1)
@@ -278,14 +275,11 @@ export const scatter = function() {
               );
           points.exit().remove();
           groups.exit().selectAll('path.nv-point')
-              .watchTransition(renderWatch, 'scatter exit')
               .attr('transform', d => 'translate(' + nv.utils.NaNtoZero(x(getX(d[0],d[1]))) + ',' + nv.utils.NaNtoZero(y(getY(d[0],d[1]))) + ')')
               .remove();
           points.filter(d => scaleDiff || getDiffs(d, 'x', 'y'))
-              .watchTransition(renderWatch, 'scatter points')
               .attr('transform', d => 'translate(' + nv.utils.NaNtoZero(x(getX(d[0],d[1]))) + ',' + nv.utils.NaNtoZero(y(getY(d[0],d[1]))) + ')');
           points.filter(d => scaleDiff || getDiffs(d, 'shape', 'size'))
-              .watchTransition(renderWatch, 'scatter points')
               .attr('d',
                   nv.utils.symbol()
                   .type(d => getShape(d[0]))
@@ -307,7 +301,6 @@ export const scatter = function() {
           z0 = z.copy();
 
       });
-      renderWatch.renderEnd('scatter immediate');
       return chart;
   }
 
@@ -382,7 +375,6 @@ export const scatter = function() {
       }},
       duration: {get: function(){return duration;}, set: function(_){
           duration = _;
-          renderWatch.reset(duration);
       }},
       color: {get: function(){return color;}, set: function(_){
           color = nv.utils.getColor(_);

@@ -40,14 +40,7 @@ export function lineChart() {
   // Private Variables
   //------------------------------------------------------------
 
-  var renderWatch = nv.utils.renderWatch(dispatch, duration);
-
   function chart(selection) {
-    renderWatch.reset();
-    renderWatch.models(lines);
-    renderWatch.models(xAxis);
-    renderWatch.models(yAxis);
-
     selection.each(function(data) {
       var container = d3.select(this);
       nv.utils.initSVG(container);
@@ -269,7 +262,6 @@ export function lineChart() {
       });
     });
 
-    renderWatch.renderEnd('lineChart immediate');
     return chart;
   }
 
