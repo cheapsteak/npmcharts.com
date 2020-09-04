@@ -1,0 +1,4 @@
+/api/npm-registry/*
+  Access-Control-Allow-Origin: *
+/api/npm-api/*
+  Access-Control-Allow-Origin: *
