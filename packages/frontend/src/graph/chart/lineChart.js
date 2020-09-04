@@ -489,22 +489,6 @@ export function lineChart() {
           lines.interpolate(_);
         },
       },
-      xTickFormat: {
-        get: function() {
-          return xAxis.tickFormat();
-        },
-        set: function(_) {
-          xAxis.tickFormat(_);
-        },
-      },
-      yTickFormat: {
-        get: function() {
-          return yAxis.tickFormat();
-        },
-        set: function(_) {
-          yAxis.tickFormat(_);
-        },
-      },
       x: {
         get: function() {
           return lines.x();
