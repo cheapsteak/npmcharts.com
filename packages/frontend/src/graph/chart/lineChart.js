@@ -21,8 +21,6 @@ export function lineChart() {
     color = nv.utils.defaultColor(),
     width = null,
     height = null,
-    showXAxis = true,
-    showYAxis = true,
     rightAlignYAxis = true,
     useInteractiveGuideline = true,
     x,
@@ -47,8 +45,8 @@ export function lineChart() {
   function chart(selection) {
     renderWatch.reset();
     renderWatch.models(lines);
-    if (showXAxis) renderWatch.models(xAxis);
-    if (showYAxis) renderWatch.models(yAxis);
+    renderWatch.models(xAxis);
+    renderWatch.models(yAxis);
 
     selection.each(function(data) {
       var container = d3.select(this);
@@ -151,41 +149,33 @@ export function lineChart() {
       var linesWrap = g.select('.nv-linesWrap').datum(data);
 
       // Setup Main (Focus) Axes
-      if (showXAxis) {
-        xAxis
-          .scale(x)
-          ._ticks(nv.utils.calcTicksX(availableWidth / 100, data))
-          .tickSize(-availableHeight1, 0);
-      }
+      xAxis
+        .scale(x)
+        ._ticks(nv.utils.calcTicksX(availableWidth / 100, data))
+        .tickSize(-availableHeight1, 0);
 
-      if (showYAxis) {
-        yAxis
-          .scale(y)
-          ._ticks(nv.utils.calcTicksY(availableHeight1 / 36, data))
-          .tickSize(-availableWidth, 0);
-      }
+      yAxis
+        .scale(y)
+        ._ticks(nv.utils.calcTicksY(availableHeight1 / 36, data))
+        .tickSize(-availableWidth, 0);
 
       //============================================================
       // Update Axes
       //============================================================
       function updateXAxis() {
-        if (showXAxis) {
-          g
-            .select('.nv-focus .nv-x.nv-axis')
-            .transition()
-            .duration(duration)
-            .call(xAxis);
-        }
+        g
+          .select('.nv-focus .nv-x.nv-axis')
+          .transition()
+          .duration(duration)
+          .call(xAxis);
       }
 
       function updateYAxis() {
-        if (showYAxis) {
-          g
-            .select('.nv-focus .nv-y.nv-axis')
-            .transition()
-            .duration(duration)
-            .call(yAxis);
-        }
+        g
+          .select('.nv-focus .nv-y.nv-axis')
+          .transition()
+          .duration(duration)
+          .call(yAxis);
       }
 
       g
