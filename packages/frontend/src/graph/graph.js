@@ -112,8 +112,7 @@ export default withRender({
         .color(palette)
         .xScale(d3.time.scale())
         .x(xAccessor)
-        .y(yAccessor)
-        .useInteractiveGuideline(true);
+        .y(yAccessor);
 
       chart.xAxis
         .showMaxMin(false)

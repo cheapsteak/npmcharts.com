@@ -19,12 +19,10 @@ export function lineChart() {
     color = nv.utils.defaultColor(),
     width = null,
     height = null,
-    showLegend = true,
-    legendPosition = 'top',
     showXAxis = true,
     showYAxis = true,
     rightAlignYAxis = false,
-    useInteractiveGuideline = false,
+    useInteractiveGuideline = true,
     x,
     y,
     state = nv.utils.state(),
@@ -406,22 +404,6 @@ export function lineChart() {
           height = _;
         },
       },
-      showLegend: {
-        get: function() {
-          return showLegend;
-        },
-        set: function(_) {
-          showLegend = _;
-        },
-      },
-      legendPosition: {
-        get: function() {
-          return legendPosition;
-        },
-        set: function(_) {
-          legendPosition = _;
-        },
-      },
       showXAxis: {
         get: function() {
           return showXAxis;
@@ -546,18 +528,6 @@ export function lineChart() {
         set: function(_) {
           rightAlignYAxis = _;
           yAxis.orient(rightAlignYAxis ? 'right' : 'left');
-        },
-      },
-      useInteractiveGuideline: {
-        get: function() {
-          return useInteractiveGuideline;
-        },
-        set: function(_) {
-          useInteractiveGuideline = _;
-          if (useInteractiveGuideline) {
-            lines.interactive(false);
-            lines.useVoronoi(false);
-          }
         },
       },
     },
