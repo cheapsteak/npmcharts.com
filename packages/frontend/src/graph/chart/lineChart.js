@@ -216,9 +216,7 @@ export function lineChart() {
           );
           var threshold = 0.03 * domainExtent;
           var indexToHighlight = nv.nearestValueIndex(
-            allData.map(function(d) {
-              return d.value;
-            }),
+            allData.map(d => d.value),
             yValue,
             threshold,
           );
