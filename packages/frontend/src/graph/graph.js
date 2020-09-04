@@ -116,8 +116,6 @@ export default withRender({
         .y(yAccessor)
         .useInteractiveGuideline(true);
 
-      chart.interactiveLayer.tooltip.enabled(false);
-
       chart.xAxis
         .showMaxMin(false)
         .tickFormat(d => d3.time.format('%e %b')(new Date(d)));

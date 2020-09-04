@@ -11,7 +11,6 @@ export function lineChart() {
     yAxis = nv.models.axis(),
     legend = nv.models.legend(),
     interactiveLayer = nv.interactiveGuideline(),
-    tooltip = nv.models.tooltip(),
     lines2 = nv.models.line(),
     x2Axis = nv.models.axis(),
     y2Axis = nv.models.axis(),
@@ -40,14 +39,7 @@ export function lineChart() {
     state = nv.utils.state(),
     defaultState = null,
     noData = null,
-    dispatch = d3.dispatch(
-      'tooltipShow',
-      'tooltipHide',
-      'brush',
-      'stateChange',
-      'changeState',
-      'renderEnd',
-    ),
+    dispatch = d3.dispatch('brush', 'stateChange', 'changeState', 'renderEnd'),
     duration = 250;
 
   // set options on sub-objects for this chart
@@ -63,22 +55,6 @@ export function lineChart() {
 
   x2Axis.orient('bottom').tickPadding(5);
   y2Axis.orient(rightAlignYAxis ? 'right' : 'left');
-
-  tooltip
-    .valueFormatter(function(d, i) {
-      return yAxis.tickFormat()(d, i);
-    })
-    .headerFormatter(function(d, i) {
-      return xAxis.tickFormat()(d, i);
-    });
-
-  interactiveLayer.tooltip
-    .valueFormatter(function(d, i) {
-      return yAxis.tickFormat()(d, i);
-    })
-    .headerFormatter(function(d, i) {
-      return xAxis.tickFormat()(d, i);
-    });
 
   //============================================================
   // Private Variables
@@ -503,21 +479,6 @@ export function lineChart() {
             allData[indexToHighlight].highlight = true;
         }
 
-        var defaultValueFormatter = function(d, i) {
-          return d == null ? 'N/A' : yAxis.tickFormat()(d);
-        };
-
-        interactiveLayer.tooltip
-          .chartContainer(chart.container.parentNode)
-          .valueFormatter(
-            interactiveLayer.tooltip.valueFormatter() || defaultValueFormatter,
-          )
-          .data({
-            value: chart.x()(singlePoint, pointIndex),
-            index: pointIndex,
-            series: allData,
-          })();
-
         interactiveLayer.renderGuideLine(pointXLocation);
       });
 
@@ -665,7 +626,6 @@ export function lineChart() {
                     lines.x()(d, i) >= extent[0] && lines.x()(d, i) <= extent[1]
                   );
                 }),
-                disableTooltip: d.disableTooltip,
               };
             }),
         );
@@ -685,20 +645,6 @@ export function lineChart() {
   }
 
   //============================================================
-  // Event Handling/Dispatching (out of chart's scope)
-  //------------------------------------------------------------
-
-  lines.dispatch.on('elementMouseover.tooltip', function(evt) {
-    if (!evt.series.disableTooltip) {
-      tooltip.data(evt).hidden(false);
-    }
-  });
-
-  lines.dispatch.on('elementMouseout.tooltip', function(evt) {
-    tooltip.hidden(true);
-  });
-
-  //============================================================
   // Expose Public Variables
   //------------------------------------------------------------
 
@@ -712,7 +658,6 @@ export function lineChart() {
   chart.yAxis = yAxis;
   chart.y2Axis = y2Axis;
   chart.interactiveLayer = interactiveLayer;
-  chart.tooltip = tooltip;
   chart.state = state;
   chart.dispatch = dispatch;
   chart.options = nv.utils.optionsFunc.bind(chart);
