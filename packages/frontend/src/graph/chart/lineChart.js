@@ -1,6 +1,9 @@
 import nv from 'nvd3';
 import d3 from 'd3';
 
+export const xAccessor = point => point.day;
+export const yAccessor = point => point.count;
+
 // copied from from nvd3 1.8.3
 // and removed unused features
 // https://github.com/novus/nvd3/blob/254bb456667d4752947cf874e303b60beb6661b5/src/models/lineChart.js
@@ -32,6 +35,8 @@ export function lineChart() {
   yAxis.orient(rightAlignYAxis ? 'right' : 'left');
 
   lines.clipEdge(true).duration(0);
+  lines.x(xAccessor);
+  lines.y(yAccessor);
 
   //============================================================
   // Private Variables
@@ -328,22 +333,6 @@ export function lineChart() {
         set: function(_) {
           color = nv.utils.getColor(_);
           lines.color(color);
-        },
-      },
-      x: {
-        get: function() {
-          return lines.x();
-        },
-        set: function(_) {
-          lines.x(_);
-        },
-      },
-      y: {
-        get: function() {
-          return lines.y();
-        },
-        set: function(_) {
-          lines.y(_);
         },
       },
     },

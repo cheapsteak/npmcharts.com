@@ -4,14 +4,12 @@ import _ from 'lodash';
 import { format as formatDate, startOfDay } from 'date-fns';
 import { line, curveCatmullRom } from 'd3-shape';
 import withRender from './graph.html';
-import { lineChart } from './chart/lineChart';
+import { lineChart, xAccessor } from './chart/lineChart';
 
 const { palette } = require('configs');
 
 // this can't go in the data of the component, observing it changes it.
 let svg;
-const xAccessor = point => point.day;
-const yAccessor = point => point.count;
 
 const catmulRomInterpolation = (points, tension) =>
   line()
@@ -110,9 +108,7 @@ export default withRender({
       chart
         .margin(margin)
         .color(palette)
-        .xScale(d3.time.scale())
-        .x(xAccessor)
-        .y(yAccessor);
+        .xScale(d3.time.scale());
 
       chart.xAxis
         .showMaxMin(false)
