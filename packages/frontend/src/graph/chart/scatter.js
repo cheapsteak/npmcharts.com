@@ -37,6 +37,7 @@ export const scatter = function() {
       , singlePoint  = false
       , dispatch     = d3.dispatch('elementClick', 'elementDblClick', 'elementMouseover', 'elementMouseout', 'renderEnd')
       , duration     = 250
+      , interactiveUpdateDelay = 300
       ;
 
 
@@ -44,8 +45,37 @@ export const scatter = function() {
   // Private Variables
   //------------------------------------------------------------
 
-  var _sizeRange_def = [16, 256]
+  var x0, y0, z0 // used to store previous scales
+      , timeoutID
+      , needsUpdate = false // Flag for when the points are visually updating, but the interactive layer is behind, to disable tooltips
+      , _sizeRange_def = [16, 256]
+      , _caches
       ;
+
+  function getCache(d) {
+      var cache, i;
+      cache = _caches = _caches || {};
+      i = d[0].series;
+      cache = cache[i] = cache[i] || {};
+      i = d[1];
+      cache = cache[i] = cache[i] || {};
+      return cache;
+  }
+
+  function getDiffs(d) {
+      var i, key,
+          point = d[0],
+          cache = getCache(d),
+          diffs = false;
+      for (i = 1; i < arguments.length; i ++) {
+          key = arguments[i];
+          if (cache[key] !== point[key] || !cache.hasOwnProperty(key)) {
+              cache[key] = point[key];
+              diffs = true;
+          }
+      }
+      return diffs;
+  }
 
   function chart(selection) {
       selection.each(function(data) {
@@ -62,6 +92,8 @@ export const scatter = function() {
               });
           });
 
+          // Setup Scales
+          var logScale = chart.yScale().toString().includes('log(x)')
           // remap and flatten the data for use in calculating the scales' domains
           var seriesData = (xDomain && yDomain && sizeDomain) ? [] : // if we know xDomain and yDomain and sizeDomain, no need to calculate.... if Size is constant remember to set sizeDomain to speed up performance
               d3.merge(
@@ -72,11 +104,10 @@ export const scatter = function() {
 
           if (padData && data[0])
               x.range(xRange || [(availableWidth * padDataOuter +  availableWidth) / (2 *data[0].values.length), availableWidth - availableWidth * (1 + padDataOuter) / (2 * data[0].values.length)  ]);
+          //x.range([availableWidth * .5 / data[0].values.length, availableWidth * (data[0].values.length - .5)  / data[0].values.length ]);
           else
               x.range(xRange || [0, availableWidth]);
 
-           // Setup Scales
-           var logScale = chart.yScale().toString().includes('log(x)')
 
            var min = d3.min(seriesData.map(d => d.y || null));
            var max = d3.max(seriesData.map(d => d.y));
@@ -113,6 +144,11 @@ export const scatter = function() {
               y.domain([-1,1]);
           }
 
+          x0 = x0 || x;
+          y0 = y0 || y;
+          z0 = z0 || z;
+
+          var scaleDiff = x(1) !== x0(1) || y(1) !== y0(1) || z(1) !== z0(1);
 
           // Setup containers and skeleton of chart
           var wrap = container.selectAll('g.nv-wrap.nv-scatter').data([data]);
@@ -138,6 +174,67 @@ export const scatter = function() {
 
           g.attr('clip-path', clipEdge ? 'url(#nv-edge-clip-' + id + ')' : '');
 
+          function updateInteractiveLayer() {
+              // Always clear needs-update flag regardless of whether or not
+              // we will actually do anything (avoids needless invocations).
+              needsUpdate = false;
+
+              if (!interactive) return false;
+
+              // inject series and point index for reference into voronoi
+          
+              // add event handlers to points instead voronoi paths
+              wrap.select('.nv-groups').selectAll('.nv-group')
+                  .selectAll('.nv-point')
+                  .on('click', function(d,i) {
+                      //nv.log('test', d, i);
+                      if (needsUpdate || !data[d.series]) return 0; //check if this is a dummy point
+                      var series = data[d.series],
+                          point  = series.values[i];
+
+                      dispatch.elementClick({
+                          point: point,
+                          series: series,
+                          pos: [x(getX(point, i)) + margin.left, y(getY(point, i)) + margin.top], //TODO: make this pos base on the page
+                          relativePos: [x(getX(point, i)) + margin.left, y(getY(point, i)) + margin.top],
+                          seriesIndex: d.series,
+                          pointIndex: i
+                      });
+                  })
+                  .on('mouseover', function(d,i) {
+                      if (needsUpdate || !data[d.series]) return 0; //check if this is a dummy point
+                      var series = data[d.series],
+                          point  = series.values[i];
+
+                      dispatch.elementMouseover({
+                          point: point,
+                          series: series,
+                          pos: [x(getX(point, i)) + margin.left, y(getY(point, i)) + margin.top],//TODO: make this pos base on the page
+                          relativePos: [x(getX(point, i)) + margin.left, y(getY(point, i)) + margin.top],
+                          seriesIndex: d.series,
+                          pointIndex: i,
+                          color: color(d, i)
+                      });
+                  })
+                  .on('mouseout', function(d,i) {
+                      if (needsUpdate || !data[d.series]) return 0; //check if this is a dummy point
+                      var series = data[d.series],
+                          point  = series.values[i];
+
+                      dispatch.elementMouseout({
+                          point: point,
+                          series: series,
+                          pos: [x(getX(point, i)) + margin.left, y(getY(point, i)) + margin.top],//TODO: make this pos base on the page
+                          relativePos: [x(getX(point, i)) + margin.left, y(getY(point, i)) + margin.top],
+                          seriesIndex: d.series,
+                          pointIndex: i,
+                          color: color(d, i)
+                      });
+                  });
+              
+          }
+
+          needsUpdate = true;
           var groups = wrap.select('.nv-groups').selectAll('.nv-group')
               .data(d => d, d => d.key);
           groups.enter().append('g')
@@ -163,27 +260,38 @@ export const scatter = function() {
               .attr('class', d => 'nv-point nv-point-' + d[1])
               .style('fill', d => d.color)
               .style('stroke', d => d.color)
-              .attr('transform', d => 'translate(' + nv.utils.NaNtoZero(x(getX(d[0],d[1]))) + ',' + nv.utils.NaNtoZero(y(getY(d[0],d[1]))) + ')')
+              .attr('transform', d => 'translate(' + nv.utils.NaNtoZero(x0(getX(d[0],d[1]))) + ',' + nv.utils.NaNtoZero(y0(getY(d[0],d[1]))) + ')')
               .attr('d',
                   nv.utils.symbol()
                   .type(d => getShape(d[0]))
                   .size(d => z(getSize(d[0],d[1])))
               );
+          points.exit().remove();
+          groups.exit().selectAll('path.nv-point')
+              .attr('transform', d => 'translate(' + nv.utils.NaNtoZero(x(getX(d[0],d[1]))) + ',' + nv.utils.NaNtoZero(y(getY(d[0],d[1]))) + ')')
+              .remove();
+          points.filter(d => scaleDiff || getDiffs(d, 'x', 'y'))
+              .attr('transform', d => 'translate(' + nv.utils.NaNtoZero(x(getX(d[0],d[1]))) + ',' + nv.utils.NaNtoZero(y(getY(d[0],d[1]))) + ')');
+          points.filter(d => scaleDiff || getDiffs(d, 'shape', 'size'))
+              .attr('d',
+                  nv.utils.symbol()
+                  .type(d => getShape(d[0]))
+                  .size(d => z(getSize(d[0],d[1])))
+          );
+          
+          // Delay updating the invisible interactive layer for smoother animation
+          if( interactiveUpdateDelay ) {
+              clearTimeout(timeoutID); // stop repeat calls to updateInteractiveLayer
+              timeoutID = setTimeout(updateInteractiveLayer, interactiveUpdateDelay );
+          }
+          else {
+              updateInteractiveLayer();
+          }
 
-          // XXX: this code doesn't seem to do anything?
-          // points.exit().remove();
-          // groups.exit().selectAll('path.nv-point')
-          //     .attr('transform', d => 'translate(' + nv.utils.NaNtoZero(x(getX(d[0],d[1]))) + ',' + nv.utils.NaNtoZero(y(getY(d[0],d[1]))) + ')')
-          //     .remove();
-          // points.filter(d => getDiffs(d, 'x', 'y'))
-          //     .attr('transform', d => 'translate(' + nv.utils.NaNtoZero(x(getX(d[0],d[1]))) + ',' + nv.utils.NaNtoZero(y(getY(d[0],d[1]))) + ')');
-          // points.filter(d => getDiffs(d, 'shape', 'size'))
-          //     .attr('d',
-          //         nv.utils.symbol()
-          //         .type(d => getShape(d[0]))
-          //         .size(d => z(getSize(d[0],d[1])))
-          // );
-        
+          //store old scales for use in transitions on update
+          x0 = x.copy();
+          y0 = y.copy();
+          z0 = z.copy();
 
       });
       return chart;
@@ -242,6 +350,7 @@ export const scatter = function() {
       clipEdge:     {get: function(){return clipEdge;}, set: function(_){clipEdge=_;}},
       clipRadius:   {get: function(){return clipRadius;}, set: function(_){clipRadius=_;}},
       id:           {get: function(){return id;}, set: function(_){id=_;}},
+      interactiveUpdateDelay: {get:function(){return interactiveUpdateDelay;}, set: function(_){interactiveUpdateDelay=_;}},
 
       // simple functor options
       x:     {get: function(){return getX;}, set: function(_){getX = d3.functor(_);}},
