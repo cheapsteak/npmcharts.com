@@ -20,7 +20,6 @@ export const line = function() {
       , getX = function(d) { return d.x } // accessor to get the x value from a data point
       , getY = function(d) { return d.y } // accessor to get the y value from a data point
       , defined = function(d,i) { return !isNaN(getY(d,i)) && getY(d,i) !== null } // allows a line to be not continuous when it is not defined
-      , isArea = function(d) { return d.area } // decides if a line is an area or just a line
       , clipEdge = false // if true, masks lines within x and y scale
       , x //can be accessed via chart.xScale()
       , y //can be accessed via chart.yScale()
@@ -115,34 +114,9 @@ export const line = function() {
               .style('stroke-opacity', 1)
               .style('fill-opacity', function(d) { return d.fillOpacity || .5});
 
-          var areaPaths = groups.selectAll('path.nv-area')
-              .data(function(d) { return isArea(d) ? [d] : [] }); // this is done differently than lines because I need to check if series is an area
-          areaPaths.enter().append('path')
-              .attr('class', 'nv-area')
-              .attr('d', function(d) {
-                  return d3.svg.area()
-                      .interpolate(interpolate)
-                      .defined(defined)
-                      .x(function(d,i) { return nv.utils.NaNtoZero(x0(getX(d,i))) })
-                      .y0(function(d,i) { return nv.utils.NaNtoZero(y0(getY(d,i))) })
-                      .y1(function(d,i) { return y0( y.domain()[0] <= 0 ? y.domain()[1] >= 0 ? 0 : y.domain()[1] : y.domain()[0] ) })
-                      //.y1(function(d,i) { return y0(0) }) //assuming 0 is within y domain.. may need to tweak this
-                      .apply(this, [d.values])
-              });
+
           groups.exit().selectAll('path.nv-area')
               .remove();
-
-          areaPaths.watchTransition(renderWatch, 'line: areaPaths')
-              .attr('d', function(d) {
-                  return d3.svg.area()
-                      .interpolate(interpolate)
-                      .defined(defined)
-                      .x(function(d,i) { return nv.utils.NaNtoZero(x(getX(d,i))) })
-                      .y0(function(d,i) { return nv.utils.NaNtoZero(y(getY(d,i))) })
-                      .y1(function(d,i) { return y( y.domain()[0] <= 0 ? y.domain()[1] >= 0 ? 0 : y.domain()[1] : y.domain()[0] ) })
-                      //.y1(function(d,i) { return y0(0) }) //assuming 0 is within y domain.. may need to tweak this
-                      .apply(this, [d.values])
-              });
 
           var linePaths = groups.selectAll('path.nv-line')
               .data(function(d) { return [d.values] });
@@ -207,9 +181,6 @@ export const line = function() {
           duration = _;
           renderWatch.reset(duration);
           scatter.duration(duration);
-      }},
-      isArea: {get: function(){return isArea;}, set: function(_){
-          isArea = d3.functor(_);
       }},
       x: {get: function(){return getX;}, set: function(_){
           getX = _;
