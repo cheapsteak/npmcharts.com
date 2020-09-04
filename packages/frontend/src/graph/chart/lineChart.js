@@ -162,29 +162,22 @@ export function lineChart() {
       //============================================================
       // Update Axes
       //============================================================
-      function updateXAxis() {
-        g
-          .select('.nv-focus .nv-x.nv-axis')
-          .transition()
-          .duration(duration)
-          .call(xAxis);
-      }
-
-      function updateYAxis() {
-        g
-          .select('.nv-focus .nv-y.nv-axis')
-          .transition()
-          .duration(duration)
-          .call(yAxis);
-      }
 
       g
         .select('.nv-focus .nv-x.nv-axis')
         .attr('transform', 'translate(0,' + availableHeight1 + ')');
 
       linesWrap.call(lines);
-      updateXAxis();
-      updateYAxis();
+      g
+        .select('.nv-focus .nv-x.nv-axis')
+        .transition()
+        .duration(duration)
+        .call(xAxis);
+      g
+        .select('.nv-focus .nv-y.nv-axis')
+        .transition()
+        .duration(duration)
+        .call(yAxis);
 
       //============================================================
       // Event Handling/Dispatching (in chart's scope)
