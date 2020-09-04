@@ -167,10 +167,7 @@ export default withRender({
       chart.interpolate(interpolation);
 
       chart.yScale(this.useLog ? d3.scale.log() : d3.scale.linear());
-      svg
-        .data([processedData])
-        .transition()
-        .call(chart);
+      svg.data([processedData]).call(chart);
 
       this.legendData = this.getDataAtDate(this.chart.xAxis.domain()[1]);
       this.applyOverrides();
