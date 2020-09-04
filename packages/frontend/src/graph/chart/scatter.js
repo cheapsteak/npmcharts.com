@@ -76,14 +76,16 @@ export const scatter = function() {
               x.range(xRange || [0, availableWidth]);
 
            // Setup Scales
-           var logScale = chart.yScale().name === d3.scale.log().name ? true : false; 
+           var logScale = chart.yScale().toString().includes('log(x)')
+
+           var min = d3.min(seriesData.map(d => d.y || null));
+           var max = d3.max(seriesData.map(d => d.y));
            if (logScale) {
-                  var min = d3.min(seriesData.map(d => d.y || null));
                   y.clamp(true)
-                      .domain(yDomain || d3.extent(seriesData.map(d => d.y || min * 0.1).concat(forceY)))
+                      .domain(yDomain || [min || 0, max * 1.01])
                       .range(yRange || [availableHeight, 0]);
               } else {
-                      y.domain(yDomain || d3.extent(seriesData.map(d => d.y).concat(forceY)))
+                      y.domain(yDomain || [min || 0, max * 1.01])
                       .range(yRange || [availableHeight, 0]);
               }
 
