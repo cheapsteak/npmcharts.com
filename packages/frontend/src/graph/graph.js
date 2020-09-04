@@ -16,7 +16,7 @@ const catmulRomInterpolation = (points, tension) =>
     .curve(curveCatmullRom)(points)
     .replace(/^M/, '');
 
-function processEntries(entries, { showWeekends = false, interval = 7 }) {
+function processEntries(entries, { interval = 7 }) {
   if (interval !== 1) {
     entries = _.flow([
       entries =>
@@ -37,10 +37,6 @@ function processEntries(entries, { showWeekends = false, interval = 7 }) {
       */
       _.reverse,
     ])(entries);
-  } else if (!showWeekends) {
-    entries = entries.filter(
-      entry => [0, 6].indexOf(entry.day.getDay()) === -1,
-    );
   }
 
   return entries;
@@ -55,10 +51,6 @@ export default withRender({
     isMinimalMode: {
       type: Boolean,
       default: false,
-    },
-    showWeekends: {
-      type: Boolean,
-      default: true,
     },
     interval: {
       type: Number,
@@ -89,9 +81,6 @@ export default withRender({
     useLog(val) {
       this.chart.yScale(val ? d3.scale.log() : d3.scale.linear());
       this.chart.update();
-    },
-    showWeekends() {
-      this.render();
     },
     packageDownloadStats() {
       console.log('render because packageDownloadStats');
@@ -156,7 +145,6 @@ export default withRender({
         values: processEntriesMemo(
           downloads,
           {
-            showWeekends: this.showWeekends,
             interval: this.interval,
           },
           [name, this.showWeekends, this.interval].join(','),

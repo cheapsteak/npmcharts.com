@@ -156,7 +156,6 @@ export default withRender({
       isLoading: true,
       shouldShowVersionDates: true,
       palette,
-      showWeekends: true,
       hoverCount: 0,
       twitterIcon: require('../assets/images/icon-twitter.svg'),
       shouldShowComments:
