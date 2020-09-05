@@ -1,6 +1,6 @@
 import querystring from 'querystring';
 import _ from 'lodash';
-import { format as formatDate, subDays } from 'date-fns';
+import { format as formatDate, subDays, isWithinRange } from 'date-fns';
 import config from 'configs';
 import { setPackages } from '../packages/packages.js';
 import processPackagesStats from 'frontend/src/utils/processPackagesStats';
@@ -21,7 +21,7 @@ const {
   packages,
 } = require('../packages/packages');
 
-const getModuleDataByNames = async (names, start, end) => {
+const getPackagesDownloadDataByNames = async (names, start, end) => {
   setTimeout(() => ga('send', 'pageview'));
 
   // set notify to false to prevent triggering route change
@@ -38,6 +38,35 @@ const getModuleDataByNames = async (names, start, end) => {
   return operation;
 };
 
+const getPackagesReleaseDataByNames = async (
+  packageNames,
+  startDaysOffset,
+  endDaysOffset,
+) => {
+  const startDate = subDays(Date.now(), startDaysOffset);
+  const endDate = subDays(Date.now(), endDaysOffset);
+  const packageReleaseResponses = await Promise.all(
+    packageNames.map(packageName =>
+      fetch(`/api/npm-registry/${packageName}`)
+        .then(response => response.json())
+        .then(versionDateMap => [
+          packageName,
+          _.invertBy(
+            _.omitBy(versionDateMap, (datePublished, versionName) => {
+              if (['created', 'modified'].includes(versionName)) return true;
+              if (!isWithinRange(datePublished, startDate, endDate))
+                return true;
+              if (versionName.includes('-')) return true;
+            }),
+            datePublished =>
+              formatDate(datePublished, 'YYYY-MM-DD', null, 'UTC'),
+          ),
+        ]),
+    ),
+  );
+  return Object.fromEntries(packageReleaseResponses);
+};
+
 /**
  * Merge 2 statistic periods
  * @param period0 Period before period1
@@ -49,7 +78,7 @@ function mergePeriods(period0, period1) {
 
   for (let p = 0; p < period0.length; ++p) {
     sumPackages.push({
-      downloads: period0[p].downloads.concat(period1[p].downloads),
+      downloads: period0[p].entries.concat(period1[p].entries),
       package: period0[p].package,
       start: period0[p].start,
       end: period1[p].end,
@@ -75,14 +104,11 @@ function getPackagesDownloadsOverPeriod(names, startDay, endDay) {
 
   const startStats = new Date(Date.UTC(2015, 1, 10));
 
-  const DATE_FORMAT = 'YYYY-MM-DD';
-  const timezone = 'UTC';
-
   let startDate = maxDate(startStats, subDays(new Date(), startDay));
   let endDate = maxDate(startStats, subDays(new Date(), requestEndDay));
 
-  startDate = formatDate(startDate, DATE_FORMAT, null, timezone);
-  endDate = formatDate(endDate, DATE_FORMAT, null, timezone);
+  startDate = formatDate(startDate, 'YYYY-MM-DD', null, 'UTC');
+  endDate = formatDate(endDate, 'YYYY-MM-DD', null, 'UTC');
 
   const period1 = getPackagesDownloads(names, { startDate, endDate });
 
@@ -102,13 +128,44 @@ function getPackagesDownloadsOverPeriod(names, startDay, endDay) {
 export default withRender({
   created() {
     this.isLoading = true;
-    getModuleDataByNames(
-      this.moduleNames,
-      this.$route.query.start ? this.$route.query.start : 365,
-      this.$route.query.end ? this.$route.query.start : 0,
-    ).then(moduleData => {
+
+    Promise.allSettled([
+      getPackagesDownloadDataByNames(
+        this.packageNames,
+        this.$route.query.start ? this.$route.query.start : 365,
+        this.$route.query.end ? this.$route.query.end : 0,
+      ),
+      this.shouldShowVersionDates &&
+        getPackagesReleaseDataByNames(
+          this.packageNames,
+          this.$route.query.start ? this.$route.query.start : 365,
+          this.$route.query.end ? this.$route.query.end : 0,
+        ),
+    ]).then(([packagesDownloadStatsResponse, packageVersionDatesResponse]) => {
+      if (
+        this.shouldShowVersionDates &&
+        packageVersionDatesResponse.status === 'fulfilled'
+      ) {
+        const packageVersionDates = packageVersionDatesResponse.value;
+        const packagesDownloadStats = packagesDownloadStatsResponse.value;
+        this.packageDownloadStats = packagesDownloadStats.map(
+          ({ name, downloads }) => ({
+            name,
+            entries: downloads.map(({ day, count }) => ({
+              day,
+              count,
+              releases:
+                packageVersionDates[name][
+                  formatDate(day, 'YYYY-MM-DD', null, 'UTC')
+                ] || [],
+            })),
+          }),
+        );
+      } else {
+        this.packageDownloadStats = packagesDownloadStatsResponse.value;
+      }
+
       this.isLoading = false;
-      this.moduleData = moduleData;
     });
   },
   render: withRender.default,
@@ -116,10 +173,10 @@ export default withRender({
     return {
       presetPackages,
       samplePreset: [],
-      moduleData: null,
+      packageDownloadStats: null,
       isLoading: true,
+      shouldShowVersionDates: true,
       palette,
-      showWeekends: true,
       hoverCount: 0,
       twitterIcon: require('../assets/images/icon-twitter.svg'),
       shouldShowComments:
@@ -130,8 +187,8 @@ export default withRender({
   computed: {
     shareUrl() {
       return (
-        this.moduleNames &&
-        `http://npmcharts.com/compare/${this.moduleNames.join(',')}`
+        this.packageNames &&
+        `http://npmcharts.com/compare/${this.packageNames.join(',')}`
       );
     },
     twitterShareUrl() {
@@ -156,13 +213,13 @@ export default withRender({
     isUsingPresetPackages() {
       return !this.$route.params.packages;
     },
-    moduleNames() {
-      const moduleNames = this.isUsingPresetPackages
+    packageNames() {
+      const packageNames = this.isUsingPresetPackages
         ? _.sample(presetPackages)
         : this.$route.params.packages
             .split(',')
             .map(packageName => window.decodeURIComponent(packageName));
-      return moduleNames;
+      return packageNames;
     },
     isMinimalMode() {
       return this.$route.query.minimal === 'true';
@@ -215,7 +272,7 @@ export default withRender({
         'event',
         'packageInput',
         'add',
-        `${packageName} existing:${this.moduleNames}`,
+        `${packageName} existing:${this.packageNames}`,
       );
 
       this.$router.push({
@@ -253,19 +310,19 @@ export default withRender({
     },
     handleDownloadCsv(e) {
       e.preventDefault();
-      const moduleNames = this.moduleData.map(x => x.name);
+      const packageNames = this.packageDownloadStats.map(x => x.name);
       const moduleWithLongestHistory = _.maxBy(
-        this.moduleData,
-        x => x.downloads.length,
+        this.packageDownloadStats,
+        x => x.entries.length,
       );
-      var csv = [['Date', ...moduleNames]]
+      var csv = [['Date', ...packageNames]]
         .concat(
-          moduleWithLongestHistory.downloads.map(({ day, downloads }) => {
+          moduleWithLongestHistory.entries.map(({ day, downloads }) => {
             return [day.toLocaleDateString()].concat(
-              this.moduleData
+              this.packageDownloadStats
                 .map(
-                  moduleData =>
-                    moduleData.downloads.find(
+                  packageDownloadStats =>
+                    packageDownloadStats.entries.find(
                       x => x.day.toISOString() === day.toISOString(),
                     ).count || '',
                 )
@@ -274,8 +331,8 @@ export default withRender({
           }),
         )
         .join('\n');
-      this.track('download csv', moduleNames);
-      downloadCsv(csv, `${moduleNames}.csv`);
+      this.track('download csv', packageNames);
+      downloadCsv(csv, `${packageNames}.csv`);
     },
     shuffle: _.shuffle,
   },

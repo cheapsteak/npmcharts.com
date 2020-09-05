@@ -4,20 +4,19 @@ import _ from 'lodash';
 import { format as formatDate, startOfDay } from 'date-fns';
 import { line, curveCatmullRom } from 'd3-shape';
 import withRender from './graph.html';
+import { lineChart, xAccessor } from './chart/lineChart';
 
 const { palette } = require('configs');
 
 // this can't go in the data of the component, observing it changes it.
 let svg;
-const xAccessor = point => point.day;
-const yAccessor = point => point.count;
 
 const catmulRomInterpolation = (points, tension) =>
   line()
     .curve(curveCatmullRom)(points)
     .replace(/^M/, '');
 
-function processEntries(entries, { showWeekends = false, interval = 7 }) {
+function processEntries(entries, { interval = 7 }) {
   if (interval !== 1) {
     entries = _.flow([
       entries =>
@@ -26,9 +25,10 @@ function processEntries(entries, { showWeekends = false, interval = 7 }) {
         ),
       _.values,
       entries =>
-        entries.map(entries => ({
-          count: _.sumBy(entries, entry => entry.count),
-          day: entries[0].day,
+        entries.map(entriesInGroup => ({
+          count: _.sumBy(entriesInGroup, entry => entry.count),
+          day: entriesInGroup[0].day,
+          releases: entriesInGroup.flatMap(entry => entry.releases),
         })),
       /*
         x axis entries need to be in ascending order
@@ -38,10 +38,6 @@ function processEntries(entries, { showWeekends = false, interval = 7 }) {
       */
       _.reverse,
     ])(entries);
-  } else if (!showWeekends) {
-    entries = entries.filter(
-      entry => [0, 6].indexOf(entry.day.getDay()) === -1,
-    );
   }
 
   return entries;
@@ -57,20 +53,16 @@ export default withRender({
       type: Boolean,
       default: false,
     },
-    showWeekends: {
-      type: Boolean,
-      default: true,
-    },
     interval: {
       type: Number,
       default: 7,
     },
     moduleNames: Array,
-    moduleData: Array,
+    packageDownloadStats: Array,
   },
   data() {
     return {
-      chart: nv.models.lineChart(),
+      chart: lineChart(),
       svg: null,
       useLog: false,
       legendData: null,
@@ -90,10 +82,8 @@ export default withRender({
       this.chart.yScale(val ? d3.scale.log() : d3.scale.linear());
       this.chart.update();
     },
-    showWeekends() {
-      this.render();
-    },
-    moduleData() {
+    packageDownloadStats() {
+      console.log('render because packageDownloadStats');
       this.render();
     },
     interval() {
@@ -106,16 +96,7 @@ export default withRender({
     const chart = this.chart;
 
     nv.addGraph(() => {
-      chart
-        .margin(margin)
-        .showLegend(false)
-        .color(palette)
-        .xScale(d3.time.scale())
-        .x(xAccessor)
-        .y(yAccessor)
-        .useInteractiveGuideline(true);
-
-      chart.interactiveLayer.tooltip.enabled(false);
+      chart.margin(margin).color(palette);
 
       chart.xAxis
         .showMaxMin(false)
@@ -154,22 +135,21 @@ export default withRender({
     });
   },
   methods: {
-    processForD3(input) {
-      return input.map(module => ({
-        key: module.name,
+    processForD3(downloadStats) {
+      return downloadStats.map(({ name, entries }) => ({
+        key: name,
         values: processEntriesMemo(
-          module.downloads,
+          entries,
           {
-            showWeekends: this.showWeekends,
             interval: this.interval,
           },
-          [module.name, this.showWeekends, this.interval].join(','),
+          [name, this.showWeekends, this.interval].join(','),
         ),
       }));
     },
     render() {
       const chart = this.chart;
-      const processedData = this.processForD3(this.moduleData);
+      const processedData = this.processForD3(this.packageDownloadStats);
       this.processedData = processedData;
       const interpolation =
         this.interval > 1 ? catmulRomInterpolation : 'linear';
@@ -177,11 +157,7 @@ export default withRender({
       chart.interpolate(interpolation);
 
       chart.yScale(this.useLog ? d3.scale.log() : d3.scale.linear());
-      svg
-        .data([processedData])
-        .transition()
-        .duration(500)
-        .call(chart);
+      svg.data([processedData]).call(chart);
 
       this.legendData = this.getDataAtDate(this.chart.xAxis.domain()[1]);
       this.applyOverrides();
@@ -190,27 +166,10 @@ export default withRender({
       window.__currently_rendered_graph__ = this.moduleNames.join(',');
     },
     applyOverrides() {
-      if (!this.moduleData.length) {
+      if (!this.packageDownloadStats.length) {
         return;
       }
       const chart = this.chart;
-      // tick on the 1st of the month
-      chart.x2Axis.tickValues(
-        this.moduleData[0].downloads
-          .map(item => item.day)
-          .filter(date => date.getDate() === 1),
-      );
-      chart.update();
-
-      svg
-        .select('.nv-y.nv-axis')
-        .attr(
-          'transform',
-          'translate(' +
-            nv.utils.availableWidth(null, svg, this.margin) +
-            ',0)',
-        );
-      svg.select('.nv-context .nv-y.nv-axis').remove();
 
       // Update legend on mousemove
       var prevMousemove = chart.interactiveLayer.dispatch.on(
@@ -241,13 +200,14 @@ export default withRender({
       });
     },
     getStartOfPeriod(date) {
-      const indexInModuleData = _.findIndex(
-        this.moduleData[0].downloads,
+      const indexInPackageDownloadStats = _.findIndex(
+        this.packageDownloadStats[0].entries,
         entry => entry.day.getTime() === startOfDay(date).getTime(),
       );
 
       const startOfPeriodBucket = Math.floor(
-        (this.moduleData[0].downloads.length - indexInModuleData) /
+        (this.packageDownloadStats[0].entries.length -
+          indexInPackageDownloadStats) /
           this.interval,
       );
 
