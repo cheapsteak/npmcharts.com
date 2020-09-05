@@ -162,7 +162,12 @@ export default withRender({
           }),
         );
       } else {
-        this.packageDownloadStats = packagesDownloadStatsResponse.value;
+        this.packageDownloadStats = packagesDownloadStatsResponse.value.map(
+          ({ name, downloads }) => ({
+            name,
+            entries: downloads,
+          }),
+        );
       }
 
       this.isLoading = false;
