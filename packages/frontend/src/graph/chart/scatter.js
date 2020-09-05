@@ -19,6 +19,7 @@ export const scatter = function() {
       , getX         = d => d.x // accessor to get the x value
       , getY         = d => d.y  // accessor to get the y value
       , getSize      = d => d.size || 1 // accessor to get the point size
+        //   ['circle', 'cross', 'triangle-up', 'triangle-down', 'diamond', 'square'],
       , getShape     = d => d.shape || 'circle'  // accessor to get point shape
       , forceX       = [] // List of numbers to Force into the X scale (ie. 0, or a max / min, etc.)
       , forceY       = [] // List of numbers to Force into the Y scale
@@ -252,12 +253,12 @@ export const scatter = function() {
               .style('fill-opacity', .5);
 
           // create the points, maintaining their IDs from the original data set
-          var points = groups.selectAll('path.nv-point')
+          var points = groups.selectAll('g.nv-point')
               .data((d) => d.values
                 .map((point, pointIndex) => [point, pointIndex])
               );
           points.enter()
-              .append('path')
+              .append('g')
                 .attr('class', d => 'nv-point nv-point-' + d[1])
                 .style('fill', d => d.color)
                 .style('stroke', d => d.color)
@@ -268,20 +269,32 @@ export const scatter = function() {
                     return translate;
                 })
                 .attr('releases', d => (d[0].releases))
-                .attr('d',
-                    nv.utils.symbol()
-                    .type(d => getShape(d[0]))
-                    .size(d => z(getSize(d[0],d[1])))
-                )
-              ;
+                .append('text')
+                    .text(d => d[0].releases.join(', '))
+                    .attr('text-anchor', (d, a,b,c) => {
+                        const xValue = x0(getX(d[0],d[1]));
+                        const xPercent = xValue / x.range()[1];
+                        if (xPercent < 0.1) return 'start'
+                        if (xPercent > 0.9) return 'end'
+                        return 'middle'
+                    })
+                    .attr('y', d => {
+                      const yValue = y0(getY(d[0],d[1]));
+                      const yPercent = yValue / y.range()[0]
+                      // this is flipped from intuition; high yPercent means lower on screen
+                      if (yPercent > 0.9) return -16
+                      return 16
+                    })
+                    .attr('data-y', d => y0(getY(d[0],d[1])))
 
           points.exit().remove();
-          groups.exit().selectAll('path.nv-point')
+          groups.exit().selectAll('g.nv-point')
               .attr('transform', d => 'translate(' + nv.utils.NaNtoZero(x(getX(d[0],d[1]))) + ',' + nv.utils.NaNtoZero(y(getY(d[0],d[1]))) + ')')
               .remove();
           points.filter(d => scaleDiff || getDiffs(d, 'x', 'y'))
               .attr('transform', d => 'translate(' + nv.utils.NaNtoZero(x(getX(d[0],d[1]))) + ',' + nv.utils.NaNtoZero(y(getY(d[0],d[1]))) + ')');
           points.filter(d => scaleDiff || getDiffs(d, 'shape', 'size'))
+              .append('path')
               .attr('d',
                   nv.utils.symbol()
                   .type(d => {
@@ -291,6 +304,9 @@ export const scatter = function() {
                       return d[0].releases.length > 0 ? z(getSize(d[0],d[1]) * 2) : z(getSize(d[0],d[1]))
                   })
           );
+          points.filter(d => scaleDiff || getDiffs(d, 'shape', 'size'))
+                .append('text')
+                .text(d => d[0].releases)
           
           // Delay updating the invisible interactive layer for smoother animation
           if( interactiveUpdateDelay ) {

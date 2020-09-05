@@ -49,9 +49,33 @@ $lineColor = #f3f3f3;
           stroke-opacity: 0.35 !important
           .nv-line
             stroke-width: 2.5px
-    .nv-scatterWrap .nv-point:not(.hover)
-      stroke-width: 0
-      fill-opacity: 1
+    .nv-scatterWrap
+      .nv-point
+        &[releases]:not([releases=""])
+          // path
+          //   stroke: #ffffff
+          //   paint-order: stroke;
+          &.hover path
+            stroke: inherit
+            stroke-width: 5
+
+
+      .nv-point text
+        stroke-width: 0
+        fill: transparent
+        font-weight: bold
+        font-family monospace
+
+        paint-order: stroke;
+        stroke: #ffffff;
+        stroke-width: 3px;
+        stroke-linecap: butt;
+        stroke-linejoin: round;
+      .nv-point.hover text
+        fill: inherit
+      .nv-point:not(.hover)
+        stroke-width: 0
+        fill-opacity: 1
 
   .nv-context
     .nv-line > g > .nv-groups > .nv-group
