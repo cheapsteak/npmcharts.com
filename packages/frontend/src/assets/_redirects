@@ -1,4 +1,3 @@
-/api/npm-registry/:splat https://npmcharts.com/api/npm-registry/:splat 200
-/api/:splat https://npmcharts.com/api/:splat 200
+/api/* https://npmcharts.com/api/:splat 200
 /* /index.html 200
 
