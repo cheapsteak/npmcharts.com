@@ -16,7 +16,7 @@ export default withRender({
   },
   computed: {
     sortedModules() {
-      return _.orderBy(this.modules, module => module.downloads, ['desc']);
+      return _.orderBy(this.modules, module => module.entries, ['desc']);
     },
   },
   template: require('./legend.html'),

@@ -25,9 +25,10 @@ function processEntries(entries, { interval = 7 }) {
         ),
       _.values,
       entries =>
-        entries.map(entries => ({
-          count: _.sumBy(entries, entry => entry.count),
-          day: entries[0].day,
+        entries.map(entriesInGroup => ({
+          count: _.sumBy(entriesInGroup, entry => entry.count),
+          day: entriesInGroup[0].day,
+          releases: entriesInGroup.flatMap(entry => entry.releases),
         })),
       /*
         x axis entries need to be in ascending order
@@ -58,7 +59,6 @@ export default withRender({
     },
     moduleNames: Array,
     packageDownloadStats: Array,
-    packageVersionDates: Array,
   },
   data() {
     return {
@@ -84,10 +84,6 @@ export default withRender({
     },
     packageDownloadStats() {
       console.log('render because packageDownloadStats');
-      this.render();
-    },
-    packageVersionDates() {
-      console.log('render because packageVersionDates');
       this.render();
     },
     interval() {
@@ -140,10 +136,10 @@ export default withRender({
   },
   methods: {
     processForD3(downloadStats) {
-      return downloadStats.map(({ name, downloads }) => ({
+      return downloadStats.map(({ name, entries }) => ({
         key: name,
         values: processEntriesMemo(
-          downloads,
+          entries,
           {
             interval: this.interval,
           },
@@ -205,12 +201,12 @@ export default withRender({
     },
     getStartOfPeriod(date) {
       const indexInPackageDownloadStats = _.findIndex(
-        this.packageDownloadStats[0].downloads,
+        this.packageDownloadStats[0].entries,
         entry => entry.day.getTime() === startOfDay(date).getTime(),
       );
 
       const startOfPeriodBucket = Math.floor(
-        (this.packageDownloadStats[0].downloads.length -
+        (this.packageDownloadStats[0].entries.length -
           indexInPackageDownloadStats) /
           this.interval,
       );

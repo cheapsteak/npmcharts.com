@@ -49,21 +49,21 @@ const getPackagesReleaseDataByNames = async (
     packageNames.map(packageName =>
       fetch(`/api/npm-registry/${packageName}`)
         .then(response => response.json())
-        .then(versionDateMap => ({
+        .then(versionDateMap => [
           packageName,
-          versions: Object.entries(versionDateMap).flatMap(
-            ([versionName, datePublished]) => {
-              if (!isWithinRange(datePublished, startDate, endDate)) return [];
-              return {
-                day: formatDate(datePublished, 'YYYY-MM-DD', null, 'UTC'),
-                versionName,
-              };
-            },
+          _.invertBy(
+            _.omitBy(versionDateMap, (datePublished, key) => {
+              if (['created', 'modified'].includes(key)) return true;
+              if (!isWithinRange(datePublished, startDate, endDate))
+                return true;
+            }),
+            datePublished =>
+              formatDate(datePublished, 'YYYY-MM-DD', null, 'UTC'),
           ),
-        })),
+        ]),
     ),
   );
-  return packageReleaseResponses;
+  return Object.fromEntries(packageReleaseResponses);
 };
 
 /**
@@ -77,7 +77,7 @@ function mergePeriods(period0, period1) {
 
   for (let p = 0; p < period0.length; ++p) {
     sumPackages.push({
-      downloads: period0[p].downloads.concat(period1[p].downloads),
+      downloads: period0[p].entries.concat(period1[p].entries),
       package: period0[p].package,
       start: period0[p].start,
       end: period1[p].end,
@@ -140,9 +140,25 @@ export default withRender({
           this.$route.query.start ? this.$route.query.start : 365,
           this.$route.query.end ? this.$route.query.end : 0,
         ),
-    ]).then(([packageDownloadStats, packageVersionDates]) => {
-      this.packageDownloadStats = packageDownloadStats;
-      this.packageVersionDates = packageVersionDates || [];
+    ]).then(([packagesDownloadStats, packageVersionDates]) => {
+      if (this.shouldShowVersionDates) {
+        this.packageDownloadStats = packagesDownloadStats.map(
+          ({ name, downloads }) => ({
+            name,
+            entries: downloads.map(({ day, count }) => ({
+              day,
+              count,
+              releases:
+                packageVersionDates[name][
+                  formatDate(day, 'YYYY-MM-DD', null, 'UTC')
+                ] || [],
+            })),
+          }),
+        );
+      } else {
+        this.packageDownloadStats = packagesDownloadStats;
+      }
+
       this.isLoading = false;
     });
   },
@@ -152,7 +168,6 @@ export default withRender({
       presetPackages,
       samplePreset: [],
       packageDownloadStats: null,
-      packageVersionDates: null,
       isLoading: true,
       shouldShowVersionDates: true,
       palette,
@@ -292,16 +307,16 @@ export default withRender({
       const packageNames = this.packageDownloadStats.map(x => x.name);
       const moduleWithLongestHistory = _.maxBy(
         this.packageDownloadStats,
-        x => x.downloads.length,
+        x => x.entries.length,
       );
       var csv = [['Date', ...packageNames]]
         .concat(
-          moduleWithLongestHistory.downloads.map(({ day, downloads }) => {
+          moduleWithLongestHistory.entries.map(({ day, downloads }) => {
             return [day.toLocaleDateString()].concat(
               this.packageDownloadStats
                 .map(
                   packageDownloadStats =>
-                    packageDownloadStats.downloads.find(
+                    packageDownloadStats.entries.find(
                       x => x.day.toISOString() === day.toISOString(),
                     ).count || '',
                 )
