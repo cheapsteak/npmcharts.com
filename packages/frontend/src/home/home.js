@@ -129,7 +129,7 @@ export default withRender({
   created() {
     this.isLoading = true;
 
-    Promise.all([
+    Promise.allSettled([
       getPackagesDownloadDataByNames(
         this.packageNames,
         this.$route.query.start ? this.$route.query.start : 365,
@@ -141,8 +141,13 @@ export default withRender({
           this.$route.query.start ? this.$route.query.start : 365,
           this.$route.query.end ? this.$route.query.end : 0,
         ),
-    ]).then(([packagesDownloadStats, packageVersionDates]) => {
-      if (this.shouldShowVersionDates) {
+    ]).then(([packagesDownloadStatsResponse, packageVersionDatesResponse]) => {
+      if (
+        this.shouldShowVersionDates &&
+        packageVersionDatesResponse.status === 'fulfilled'
+      ) {
+        const packageVersionDates = packageVersionDatesResponse.value;
+        const packagesDownloadStats = packagesDownloadStatsResponse.value;
         this.packageDownloadStats = packagesDownloadStats.map(
           ({ name, downloads }) => ({
             name,
@@ -157,7 +162,7 @@ export default withRender({
           }),
         );
       } else {
-        this.packageDownloadStats = packagesDownloadStats;
+        this.packageDownloadStats = packagesDownloadStatsResponse.value;
       }
 
       this.isLoading = false;
