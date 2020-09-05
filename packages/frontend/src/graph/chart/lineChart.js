@@ -61,7 +61,7 @@ export function lineChart() {
           return d.values.length;
         }).length
       ) {
-        nv.utils.noData(chart, container);
+        // nv.utils.noData(chart, container);
         return chart;
       } else {
         container.selectAll('.nv-noData').remove();
