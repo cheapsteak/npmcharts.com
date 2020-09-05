@@ -304,9 +304,6 @@ export const scatter = function() {
                       return d[0].releases.length > 0 ? z(getSize(d[0],d[1]) * 2) : z(getSize(d[0],d[1]))
                   })
           );
-          points.filter(d => scaleDiff || getDiffs(d, 'shape', 'size'))
-                .append('text')
-                .text(d => d[0].releases)
           
           // Delay updating the invisible interactive layer for smoother animation
           if( interactiveUpdateDelay ) {
