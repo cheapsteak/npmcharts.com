@@ -256,16 +256,25 @@ export const scatter = function() {
               .data((d) => d.values
                 .map((point, pointIndex) => [point, pointIndex])
               );
-          points.enter().append('path')
-              .attr('class', d => 'nv-point nv-point-' + d[1])
-              .style('fill', d => d.color)
-              .style('stroke', d => d.color)
-              .attr('transform', d => 'translate(' + nv.utils.NaNtoZero(x0(getX(d[0],d[1]))) + ',' + nv.utils.NaNtoZero(y0(getY(d[0],d[1]))) + ')')
-              .attr('d',
-                  nv.utils.symbol()
-                  .type(d => getShape(d[0]))
-                  .size(d => z(getSize(d[0],d[1])))
-              );
+          points.enter()
+              .append('path')
+                .attr('class', d => 'nv-point nv-point-' + d[1])
+                .style('fill', d => d.color)
+                .style('stroke', d => d.color)
+                .attr('transform', d => {
+                    const translateX = nv.utils.NaNtoZero(x0(getX(d[0],d[1])));
+                    const translateY = nv.utils.NaNtoZero(y0(getY(d[0],d[1])));
+                    const translate = 'translate(' + translateX + ',' + translateY + ')';
+                    return translate;
+                })
+                .attr('releases', d => (d[0].releases))
+                .attr('d',
+                    nv.utils.symbol()
+                    .type(d => getShape(d[0]))
+                    .size(d => z(getSize(d[0],d[1])))
+                )
+              ;
+
           points.exit().remove();
           groups.exit().selectAll('path.nv-point')
               .attr('transform', d => 'translate(' + nv.utils.NaNtoZero(x(getX(d[0],d[1]))) + ',' + nv.utils.NaNtoZero(y(getY(d[0],d[1]))) + ')')
@@ -275,8 +284,12 @@ export const scatter = function() {
           points.filter(d => scaleDiff || getDiffs(d, 'shape', 'size'))
               .attr('d',
                   nv.utils.symbol()
-                  .type(d => getShape(d[0]))
-                  .size(d => z(getSize(d[0],d[1])))
+                  .type(d => {
+                      return d[0].releases.length > 0 ? 'cross' : 'circle'
+                    })
+                  .size(d => {
+                      return d[0].releases.length > 0 ? z(getSize(d[0],d[1]) * 2) : z(getSize(d[0],d[1]))
+                  })
           );
           
           // Delay updating the invisible interactive layer for smoother animation
