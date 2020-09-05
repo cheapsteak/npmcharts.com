@@ -229,11 +229,11 @@ export default withRender({
     isMinimalMode() {
       return this.$route.query.minimal === 'true';
     },
+    useLogScale() {
+      return this.$route.query.log === 'true' || this.$route.query.log === true;
+    },
   },
   watch: {
-    shouldShowComments() {
-      this.$refs.graph.render();
-    },
     isMinimalMode(isMinimalMode, prevIsMinimalMode) {
       console.log('watch isMinimalMode');
       if (isMinimalMode) {

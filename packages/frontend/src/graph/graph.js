@@ -59,12 +59,15 @@ export default withRender({
     },
     moduleNames: Array,
     packageDownloadStats: Array,
+    useLogScale: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
       chart: lineChart(),
       svg: null,
-      useLog: false,
       legendData: null,
       moduleSizes: {},
     };
@@ -78,7 +81,7 @@ export default withRender({
     },
   },
   watch: {
-    useLog(val) {
+    useLogScale(val) {
       this.chart.yScale(val ? d3.scale.log() : d3.scale.linear());
       this.chart.update();
     },
@@ -156,7 +159,7 @@ export default withRender({
 
       chart.interpolate(interpolation);
 
-      chart.yScale(this.useLog ? d3.scale.log() : d3.scale.linear());
+      chart.yScale(this.useLogScale ? d3.scale.log() : d3.scale.linear());
       svg.data([processedData]).call(chart);
 
       this.legendData = this.getDataAtDate(this.chart.xAxis.domain()[1]);

@@ -78,10 +78,20 @@
         >
           <input type="radio" :checked="interval === 30" /> monthly
         </router-link>
+
+        <router-link
+          tag="label"
+          :to="{ query: getMergedQueryParams({ log: !useLogScale }) }"
+          @click.native="track('set scale', !useLogScale)"
+          style="margin-left: auto;"
+        >
+          <input type="checkbox" :checked="useLogScale" /> log scale
+        </router-link>
+
         <router-link
           tag="button"
           class="minimal-mode"
-          :to="{ query: { minimal: 'true', interval: interval }}"
+          :to="{ query: getMergedQueryParams({ minimal: 'true' })}"
           @click.native="track('enter-minimal-mode')"
           >enter minimal mode</router-link
         >
@@ -137,6 +147,7 @@
         :package-download-stats="packageDownloadStats"
         :interval="interval"
         :is-minimal-mode="isMinimalMode === 'true'"
+        :useLogScale="useLogScale"
       >
       </graph>
       <div class="no-packages-selected" v-if="!packageDownloadStats && !isLoading">
