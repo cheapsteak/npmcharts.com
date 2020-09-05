@@ -271,13 +271,7 @@ export const scatter = function() {
                 .attr('releases', d => (d[0].releases))
                 .append('text')
                     .text(d => d[0].releases.join(', '))
-                    .attr('text-anchor', (d, a,b,c) => {
-                        const xValue = x0(getX(d[0],d[1]));
-                        const xPercent = xValue / x.range()[1];
-                        if (xPercent < 0.1) return 'start'
-                        if (xPercent > 0.9) return 'end'
-                        return 'middle'
-                    })
+                    .attr('text-anchor', 'middle')
                     .attr('y', d => {
                       const yValue = y0(getY(d[0],d[1]));
                       const yPercent = yValue / y.range()[0]
@@ -285,7 +279,6 @@ export const scatter = function() {
                       if (yPercent > 0.9) return -16
                       return 16
                     })
-                    .attr('data-y', d => y0(getY(d[0],d[1])))
 
           points.exit().remove();
           groups.exit().selectAll('g.nv-point')
