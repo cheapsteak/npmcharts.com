@@ -28,7 +28,7 @@
         <template v-if="packageNames && packageNames.length > 1">
           compare
         </template>
-        <template v-if="isUsingPresetPackages">
+        <template v-if="isUsingPresetComparisons">
           npm
         </template>
         <a
@@ -47,7 +47,7 @@
       <package-input
         class="package-input"
         :on-submit="addPackage"
-        :is-using-preset-packages="isUsingPresetPackages"
+        :is-using-preset-packages="isUsingPresetComparisons"
       ></package-input>
       <div class="graph-config">
         <!--
@@ -119,7 +119,7 @@
         <div class="caption">or check out</div>
 
         <router-link
-          v-for="packages in presetPackages"
+          v-for="packages in presetComparisons"
           :to="'/compare/' + packages.join(',') + '?' + queryString"
           @click.native="track('click-preset', packages.join(','))"
           class="match"

@@ -1,5 +1,5 @@
 module.exports = {
-  presetPackages: [
+  presetComparisons: [
     // build tools
     ['webpack', 'rollup', 'parcel-bundler', 'vite', 'snowpack'],
     // state managament

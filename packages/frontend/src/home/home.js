@@ -11,7 +11,7 @@ import withRender from './home.html';
 import { downloadCsv } from './downloadCsv';
 
 const palette = config.palette;
-const presetPackages = _.shuffle(config.presetPackages);
+const presetComparisons = _.shuffle(config.presetComparisons);
 
 const maxRequestPeriod = 365; // ~1 year
 
@@ -176,7 +176,7 @@ export default withRender({
   render: withRender.default,
   data() {
     return {
-      presetPackages,
+      presetComparisons,
       samplePreset: [],
       packageDownloadStats: null,
       isLoading: true,
@@ -215,12 +215,12 @@ export default withRender({
         this.$route.query.interval || this.$route.query.periodLength || 7,
       );
     },
-    isUsingPresetPackages() {
+    isUsingPresetComparisons() {
       return !this.$route.params.packages;
     },
     packageNames() {
-      const packageNames = this.isUsingPresetPackages
-        ? _.sample(presetPackages)
+      const packageNames = this.isUsingPresetComparisons
+        ? _.sample(presetComparisons)
         : this.$route.params.packages
             .split(',')
             .map(packageName => window.decodeURIComponent(packageName));

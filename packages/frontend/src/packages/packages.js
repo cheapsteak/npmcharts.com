@@ -20,7 +20,7 @@ export function setPackages(val, notify = true) {
 export default withRender({
   props: {
     onSubmit: Function,
-    isUsingPresetPackages: Boolean,
+    isUsingPresetComparisons: Boolean,
   },
   data() {
     return {
