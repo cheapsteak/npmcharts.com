@@ -52,10 +52,11 @@ const getPackagesReleaseDataByNames = async (
         .then(versionDateMap => [
           packageName,
           _.invertBy(
-            _.omitBy(versionDateMap, (datePublished, key) => {
-              if (['created', 'modified'].includes(key)) return true;
+            _.omitBy(versionDateMap, (datePublished, versionName) => {
+              if (['created', 'modified'].includes(versionName)) return true;
               if (!isWithinRange(datePublished, startDate, endDate))
                 return true;
+              if (versionName.includes('-')) return true;
             }),
             datePublished =>
               formatDate(datePublished, 'YYYY-MM-DD', null, 'UTC'),
