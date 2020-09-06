@@ -1,6 +1,8 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const babelConfig = require('./.babelrc');
 
-module.exports = (storybookBaseConfig, configType, defaultConfig) => ({
+module.exports = (storybookBaseConfig, configType, defaultConfig) => {
+  return ({
   ...defaultConfig,
   module: {
     ...defaultConfig.module,
@@ -18,6 +20,7 @@ module.exports = (storybookBaseConfig, configType, defaultConfig) => ({
         use: [
           {
             loader: 'babel-loader',
+            options: babelConfig,
           },
           {
             loader: 'vue-template-loader',
@@ -31,7 +34,13 @@ module.exports = (storybookBaseConfig, configType, defaultConfig) => ({
           },
         ],
       },
-      ...defaultConfig.module.rules,
+      ...defaultConfig.module.rules.map(x => {
+        if (x.test.source === /\.(mjs|jsx?)$/.source) {
+          x.use[0].options.plugins.push('@babel/plugin-proposal-optional-chaining')
+          return x
+        }
+        return x
+      }),
     ],
   },
   plugins: [
@@ -49,4 +58,4 @@ module.exports = (storybookBaseConfig, configType, defaultConfig) => ({
       vue$: 'vue/dist/vue.esm.js',
     },
   },
-});
+})};

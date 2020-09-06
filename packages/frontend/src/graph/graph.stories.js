@@ -1,6 +1,6 @@
 import { storiesOf } from '@storybook/vue';
 
-import processPackagesStats from 'frontend/src/utils/processPackagesStats';
+import { processPackagesStats } from 'frontend/src/utils/processPackagesStats';
 import standardizeNpmPackageResponse from 'utils/stats/standardizeNpmPackageResponse';
 import dummyData from 'utils/dummyData';
 
@@ -16,10 +16,11 @@ const makeGraph = data => ({
       <div class="chart-container">
         <graph
           class="chart"
-          :module-names="moduleNames"
-          :module-data="moduleData"
+          :module-names="packageNames"
+          :package-download-stats="packageDownloadStats"
           :interval="interval"
-          :is-minimal-mode="isMinimalMode"
+          :is-minimal-mode="isMinimalMode === 'true'"
+          :useLogScale="false"
         >
         </graph>
       </div>
@@ -30,8 +31,8 @@ const makeGraph = data => ({
 storiesOf('graph', module)
   .add('log4js, winston | weekly', () =>
     makeGraph({
-      moduleNames: ['log4js', 'winston'],
-      moduleData: processPackagesStats(
+      packageNames: ['log4js', 'winston'],
+      packageDownloadStats: processPackagesStats(
         standardizeNpmPackageResponse(dummyData['log4js,winston']),
       ),
       isMinimalMode: false,
@@ -40,8 +41,8 @@ storiesOf('graph', module)
   )
   .add('log4js, winston | daily', () =>
     makeGraph({
-      moduleNames: ['log4js', 'winston'],
-      moduleData: processPackagesStats(
+      packageNames: ['log4js', 'winston'],
+      packageDownloadStats: processPackagesStats(
         standardizeNpmPackageResponse(dummyData['log4js,winston']),
       ),
       isMinimalMode: false,
@@ -50,8 +51,8 @@ storiesOf('graph', module)
   )
   .add('log4js, winston | monthly', () =>
     makeGraph({
-      moduleNames: ['log4js', 'winston'],
-      moduleData: processPackagesStats(
+      packageNames: ['log4js', 'winston'],
+      packageDownloadStats: processPackagesStats(
         standardizeNpmPackageResponse(dummyData['log4js,winston']),
       ),
       isMinimalMode: false,

@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { format as formatDate, subDays, isWithinRange } from 'date-fns';
 import config from 'configs';
 import { setPackages } from '../packages/packages.js';
-import processPackagesStats from 'frontend/src/utils/processPackagesStats';
+import { processPackagesStats } from 'frontend/src/utils/processPackagesStats';
 import getPackagesDownloads from 'utils/stats/getPackagesDownloads';
 import isPackageName from 'utils/isPackageName';
 import fetchReposCommitsStats from 'frontend/src/home/fetchReposCommitStats';
@@ -29,9 +29,7 @@ const getPackagesDownloadDataByNames = async (names, start, end) => {
 
   const operation = _.every(names, isPackageName)
     ? // names are npm packages
-      getPackagesDownloadsOverPeriod(names, start, end).then(
-        processPackagesStats,
-      )
+      getPackagesDownloadsOverPeriod(names, start, end)
     : // names are github repo names
       fetchReposCommitsStats(names);
 
@@ -141,37 +139,31 @@ export default withRender({
           this.$route.query.start ? this.$route.query.start : 365,
           this.$route.query.end ? this.$route.query.end : 0,
         ),
-    ]).then(([packagesDownloadStatsResponse, packageVersionDatesResponse]) => {
-      if (
-        this.shouldShowVersionDates &&
-        packageVersionDatesResponse.status === 'fulfilled'
-      ) {
-        const packageVersionDates = packageVersionDatesResponse.value;
-        const packagesDownloadStats = packagesDownloadStatsResponse.value;
-        this.packageDownloadStats = packagesDownloadStats.map(
-          ({ name, downloads }) => ({
-            name,
-            entries: downloads.map(({ day, count }) => ({
-              day,
-              count,
-              releases:
-                packageVersionDates[name][
-                  formatDate(day, 'YYYY-MM-DD', null, 'UTC')
-                ] || [],
-            })),
-          }),
-        );
-      } else {
-        this.packageDownloadStats = packagesDownloadStatsResponse.value.map(
-          ({ name, downloads }) => ({
-            name,
-            entries: downloads,
-          }),
-        );
-      }
+    ]).then(
+      ([packagesDownloadStatsResponse, packagesVersionsDatesResponse]) => {
+        if (
+          this.shouldShowVersionDates &&
+          packagesVersionsDatesResponse.status === 'fulfilled'
+        ) {
+          const packagesDownloadStats = packagesDownloadStatsResponse.value;
+          const packagesVersionsDates = packagesVersionsDatesResponse.value;
+          console.log({ packagesDownloadStats, packagesVersionsDates });
+          this.packageDownloadStats = processPackagesStats(
+            packagesDownloadStats,
+            packagesVersionsDates,
+          );
+        } else {
+          this.packageDownloadStats = packagesDownloadStatsResponse.value.map(
+            ({ name, downloads }) => ({
+              name,
+              entries: downloads,
+            }),
+          );
+        }
 
-      this.isLoading = false;
-    });
+        this.isLoading = false;
+      },
+    );
   },
   render: withRender.default,
   data() {

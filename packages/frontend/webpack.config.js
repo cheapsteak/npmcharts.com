@@ -6,6 +6,8 @@ const glob = require('glob');
 
 const outDir = path.resolve(__dirname, 'public');
 
+const babelConfig = require('../../babel.config.js');
+
 module.exports = {
   entry: {
     app: ['./src/index.js', ...glob.sync('./src/**/*.styl')],
@@ -34,6 +36,7 @@ module.exports = {
             use: [
               {
                 loader: 'babel-loader',
+                options: babelConfig,
               },
               {
                 loader: 'vue-template-loader',
@@ -52,6 +55,7 @@ module.exports = {
             exclude: /node_modules/,
             use: {
               loader: 'babel-loader',
+              options: babelConfig,
             },
           },
           {

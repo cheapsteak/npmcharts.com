@@ -1,21 +1,30 @@
 import _ from 'lodash/fp';
-import { startOfDay } from 'date-fns';
+import { format as formatDate, startOfDay } from 'date-fns';
 
-export const processPackageStats = npmModuleData => {
-  const downloads = npmModuleData.downloads.map(entry => ({
-    day: startOfDay(entry.day),
-    count: entry.downloads,
-  }));
-  return {
-    name: npmModuleData.package,
-    // if most recent day has no download count, remove it
-    downloads: _.last(downloads).count === 0 ? _.initial(downloads) : downloads,
-  };
+export const processPackagesStats = (
+  packagesDownloadStats,
+  packagesVersionsDates,
+) => {
+  return packagesDownloadStats.flatMap(singlePackageDownloadStats => {
+    const packageName = singlePackageDownloadStats.package;
+    if (!singlePackageDownloadStats) return [];
+    const entries = singlePackageDownloadStats.downloads.map(npmModuleData => {
+      const day = startOfDay(npmModuleData.day);
+      return {
+        day,
+        count: npmModuleData.downloads,
+        releases:
+          packagesVersionsDates?.[packageName]?.[
+            formatDate(day, 'YYYY-MM-DD', null, 'UTC')
+          ] || [],
+      };
+    });
+    return [
+      {
+        name: packageName,
+        // if most recent day has no download count, remove it
+        entries: _.last(entries).count === 0 ? _.initial(entries) : entries,
+      },
+    ];
+  });
 };
-
-export const processPackagesStats = _.flow(
-  _.compact,
-  _.map(processPackageStats),
-);
-
-export default processPackagesStats;
