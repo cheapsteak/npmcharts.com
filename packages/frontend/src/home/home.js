@@ -78,7 +78,7 @@ function mergePeriods(period0, period1) {
 
   for (let p = 0; p < period0.length; ++p) {
     sumPackages.push({
-      downloads: period0[p].entries.concat(period1[p].entries),
+      downloads: period0[p].downloads.concat(period1[p].downloads),
       package: period0[p].package,
       start: period0[p].start,
       end: period1[p].end,
