@@ -83,7 +83,7 @@
           tag="label"
           :to="{ query: getMergedQueryParams({ log: !useLogScale }) }"
           @click.native="track('set scale', !useLogScale)"
-          style="margin-left: auto;"
+          style="margin-left: 2em;"
         >
           <input type="checkbox" :checked="useLogScale" /> log scale
         </router-link>
