@@ -147,7 +147,6 @@ export default withRender({
         ) {
           const packagesDownloadStats = packagesDownloadStatsResponse.value;
           const packagesVersionsDates = packagesVersionsDatesResponse.value;
-          console.log({ packagesDownloadStats, packagesVersionsDates });
           this.packageDownloadStats = processPackagesStats(
             packagesDownloadStats,
             packagesVersionsDates,

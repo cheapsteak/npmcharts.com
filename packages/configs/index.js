@@ -3,7 +3,7 @@ module.exports = {
     // build tools
     ['webpack', 'rollup', 'parcel-bundler', 'vite', 'snowpack'],
     // state managament
-    ['mobx', 'redux', 'immer', 'immutable'],
+    ['mobx', 'redux', 'immer', 'immutable', 'recoil'],
     // styling
     ['styled-components', '@emotion/core', 'jss', 'emotion', 'tailwindcss'],
     // indicators?
