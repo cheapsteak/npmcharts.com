@@ -125,52 +125,37 @@ function getPackagesDownloadsOverPeriod(names, startDay, endDay) {
 
 export default withRender({
   created() {
-    this.isLoading = true;
+    this.isLoadingDownloadStats = true;
+    getPackagesDownloadDataByNames(
+      this.packageNames,
+      this.$route.query.start ? this.$route.query.start : 365,
+      this.$route.query.end ? this.$route.query.end : 0,
+    ).then(packagesDownloadStatsResponse => {
+      this.packagesDownloadStatsResponse = packagesDownloadStatsResponse;
+      this.isLoadingDownloadStats = false;
+    });
 
-    Promise.allSettled([
-      getPackagesDownloadDataByNames(
+    if (this.shouldShowVersionDates) {
+      this.isLoadingVersionsDates = true;
+      getPackagesReleaseDataByNames(
         this.packageNames,
         this.$route.query.start ? this.$route.query.start : 365,
         this.$route.query.end ? this.$route.query.end : 0,
-      ),
-      this.shouldShowVersionDates &&
-        getPackagesReleaseDataByNames(
-          this.packageNames,
-          this.$route.query.start ? this.$route.query.start : 365,
-          this.$route.query.end ? this.$route.query.end : 0,
-        ),
-    ]).then(
-      ([packagesDownloadStatsResponse, packagesVersionsDatesResponse]) => {
-        if (
-          this.shouldShowVersionDates &&
-          packagesVersionsDatesResponse.status === 'fulfilled'
-        ) {
-          const packagesDownloadStats = packagesDownloadStatsResponse.value;
-          const packagesVersionsDates = packagesVersionsDatesResponse.value;
-          this.packageDownloadStats = processPackagesStats(
-            packagesDownloadStats,
-            packagesVersionsDates,
-          );
-        } else {
-          this.packageDownloadStats = packagesDownloadStatsResponse.value.map(
-            ({ name, downloads }) => ({
-              name,
-              entries: downloads,
-            }),
-          );
-        }
-
-        this.isLoading = false;
-      },
-    );
+      ).then(packagesVersionsDatesResponse => {
+        this.packagesVersionsDatesResponse = packagesVersionsDatesResponse;
+        this.isLoadingVersionsDates = false;
+      });
+    }
   },
   render: withRender.default,
   data() {
     return {
       presetComparisons,
       samplePreset: [],
-      packageDownloadStats: null,
-      isLoading: true,
+      packagesDownloadStatsResponse: null,
+      packagesVersionsDatesResponse: null,
+      isLoadingDownloadStats: true,
+      isLoadingVersionsDates: true,
       shouldShowVersionDates: true,
       palette,
       hoverCount: 0,
@@ -181,6 +166,13 @@ export default withRender({
     };
   },
   computed: {
+    packageDownloadStats() {
+      if (!this.packagesDownloadStatsResponse) return null;
+      return processPackagesStats(
+        this.packagesDownloadStatsResponse,
+        this.shouldShowVersionDates ? this.packagesVersionsDatesResponse : null,
+      );
+    },
     shareUrl() {
       return (
         this.packageNames &&

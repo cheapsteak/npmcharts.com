@@ -3,7 +3,7 @@
   <header
     class="page-header"
     :class="{
-    loading: isLoading,
+    loading: isLoadingDownloadStats,
   }"
   >
     <h1 class="heading">
@@ -103,7 +103,7 @@
   </header>
   <main
     :class="{
-  loading: isLoading,
+  loading: isLoadingDownloadStats,
 }"
   >
     <div class="chart-container">
@@ -141,7 +141,7 @@
       </div>
       <graph
         class="chart"
-        v-if="!isLoading"
+        v-if="!isLoadingDownloadStats"
         ref="graph"
         :module-names="packageNames"
         :package-download-stats="packageDownloadStats"
@@ -150,7 +150,7 @@
         :useLogScale="useLogScale"
       >
       </graph>
-      <div class="no-packages-selected" v-if="!packageDownloadStats && !isLoading">
+      <div class="no-packages-selected" v-if="!packageDownloadStats && !isLoadingDownloadStats">
         <p>No packages selected.</p>
         <p>
           Why not try
