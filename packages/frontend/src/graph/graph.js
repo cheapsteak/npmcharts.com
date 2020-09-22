@@ -66,7 +66,7 @@ export default withRender({
   },
   data() {
     return {
-      chart: lineChart(),
+      chart: null,
       svg: null,
       legendData: null,
       moduleSizes: {},
@@ -86,7 +86,6 @@ export default withRender({
       this.chart.update();
     },
     packageDownloadStats() {
-      console.log('render because packageDownloadStats');
       this.render();
     },
     interval() {
@@ -94,11 +93,46 @@ export default withRender({
     },
   },
   mounted() {
-    const margin = (this.margin = { top: 0, right: 36, bottom: 30, left: 16 });
-    svg = d3.select('#chart svg');
-    const chart = this.chart;
+    this.render();
+    window.addEventListener('resize', () => {
+      // too small, looks weird, probably from mobile keyboard coming onscreen
+      if (window.innerHeight < 300) {
+        return;
+      }
+      this.chart.update();
+      svg
+        .select('.nv-y.nv-axis')
+        .attr(
+          'transform',
+          'translate(' +
+            nv.utils.availableWidth(null, svg, this.margin) +
+            ',0)',
+        );
+    });
+  },
+  methods: {
+    processForD3(downloadStats) {
+      return downloadStats.map(({ name, entries }) => ({
+        key: name,
+        values: processEntriesMemo(
+          entries,
+          {
+            interval: this.interval,
+          },
+          [name, this.showWeekends, this.interval].join(','),
+        ),
+      }));
+    },
+    render() {
+      const margin = (this.margin = {
+        top: 0,
+        right: 36,
+        bottom: 30,
+        left: 16,
+      });
+      svg = d3.select('#chart svg');
+      const chart = (this.chart = lineChart());
 
-    nv.addGraph(() => {
       chart.margin(margin).color(palette);
 
       chart.xAxis
@@ -120,38 +154,6 @@ export default withRender({
         .showMaxMin(false)
         .tickFormat(d3.format('s'));
 
-      nv.utils.windowResize(function() {
-        // too small, looks weird, probably from mobile keyboard coming onscreen
-        if (window.innerHeight < 300) {
-          return;
-        }
-        chart.update();
-        svg
-          .select('.nv-y.nv-axis')
-          .attr(
-            'transform',
-            'translate(' + nv.utils.availableWidth(null, svg, margin) + ',0)',
-          );
-      });
-      this.render();
-      return chart;
-    });
-  },
-  methods: {
-    processForD3(downloadStats) {
-      return downloadStats.map(({ name, entries }) => ({
-        key: name,
-        values: processEntriesMemo(
-          entries,
-          {
-            interval: this.interval,
-          },
-          [name, this.showWeekends, this.interval].join(','),
-        ),
-      }));
-    },
-    render() {
-      const chart = this.chart;
       const processedData = this.processForD3(this.packageDownloadStats);
       this.processedData = processedData;
       const interpolation =
@@ -163,16 +165,10 @@ export default withRender({
       svg.data([processedData]).call(chart);
 
       this.legendData = this.getDataAtDate(this.chart.xAxis.domain()[1]);
-      this.applyOverrides();
 
-      // signal for puppeteer to know when a new graph is rendered
-      window.__currently_rendered_graph__ = this.moduleNames.join(',');
-    },
-    applyOverrides() {
       if (!this.packageDownloadStats.length) {
         return;
       }
-      const chart = this.chart;
 
       // Update legend on mousemove
       var prevMousemove = chart.interactiveLayer.dispatch.on(
@@ -201,6 +197,9 @@ export default withRender({
         prevMouseout.call(chart.interactiveLayer, e);
         this.legendData = this.getDataAtDate(this.chart.xAxis.domain()[1]);
       });
+
+      // signal for puppeteer to know when a new graph is rendered
+      window.__currently_rendered_graph__ = this.moduleNames.join(',');
     },
     getStartOfPeriod(date) {
       const indexInPackageDownloadStats = _.findIndex(
