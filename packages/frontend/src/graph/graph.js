@@ -43,8 +43,8 @@ function processEntries(entries, { interval = 7 }) {
   return entries;
 }
 
-const processEntriesMemo = _.memoize(processEntries, function resolver() {
-  return Array.prototype.slice.call(arguments, -1)[0];
+const processEntriesMemo = _.memoize(processEntries, (...args) => {
+  return JSON.stringify(args);
 });
 
 export default withRender({
