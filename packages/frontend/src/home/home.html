@@ -24,24 +24,29 @@
       >
         <img src="/images/logo.svg" width="190" alt="npmcharts" />
       </a>
-      <p class="sub-heading">
-        <template v-if="packageNames && packageNames.length > 1">
+      <p
+        class="sub-heading"
+      >
+        <template v-if="isLoadingVersionsDates">
+          fetching package release dates..
+        </template>
+        <template v-else="packageNames && packageNames.length > 1">
           compare
+          <template v-if="isUsingPresetComparisons">
+            npm
+          </template>
+          <a
+            v-else
+            class="package-linkout"
+            v-for="moduleName in packageNames"
+            v-bind:title="'Open ' + moduleName + '\'s npm page'"
+            :href="'https://www.npmjs.com/package/'+moduleName"
+            target="_blank"
+          >{{ moduleName }}</a>
+          download trends
         </template>
-        <template v-if="isUsingPresetComparisons">
-          npm
-        </template>
-        <a
-          v-else
-          class="package-linkout"
-          v-for="moduleName in packageNames"
-          v-bind:title="'Open ' + moduleName + '\'s npm page'"
-          :href="'https://www.npmjs.com/package/'+moduleName"
-          target="_blank"
-          >{{ moduleName }}</a
-        >
-        download trends
       </p>
+
     </h1>
     <form class="header-controls-wrapper">
       <package-input
