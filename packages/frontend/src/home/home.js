@@ -326,6 +326,7 @@ export default withRender({
   },
   components: {
     'package-input': packageInput,
-    graph: require('../graph/graph').default,
+    graph: () =>
+      import(/* webpackPrefetch: true, webpackChunkName: "graph" */ '../graph/graph'),
   },
 });
