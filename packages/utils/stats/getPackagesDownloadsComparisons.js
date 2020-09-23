@@ -1,4 +1,7 @@
-const _ = require('lodash');
+const _last = require('lodash/last');
+const _sumBy = require('lodash/sumBy');
+const _initial = require('lodash/initial');
+const _difference = require('lodash/difference');
 const { format: formatDate, subDays } = require('date-fns');
 
 const getPackagesDownloads = require('./getPackagesDownloads');
@@ -7,14 +10,14 @@ const DATE_FORMAT = 'YYYY-MM-DD';
 
 const getDownloadComparisonForPeriod = (downloads, intervalInDays) => {
   const trimmedDownloads =
-    _.last(downloads).downloads === 0 ? _.initial(downloads) : downloads;
+    _last(downloads).downloads === 0 ? _initial(downloads) : downloads;
 
-  const currentPeriodDownloads = _.sumBy(
+  const currentPeriodDownloads = _sumBy(
     trimmedDownloads.slice(-intervalInDays),
     x => x.downloads,
   );
-  const previousPeriodDownloads = _.sumBy(
-    _.difference(
+  const previousPeriodDownloads = _sumBy(
+    _difference(
       trimmedDownloads.slice(-intervalInDays * 2),
       trimmedDownloads.slice(-intervalInDays),
     ),

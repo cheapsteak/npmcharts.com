@@ -1,4 +1,4 @@
-import _ from 'lodash/fp';
+import _ from 'lodash';
 import { format as formatDate, startOfDay } from 'date-fns';
 
 export const processPackagesStats = (

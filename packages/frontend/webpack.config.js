@@ -4,6 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const glob = require('glob');
 const TerserPlugin = require('terser-webpack-plugin');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 const outDir = path.resolve(__dirname, 'public');
 
@@ -124,6 +125,12 @@ module.exports = (env, opts) => {
         ],
         { context: './src/assets' },
       ),
+
+      new BundleAnalyzerPlugin({
+        analyzerMode: 'static',
+        reportFilename: 'bundle-stats.html',
+        openAnalyzer: false,
+      }),
     ],
     // resolve: {
     //   alias: {
