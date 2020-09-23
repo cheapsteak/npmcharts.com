@@ -286,21 +286,8 @@ footer
   cursor: pointer
   position: relative
   text-decoration: none
-  &:before
-    content: '\f14c'
-    font: normal normal normal 14px/1 FontAwesome
-    position: absolute
-    right: 0
-    top: -6px
-    font-size: 10px
-    opacity: 0
-    transition: 0.2s ease
-    transform: translateX(-3px) translateY(3px)
   &:hover
     text-decoration: underline
-    &:before
-      opacity: 0.9
-      transform: translateX(0) translateY(0)
   &:not(:last-child):after
     content: ', '
     position: absolute
