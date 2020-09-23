@@ -21,7 +21,9 @@ module.exports = (env, opts) => {
       path: outDir,
       pathinfo: true,
       filename: 'static/[name].bundle.js',
-      publicPath: '/',
+      // if on netlify, use netlify's absolute url
+      // https://docs.netlify.com/configure-builds/environment-variables/#deploy-urls-and-metadata
+      publicPath: process.env.DEPLOY_URL ? `${process.env.DEPLOY_URL}/` : '/',
     },
     devServer: {
       historyApiFallback: true,
