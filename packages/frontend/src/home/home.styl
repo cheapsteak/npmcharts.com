@@ -15,6 +15,10 @@ $inputBg = #f9f9ff
   100% { background-position: right bottom; }
 }
 
+.opaque-once-stylesheet-loads {
+  opacity: 1 !important;
+}
+
 .page-header
   padding: 1em
   color: #fff
@@ -252,21 +256,11 @@ footer
 
 .tweet-this-chart
   cursor: pointer
-  color: #1da1f2
-  font-size: 11px
-  font-weight: 500
-  display: inline-block
-  padding: 4px 8px
-  margin-left: -4px
   text-decoration: none
   transition: all 0.2s
-  border-radius: 20px
   background-color: rgba(255,255,255,0)
   position: relative
   z-index: 1
-  svg
-    width: 12px
-    height: auto
   ~ .caption
     margin-left: -12px
   &:hover

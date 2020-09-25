@@ -1,5 +1,5 @@
 <!-- this div is only here because vue 2 doesn't support multiple root elements -->
-<div id="home">
+<div id="home" class="opaque-once-stylesheet-loads" style="opacity: 0;">
   <header
     class="page-header"
     :class="{
@@ -118,8 +118,25 @@
           @click="handleClickTwitter"
           @mouseenter="handleMouseEnterTwitter"
           @mouseleave="handleMouseLeaveTwitter"
+          style="
+            color: #1da1f2;
+            font-size: 11px;
+            font-weight: 500;
+            display: inline-block;
+            padding: 4px 8px;
+            margin-left: -4px;
+          "
         >
-          <i v-html="twitterIcon"></i> this chart
+          <i
+            v-html="twitterIcon"
+            aria-label="tweet"
+            style="
+              width: 12px;
+              height: auto;
+              display: inline-block;
+            "
+          ></i>
+          this chart
         </span>
         <div class="caption">or check out</div>
 
