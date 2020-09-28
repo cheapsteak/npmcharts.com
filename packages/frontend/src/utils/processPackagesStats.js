@@ -6,8 +6,8 @@ export const processPackagesStats = (
   packagesVersionsDates,
 ) => {
   return packagesDownloadStats.flatMap(singlePackageDownloadStats => {
-    const packageName = singlePackageDownloadStats.package;
     if (!singlePackageDownloadStats) return [];
+    const packageName = singlePackageDownloadStats.package;
     const entries = singlePackageDownloadStats.downloads.map(npmModuleData => {
       const day = startOfDay(npmModuleData.day);
       return {
