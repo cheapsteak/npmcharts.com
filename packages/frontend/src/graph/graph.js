@@ -83,6 +83,7 @@ export default withRender({
   watch: {
     useLogScale(val) {
       this.chart.yScale(val ? d3.scale.log() : d3.scale.linear());
+      this.chart.useLogScale(val);
       this.chart.update();
     },
     packageDownloadStats() {
@@ -162,6 +163,7 @@ export default withRender({
       chart.interpolate(interpolation);
 
       chart.yScale(this.useLogScale ? d3.scale.log() : d3.scale.linear());
+      chart.useLogScale(this.useLogScale);
       svg.data([processedData]).call(chart);
 
       this.legendData = this.getDataAtDate(this.chart.xAxis.domain()[1]);

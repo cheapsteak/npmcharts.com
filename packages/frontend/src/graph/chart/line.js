@@ -26,11 +26,13 @@ export const line = function() {
       , interpolate = "linear" // controls the line interpolation
       , duration = 250
       , dispatch = d3.dispatch('elementClick', 'elementMouseover', 'elementMouseout', 'renderEnd')
+      , useLogScale = false
       ;
 
   scatter
       .pointSize(16) // default size
       .pointDomain([16,256]) //set to speed up calculation, needs to be unset if there is a custom size accessor
+      .useLogScale(useLogScale) // Passes along configuration for whether log scale is being used for chart
   ;
 
   //============================================================
@@ -188,6 +190,10 @@ export const line = function() {
       color:  {get: function(){return color;}, set: function(_){
           color = nv.utils.getColor(_);
           scatter.color(color);
+      }},
+      useLogScale: {get: function(){return useLogScale;}, set: function(_){
+          useLogScale = _;
+          scatter.useLogScale(_);
       }}
   });
 
