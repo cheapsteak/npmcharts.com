@@ -22,7 +22,9 @@ const sendSPA = async function(req, res, next) {
   );
   const minimalModeUrl = getMinimalUrl(fullUrl.href);
   const ogImage = shouldScreencapUrl(minimalModeUrl)
-    ? `${protocol}://${req.get('host')}/chart-image/${packages.join(',')}.png`
+    ? `${protocol}://${req.get('host')}/chart-image/${packages.join(',')}.png${
+        fullUrl.search ? fullUrl.search : ''
+      }`
     : 'https://npmcharts.com/images/og-image-3.png';
   const pageDescription = await getPackagesDownloadsDescriptions(packages);
 
