@@ -39,6 +39,7 @@ export const scatter = function() {
       , dispatch     = d3.dispatch('elementClick', 'elementDblClick', 'elementMouseover', 'elementMouseout', 'renderEnd')
       , duration     = 250
       , interactiveUpdateDelay = 300
+      , useLogScale = false
       ;
 
 
@@ -94,7 +95,6 @@ export const scatter = function() {
           });
 
           // Setup Scales
-          var logScale = chart.yScale().toString().includes('log(x)')
           // remap and flatten the data for use in calculating the scales' domains
           var seriesData = (xDomain && yDomain && sizeDomain) ? [] : // if we know xDomain and yDomain and sizeDomain, no need to calculate.... if Size is constant remember to set sizeDomain to speed up performance
               d3.merge(
@@ -112,7 +112,7 @@ export const scatter = function() {
 
            var min = d3.min(seriesData.map(d => d.y || null));
            var max = d3.max(seriesData.map(d => d.y));
-           if (logScale) {
+           if (useLogScale) {
                   y.clamp(true)
                       .domain(yDomain || [min || 0, max * 1.01])
                       .range(yRange || [availableHeight, 0]);
@@ -370,6 +370,7 @@ export const scatter = function() {
       clipRadius:   {get: function(){return clipRadius;}, set: function(_){clipRadius=_;}},
       id:           {get: function(){return id;}, set: function(_){id=_;}},
       interactiveUpdateDelay: {get:function(){return interactiveUpdateDelay;}, set: function(_){interactiveUpdateDelay=_;}},
+      useLogScale:  {get: function(){return useLogScale;}, set: function(_){useLogScale = _;}},
 
       // simple functor options
       x:     {get: function(){return getX;}, set: function(_){getX = d3.functor(_);}},

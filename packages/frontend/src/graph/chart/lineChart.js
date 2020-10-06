@@ -26,7 +26,8 @@ export function lineChart() {
     x,
     y,
     dispatch = d3.dispatch('renderEnd'),
-    duration = 250;
+    duration = 250,
+    useLogScale = false;
 
   // set options on sub-objects for this chart
   xAxis.orient('bottom').tickPadding(7);
@@ -35,6 +36,7 @@ export function lineChart() {
   lines.clipEdge(true);
   lines.x(xAccessor);
   lines.y(yAccessor);
+  lines.useLogScale(useLogScale);
 
   //============================================================
   // Private Variables
