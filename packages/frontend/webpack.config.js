@@ -97,7 +97,7 @@ module.exports = (env, opts) => {
           cache: false,
           terserOptions: {
             compress: false,
-            mangle: false,
+            mangle: true,
           },
           parallel: true,
           sourceMap: true,
