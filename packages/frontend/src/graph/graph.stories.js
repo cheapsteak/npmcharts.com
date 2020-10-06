@@ -20,7 +20,7 @@ const makeGraph = data => ({
           :package-download-stats="packageDownloadStats"
           :interval="interval"
           :is-minimal-mode="isMinimalMode === 'true'"
-          :useLogScale="false"
+          :useLogScale="useLogScale"
         >
         </graph>
       </div>
@@ -37,6 +37,7 @@ storiesOf('graph', module)
       ),
       isMinimalMode: false,
       interval: 7,
+      useLogScale: false,
     }),
   )
   .add('log4js, winston | daily', () =>
@@ -47,6 +48,7 @@ storiesOf('graph', module)
       ),
       isMinimalMode: false,
       interval: 1,
+      useLogScale: false,
     }),
   )
   .add('log4js, winston | monthly', () =>
@@ -57,5 +59,40 @@ storiesOf('graph', module)
       ),
       isMinimalMode: false,
       interval: 30,
+      useLogScale: false,
     }),
-  );
+  )
+  .add('log4js, winston | weekly | log scale', () =>
+    makeGraph({
+      packageNames: ['log4js', 'winston'],
+      packageDownloadStats: processPackagesStats(
+        standardizeNpmPackageResponse(dummyData['log4js,winston']),
+      ),
+      isMinimalMode: false,
+      interval: 7,
+      useLogScale: true,
+    }),
+  )
+  .add('log4js, winston | daily | log scale', () =>
+    makeGraph({
+      packageNames: ['log4js', 'winston'],
+      packageDownloadStats: processPackagesStats(
+        standardizeNpmPackageResponse(dummyData['log4js,winston']),
+      ),
+      isMinimalMode: false,
+      interval: 1,
+      useLogScale: true,
+    }),
+  )
+  .add('log4js, winston | monthly | log scale', () =>
+    makeGraph({
+      packageNames: ['log4js', 'winston'],
+      packageDownloadStats: processPackagesStats(
+        standardizeNpmPackageResponse(dummyData['log4js,winston']),
+      ),
+      isMinimalMode: false,
+      interval: 30,
+      useLogScale: true,
+    })
+  )
+  ;
