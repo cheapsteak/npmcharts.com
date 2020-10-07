@@ -93,6 +93,5 @@ storiesOf('graph', module)
       isMinimalMode: false,
       interval: 30,
       useLogScale: true,
-    })
-  )
-  ;
+    }),
+  );
