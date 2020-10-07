@@ -1,11 +1,10 @@
+const qs = require('query-string');
 const debug = require('debug')('server:getChartImage');
 const browserPagePool = require('./services/browserPagePool');
 const getPackagesFromUrl = require('./getPackagesFromUrl');
 
 module.exports = async url => {
   try {
-    debug('checking if screenshot exists');
-
     const packages = getPackagesFromUrl(url);
 
     debug('acquiring page');
@@ -13,7 +12,7 @@ module.exports = async url => {
 
     const navigationCommand = `router.push('/compare/${packages.join(
       ',',
-    )}?minimal=true')`;
+    )}?${qs.stringify(qs.parseUrl(url).query)}')`;
     debug('evaluating:', navigationCommand);
 
     await page.evaluate(navigationCommand);
