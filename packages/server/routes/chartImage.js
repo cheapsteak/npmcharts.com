@@ -1,4 +1,4 @@
-const querystring = require('querystring');
+const qs = require('query-string');
 const express = require('express');
 const debug = require('debug')('server:server');
 const getChartImage = require('utils/getChartImage');
@@ -8,12 +8,12 @@ router.get('/:packages*', async function(req, res, next) {
   debug('chart image route');
   const protocol = req.protocol;
   const host = req.get('host');
-  const pathname = req.originalUrl;
+  const pathname = req.originalUrl.split('?')[0];
 
   const packages =
     pathname
       .replace(/^\/chart-image\//, '')
-      .replace(/\.png$/, '')
+      .replace(/\.png/, '')
       .split(',') || [];
   if (!packages.length) {
     debug('path doesnt require dynamic screencap');
@@ -21,7 +21,9 @@ router.get('/:packages*', async function(req, res, next) {
     res.redirect('https://npmcharts.com/images/og-image-3.png');
   } else {
     try {
-      const queryString = querystring.stringify({ minimal: true });
+      const queryString = qs.stringify(
+        Object.assign({}, req.query, { minimal: true }),
+      );
       const packagesString = packages.join(',');
       const urlToScreencap = `${protocol}://${host}/compare/${packagesString}?${queryString}`;
       debug(`attempting to get chart image for: ${urlToScreencap}`);
