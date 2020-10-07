@@ -5,5 +5,8 @@
   "private": true,
   "scripts": {
     "test": "jest"
+  },
+  "dependencies": {
+    "query-string": "6.13.5"
   }
 }
