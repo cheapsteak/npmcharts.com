@@ -10,6 +10,23 @@ const { palette } = require('configs');
 
 // this can't go in the data of the component, observing it changes it.
 let svg;
+const superscript = '⁰¹²³⁴⁵⁶⁷⁸⁹';
+const formatPower = function(d) {
+  return (d + '')
+    .split('')
+    .map(function(c) {
+      return superscript[c];
+    })
+    .join('');
+};
+const formatLogTick = function(d) {
+  const log = Math.log(d) / Math.LN10;
+  if (Math.abs(Math.round(log) - log) < 1e-6) {
+    return 10 + formatPower(Math.round(log));
+  } else {
+    return '';
+  }
+};
 
 const catmulRomInterpolation = (points, tension) =>
   line()
@@ -153,7 +170,7 @@ export default withRender({
       chart.yAxis
         .orient('right')
         .showMaxMin(false)
-        .tickFormat(d3.format('s'));
+        .tickFormat(this.useLogScale ? formatLogTick : d3.format('s'));
 
       const processedData = this.processForD3(this.packageDownloadStats);
       this.processedData = processedData;
