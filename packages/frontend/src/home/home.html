@@ -44,11 +44,10 @@
             target="_blank"
           >
           {{ moduleName }}
-          <template v-if="packagesBundleSizesResponse && packagesBundleSizesResponse[moduleName]">
-            <small>({{ packagesBundleSizesResponse[moduleName]["gzip"] }} gzipped)</small>
-          </template>
+          <small v-if="packagesBundleSizesResponse && packagesBundleSizesResponse[moduleName]">
+            ({{ packagesBundleSizesResponse[moduleName]["gzip"] }} gzipped)
+          </small>
           </a>
-          download trends
         </template>
       </p>
 
