@@ -42,8 +42,12 @@
             v-bind:title="'Open ' + moduleName + '\'s npm page'"
             :href="'https://www.npmjs.com/package/'+moduleName"
             target="_blank"
-          >{{ moduleName }}</a>
-          download trends
+          >
+          {{ moduleName }}
+          <small v-if="packagesBundleSizesResponse && packagesBundleSizesResponse[moduleName]">
+            ({{ packagesBundleSizesResponse[moduleName]["gzip"] }} gzipped)
+          </small>
+          </a>
         </template>
       </p>
 
