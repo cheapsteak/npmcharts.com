@@ -7,6 +7,7 @@ import { processPackagesStats } from 'frontend/src/utils/processPackagesStats';
 import getPackagesDownloads from 'utils/stats/getPackagesDownloads';
 import isPackageName from 'utils/isPackageName';
 import fetchReposCommitsStats from 'frontend/src/home/fetchReposCommitStats';
+import fetchBundlesSizes from 'frontend/src/home/fetchBundlesSizes';
 import withRender from './home.html';
 import { downloadCsv } from './downloadCsv';
 
@@ -29,9 +30,9 @@ const getPackagesDownloadDataByNames = async (names, start, end) => {
 
   const operation = _.every(names, isPackageName)
     ? // names are npm packages
-      getPackagesDownloadsOverPeriod(names, start, end)
+    getPackagesDownloadsOverPeriod(names, start, end)
     : // names are github repo names
-      fetchReposCommitsStats(names);
+    fetchReposCommitsStats(names);
 
   return operation;
 };
@@ -146,6 +147,10 @@ export default withRender({
         this.isLoadingVersionsDates = false;
       });
     }
+
+    if (this.shouldFetchBundleSizes) {
+      this.packagesBundleSizesResponse = fetchBundlesSizes(this.packageNames);
+    }
   },
   render: withRender.default,
   data() {
@@ -154,9 +159,11 @@ export default withRender({
       samplePreset: [],
       packagesDownloadStatsResponse: null,
       packagesVersionsDatesResponse: null,
+      packagesBundleSizesResponse: null,
       isLoadingDownloadStats: true,
       isLoadingVersionsDates: true,
       shouldShowVersionDates: true,
+      shouldFetchBundleSizes: true,
       palette,
       hoverCount: 0,
       twitterIcon: require('../assets/images/icon-twitter.svg'),
@@ -205,8 +212,8 @@ export default withRender({
       const packageNames = this.isUsingPresetComparisons
         ? _.sample(presetComparisons)
         : this.$route.params.packages
-            .split(',')
-            .map(packageName => window.decodeURIComponent(packageName));
+          .split(',')
+          .map(packageName => window.decodeURIComponent(packageName));
       return packageNames;
     },
     isMinimalMode() {
@@ -264,11 +271,10 @@ export default withRender({
       );
 
       this.$router.push({
-        path: `/compare/${
-          this.$route.params && this.$route.params.packages
-            ? this.$route.params.packages + ',' + packageName
-            : packageName
-        }`,
+        path: `/compare/${this.$route.params && this.$route.params.packages
+          ? this.$route.params.packages + ',' + packageName
+          : packageName
+          }`,
         query: this.$route.query,
       });
     },
