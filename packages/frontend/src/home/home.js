@@ -30,9 +30,9 @@ const getPackagesDownloadDataByNames = async (names, start, end) => {
 
   const operation = _.every(names, isPackageName)
     ? // names are npm packages
-    getPackagesDownloadsOverPeriod(names, start, end)
+      getPackagesDownloadsOverPeriod(names, start, end)
     : // names are github repo names
-    fetchReposCommitsStats(names);
+      fetchReposCommitsStats(names);
 
   return operation;
 };
@@ -212,8 +212,8 @@ export default withRender({
       const packageNames = this.isUsingPresetComparisons
         ? _.sample(presetComparisons)
         : this.$route.params.packages
-          .split(',')
-          .map(packageName => window.decodeURIComponent(packageName));
+            .split(',')
+            .map(packageName => window.decodeURIComponent(packageName));
       return packageNames;
     },
     isMinimalMode() {
@@ -271,10 +271,11 @@ export default withRender({
       );
 
       this.$router.push({
-        path: `/compare/${this.$route.params && this.$route.params.packages
-          ? this.$route.params.packages + ',' + packageName
-          : packageName
-          }`,
+        path: `/compare/${
+          this.$route.params && this.$route.params.packages
+            ? this.$route.params.packages + ',' + packageName
+            : packageName
+        }`,
         query: this.$route.query,
       });
     },
@@ -333,6 +334,8 @@ export default withRender({
   components: {
     'package-input': packageInput,
     graph: () =>
-      import(/* webpackPrefetch: true, webpackChunkName: "graph" */ '../graph/graph'),
+      import(
+        /* webpackPrefetch: true, webpackChunkName: "graph" */ '../graph/graph'
+      ),
   },
 });

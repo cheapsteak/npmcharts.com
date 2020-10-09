@@ -111,9 +111,10 @@ export function lineChart() {
       );
 
       if (rightAlignYAxis) {
-        g
-          .select('.nv-y.nv-axis')
-          .attr('transform', 'translate(' + availableWidth + ',0)');
+        g.select('.nv-y.nv-axis').attr(
+          'transform',
+          'translate(' + availableWidth + ',0)',
+        );
       }
 
       //Set up interactive layer
@@ -126,8 +127,7 @@ export function lineChart() {
         .xScale(x);
       wrap.select('.nv-interactive').call(interactiveLayer);
 
-      g
-        .select('.nv-focus .nv-background rect')
+      g.select('.nv-focus .nv-background rect')
         .attr('width', availableWidth)
         .attr('height', availableHeight1);
 
@@ -157,18 +157,17 @@ export function lineChart() {
       // Update Axes
       //============================================================
 
-      g
-        .select('.nv-focus .nv-x.nv-axis')
-        .attr('transform', 'translate(0,' + availableHeight1 + ')');
+      g.select('.nv-focus .nv-x.nv-axis').attr(
+        'transform',
+        'translate(0,' + availableHeight1 + ')',
+      );
 
       linesWrap.call(lines);
-      g
-        .select('.nv-focus .nv-x.nv-axis')
+      g.select('.nv-focus .nv-x.nv-axis')
         .transition()
         .duration(duration)
         .call(xAxis);
-      g
-        .select('.nv-focus .nv-y.nv-axis')
+      g.select('.nv-focus .nv-y.nv-axis')
         .transition()
         .duration(duration)
         .call(yAxis);
