@@ -1,6 +1,6 @@
 import withRender from './packages.html';
 export const packages = [];
-export const emitter = new (require('events')).EventEmitter();
+export const emitter = new (require('events').EventEmitter)();
 
 export function addPackage(name, notify = true) {
   packages.indexOf(name) === -1 && packages.push(name);

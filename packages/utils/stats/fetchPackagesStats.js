@@ -14,9 +14,7 @@ module.exports = (packageNames, startDate, endDate) => {
       .then(response => {
         if (!response.ok) {
           console.warn(
-            `Unexpected HTTP response from url=${url}: status:${
-              response.status
-            }: "${response.statusText}"`,
+            `Unexpected HTTP response from url=${url}: status:${response.status}: "${response.statusText}"`,
           );
           return fetchStats(); // Try next URL
         }

@@ -8,7 +8,9 @@ async function fetchBundleSize(pkgName) {
     const format = input =>
       input > 1048576
         ? `${parse(input / 1048576)} MB`
-        : input > 1024 ? `${parse(input / 1024)} KB` : `${input} B`;
+        : input > 1024
+        ? `${parse(input / 1024)} KB`
+        : `${input} B`;
 
     return {
       gzip: format(data.gzip),

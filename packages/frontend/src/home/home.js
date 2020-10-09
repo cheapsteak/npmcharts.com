@@ -334,6 +334,8 @@ export default withRender({
   components: {
     'package-input': packageInput,
     graph: () =>
-      import(/* webpackPrefetch: true, webpackChunkName: "graph" */ '../graph/graph'),
+      import(
+        /* webpackPrefetch: true, webpackChunkName: "graph" */ '../graph/graph'
+      ),
   },
 });
