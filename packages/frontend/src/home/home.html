@@ -27,28 +27,29 @@
       <p
         class="sub-heading"
       >
+        <template v-if="!isLoadingVersionsDates && packageNames.length > 1">compare</template>
         <template v-if="isLoadingVersionsDates">
           fetching package release dates..
         </template>
-        <template v-else="packageNames && packageNames.length > 1">
-          compare
-          <template v-if="isUsingPresetComparisons">
-            npm
-          </template>
+        <span
+          v-else
+          class="package-entry" v-for="moduleName in packageNames">
           <a
-            v-else
-            class="package-linkout"
-            v-for="moduleName in packageNames"
-            v-bind:title="'Open ' + moduleName + '\'s npm page'"
+            class="package-name"
+            v-bind:title="'Visit https://www.npmjs.com/package/'+moduleName"
             :href="'https://www.npmjs.com/package/'+moduleName"
             target="_blank"
+          >{{ moduleName }}</a>
+          <a
+            v-if="packagesBundleSizesResponse && packagesBundleSizesResponse[moduleName]"
+            class="package-size"
+            title="Inspect bundlesize on bundlephobia"
+            :href="`https://bundlephobia.com/result?p=${moduleName}`"
+            target="_blank"
           >
-          {{ moduleName }}
-          <small v-if="packagesBundleSizesResponse && packagesBundleSizesResponse[moduleName]">
-            ({{ packagesBundleSizesResponse[moduleName]["gzip"] }} gzipped)
-          </small>
+            ({{ packagesBundleSizesResponse[moduleName]["gzip"] }} gzipped)</small>
           </a>
-        </template>
+        </span>
       </p>
 
     </h1>
