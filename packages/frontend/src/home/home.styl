@@ -1,13 +1,14 @@
-// $bgcolor = #272B34
 $fgColor = #333
-$unimportantFgColor = #5f809c
+$unimportantFgColor = #192229
 $unimportantFgColorLight = #829bb0bb
-$bgcolor = #F1F1F1
+// $bgcolor = #272B34
+// $bgcolor = #082f45
+$bgcolor = #f3f3f5
 $popupTextColor = $fgColor
 // $logoColor = #1288EF
 $logoColor = #d85151
 // $logoColor = #DA605C;
-$subheadingColor = #9fb2c2
+$subheadingColor = #738fa5
 $inputBg = #f9f9ff
 
 @keyframes moving-gradient {
@@ -70,6 +71,7 @@ $inputBg = #f9f9ff
       color: $subheadingColor
     margin: 0
     font-size: 16px
+    font-weight: 400
     display: block
     line-height: 1.2
     @media (min-width: $small)
@@ -146,8 +148,10 @@ $inputBg = #f9f9ff
     border: 0
   .add-package-btn
     vertical-align: middle
-    padding: 4px 6px;
+    padding: 1px 6px 2px;
+    color: $unimportantFgColor
     &:disabled
+      color: $unimportantFgColorLight
       background: rgba(0, 0, 0, 0)
       border: 0
   .github-btn
@@ -276,18 +280,20 @@ footer
   &:active
     box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.2)
 
-.package-linkout
-  cursor: pointer
-  position: relative
-  text-decoration: none
-  &:hover
-    text-decoration: underline
-  &:not(:last-child):after
-    content: ', '
-    position: absolute
-  & + .package-linkout
-    margin-left: 0.5em
-  small
+.package-entry
+  &:not(:first-child)
+    margin-left: 0.3em;
+  a
+    text-decoration: none
+    &:hover
+      text-decoration: underline
+  .package-name
+    cursor: pointer
+    position: relative
+    letter-spacing: -0.2px
+    & + .package-linkout
+      margin-left: 0.5em
+  .package-size
     font-size: 0.7em;
     font-weight: 500;
     margin-left: -0.2em;
