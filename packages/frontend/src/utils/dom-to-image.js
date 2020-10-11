@@ -222,8 +222,8 @@ function cloneNode(node, filter, root) {
 
         return Promise.resolve()
             .then(cloneStyle)
-            .then(clonePseudoElements)
-            .then(copyUserInput)
+            // .then(clonePseudoElements)
+            // .then(copyUserInput)
             .then(fixSvg)
             .then(function () {
                 return clone;
