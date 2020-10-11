@@ -20,7 +20,7 @@ html(lang="en")
     link(rel="icon", type="image/png", href="/favicon-16x16.png", sizes="16x16")
     link(rel="canonical" href=canonicalUrl)
     link(rel="search", type="application/opensearchdescription+xml", title="npmcharts", href="/opensearch.xml")
-    link(rel='stylesheet', href=cssBundleSrc, media="print", onload="this.media='all'")
+    link(rel='stylesheet', href=cssBundleSrc, media="print", onload="this.media='all'", crossorigin)
 
     link(
       title=title
@@ -61,4 +61,4 @@ html(lang="en")
   body
     #root
     script(src=jsBundleSrc)
-    link(rel='stylesheet', href=cssBundleSrc)
+    link(rel='stylesheet', href=cssBundleSrc, crossorigin)
