@@ -25,6 +25,7 @@
     "d3-shape": "^1.2.0",
     "date-fns": "^1.29.0",
     "file-loader": "2.0.0",
+    "file-saver": "2.0.2",
     "filenamify": "^2.0.0",
     "filesize": "^3.6.0",
     "fs-extra": "^5.0.0",
