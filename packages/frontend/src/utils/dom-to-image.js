@@ -161,11 +161,13 @@ function draw(domNode, options) {
 
     function newCanvas(domNode) {
         var canvas = document.createElement('canvas');
-        canvas.width = options.width || util.width(domNode);
-        canvas.height = options.height || util.height(domNode);
+        canvas.width = (options.width || util.width(domNode)) * window.devicePixelRatio + 20;
+        canvas.height = (options.height || util.height(domNode)) * window.devicePixelRatio + 20;
+
+        var ctx = canvas.getContext('2d');
+        ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
 
         if (options.bgcolor) {
-            var ctx = canvas.getContext('2d');
             ctx.fillStyle = options.bgcolor;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
         }
@@ -767,6 +769,5 @@ function newImages() {
     }
 }
 
-
-export default domtoimage;
 export const domNodeToSvg = toSvg;
+export const domNodeToPng = toPng;
