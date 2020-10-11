@@ -154,26 +154,23 @@ function draw(domNode, options) {
         .then(util.makeImage)
         .then(util.delay(100))
         .then(function (image) {
-            var canvas = newCanvas(domNode);
-            canvas.getContext('2d').drawImage(image, 0, 0);
+            const scale = 2;
+            var canvas = document.createElement('canvas');
+            document.body.appendChild(canvas)
+            canvas.width = (options.width || util.width(domNode)) * scale;
+            canvas.height = (options.height || util.height(domNode)) * scale;
+
+            var ctx = canvas.getContext('2d');
+
+            if (options.bgcolor) {
+                ctx.fillStyle = options.bgcolor;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
+
+            ctx.drawImage(image, 0, 0);
             return canvas;
         });
 
-    function newCanvas(domNode) {
-        var canvas = document.createElement('canvas');
-        canvas.width = (options.width || util.width(domNode)) * window.devicePixelRatio + 20;
-        canvas.height = (options.height || util.height(domNode)) * window.devicePixelRatio + 20;
-
-        var ctx = canvas.getContext('2d');
-        ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
-
-        if (options.bgcolor) {
-            ctx.fillStyle = options.bgcolor;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-        }
-
-        return canvas;
-    }
 }
 
 function cloneNode(node, filter, root) {
@@ -217,8 +214,8 @@ function cloneNode(node, filter, root) {
         }
     }
 
-    function processClone(original, clone) {
-        if (!(clone instanceof Element)) return clone;
+    function processClone(sourceElement, clonedElement) {
+        if (!(clonedElement instanceof Element)) return clonedElement;
 
         return Promise.resolve()
             .then(cloneStyle)
@@ -226,26 +223,29 @@ function cloneNode(node, filter, root) {
             // .then(copyUserInput)
             .then(fixSvg)
             .then(function () {
-                return clone;
+                return clonedElement;
             });
 
         function cloneStyle() {
-            copyStyle(window.getComputedStyle(original), clone.style);
+            var dummyElementToGetBaseStyles = document.createElement( 'element-' + ( new Date().getTime() ) );
+            document.body.appendChild( dummyElementToGetBaseStyles );
 
-            function copyStyle(source, target) {
-                if (source.cssText) target.cssText = source.cssText;
-                else copyProperties(source, target);
-
-                function copyProperties(source, target) {
-                    util.asArray(source).forEach(function (name) {
-                        target.setProperty(
-                            name,
-                            source.getPropertyValue(name),
-                            source.getPropertyPriority(name)
-                        );
-                    });
-                }
+            var defaultStyles = window.getComputedStyle( dummyElementToGetBaseStyles );
+            var elementStyles = window.getComputedStyle( sourceElement );
+            for(var styleProperty in elementStyles) {
+              // only clone styles that aren't default styles
+              if(
+                (elementStyles.hasOwnProperty(styleProperty)
+                  && defaultStyles[styleProperty] !== elementStyles[styleProperty])
+                || styleProperty.startsWith('font')
+              ) {
+                clonedElement.style.setProperty(
+                  styleProperty,
+                  elementStyles[styleProperty],
+                );
+              }
             }
+            dummyElementToGetBaseStyles.remove();
         }
 
         function clonePseudoElements() {
@@ -254,16 +254,16 @@ function cloneNode(node, filter, root) {
             });
 
             function clonePseudoElement(element) {
-                var style = window.getComputedStyle(original, element);
+                var style = window.getComputedStyle(sourceElement, element);
                 var content = style.getPropertyValue('content');
 
                 if (content === '' || content === 'none') return;
 
                 var className = util.uid();
-                clone.className = clone.className + ' ' + className;
+                clonedElement.className = clonedElement.className + ' ' + className;
                 var styleElement = document.createElement('style');
                 styleElement.appendChild(formatPseudoElementStyle(className, element, style));
-                clone.appendChild(styleElement);
+                clonedElement.appendChild(styleElement);
 
                 function formatPseudoElementStyle(className, element, style) {
                     var selector = '.' + className + ':' + element;
@@ -292,20 +292,20 @@ function cloneNode(node, filter, root) {
         }
 
         function copyUserInput() {
-            if (original instanceof HTMLTextAreaElement) clone.innerHTML = original.value;
-            if (original instanceof HTMLInputElement) clone.setAttribute("value", original.value);
+            if (sourceElement instanceof HTMLTextAreaElement) clonedElement.innerHTML = sourceElement.value;
+            if (sourceElement instanceof HTMLInputElement) clonedElement.setAttribute("value", sourceElement.value);
         }
 
         function fixSvg() {
-            if (!(clone instanceof SVGElement)) return;
-            clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+            if (!(clonedElement instanceof SVGElement)) return;
+            clonedElement.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
 
-            if (!(clone instanceof SVGRectElement)) return;
+            if (!(clonedElement instanceof SVGRectElement)) return;
             ['width', 'height'].forEach(function (attribute) {
-                var value = clone.getAttribute(attribute);
+                var value = clonedElement.getAttribute(attribute);
                 if (!value) return;
 
-                clone.style.setProperty(attribute, value);
+                clonedElement.style.setProperty(attribute, value);
             });
         }
     }
@@ -334,14 +334,31 @@ function makeSvgDataUri(node, width, height) {
             node.setAttribute('xmlns', 'http://www.w3.org/1999/xhtml');
             return new XMLSerializer().serializeToString(node);
         })
-        .then(util.escapeXhtml)
         .then(function (xhtml) {
             return '<foreignObject x="0" y="0" width="100%" height="100%">' + xhtml + '</foreignObject>';
         })
         .then(function (foreignObject) {
-            return '<svg xmlns="http://www.w3.org/2000/svg" width="' + width + '" height="' + height + '">' +
-                foreignObject + '</svg>';
+            const appStylesheet = Array.from(document.styleSheets).find(sheet => sheet.href.startsWith(window.location.origin));
+            const cssRules = Array.from(appStylesheet.cssRules)
+              .flatMap(cssRule => {
+                if (cssRule instanceof CSSKeyframeRule) return [];
+                return cssRule.cssText;
+              })
+              .join('\n');
+
+            return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}">
+              <style type="text/css">
+                <![CDATA[
+                  * {
+                    -webkit-font-smoothing: antialiased;
+                  }
+                  ${cssRules}
+                ]]>
+              </style>
+              ${foreignObject}
+            </svg>`;
         })
+        .then(util.escapeXhtml)
         .then(function (svg) {
             return 'data:image/svg+xml;charset=utf-8,' + svg;
         });
