@@ -1,5 +1,6 @@
 import querystring from 'querystring';
 import _ from 'lodash';
+import fileSaver from 'file-saver';
 import { format as formatDate, subDays, isWithinRange } from 'date-fns';
 import config from 'configs';
 import { setPackages } from '../packages/packages.js';
@@ -10,6 +11,7 @@ import fetchReposCommitsStats from 'frontend/src/home/fetchReposCommitStats';
 import fetchBundlesSizes from 'frontend/src/home/fetchBundlesSizes';
 import withRender from './home.html';
 import { downloadCsv } from './downloadCsv';
+import { domNodeToSvg, domNodeToPng } from '../utils/dom-to-image';
 
 const palette = config.palette;
 const presetComparisons = _.shuffle(config.presetComparisons);
@@ -170,6 +172,7 @@ export default withRender({
       shouldShowComments:
         window.innerWidth >= 1000 &&
         !JSON.parse(!!window.localStorage.getItem('shouldShowComments')),
+      exportStatus: null,
     };
   },
   computed: {
@@ -303,31 +306,61 @@ export default withRender({
     handleMouseLeaveTwitter() {
       clearTimeout(this.twitterEventTimeout);
     },
-    handleDownloadCsv(e) {
-      e.preventDefault();
+    handleDownloadRequest(e) {
       const packageNames = this.packageDownloadStats.map(x => x.name);
-      const moduleWithLongestHistory = _.maxBy(
-        this.packageDownloadStats,
-        x => x.entries.length,
-      );
-      var csv = [['Date', ...packageNames]]
-        .concat(
-          moduleWithLongestHistory.entries.map(({ day, downloads }) => {
-            return [day.toLocaleDateString()].concat(
-              this.packageDownloadStats
-                .map(
-                  packageDownloadStats =>
-                    packageDownloadStats.entries.find(
-                      x => x.day.toISOString() === day.toISOString(),
-                    ).count || '',
-                )
-                .join(','),
+      switch (e.target.value) {
+        case 'png':
+          this.exportStatus = 'exporting png';
+          setTimeout(() => {
+            domNodeToPng(this.$refs.graph.$el).then(dataUrl => {
+              fileSaver.saveAs(dataUrl, `${packageNames}.png`);
+              this.exportStatus = null;
+            });
+          });
+          break;
+        case 'svg':
+          this.exportStatus = 'exporting svg';
+          setTimeout(() => {
+            domNodeToSvg(this.$refs.graph.$el).then(dataUrl => {
+              fileSaver.saveAs(dataUrl, `${packageNames}.svg`);
+              this.exportStatus = null;
+            });
+          });
+          break;
+        case 'csv':
+          this.exportStatus = 'exporting csv';
+          setTimeout(() => {
+            const moduleWithLongestHistory = _.maxBy(
+              this.packageDownloadStats,
+              x => x.entries.length,
             );
-          }),
-        )
-        .join('\n');
-      this.track('download csv', packageNames);
-      downloadCsv(csv, `${packageNames}.csv`);
+            var csv = [['Date', ...packageNames]]
+              .concat(
+                moduleWithLongestHistory.entries.map(({ day, downloads }) => {
+                  return [day.toLocaleDateString()].concat(
+                    this.packageDownloadStats
+                      .map(
+                        packageDownloadStats =>
+                          packageDownloadStats.entries.find(
+                            x => x.day.toISOString() === day.toISOString(),
+                          ).count || '',
+                      )
+                      .join(','),
+                  );
+                }),
+              )
+              .join('\n');
+            this.track('download csv', packageNames);
+            downloadCsv(csv, `${packageNames}.csv`);
+            this.exportStatus = null;
+          });
+          break;
+        default:
+        case '':
+          this.exportStatus = null;
+          return;
+      }
+      e.target.value = '';
     },
     shuffle: _.shuffle,
   },
