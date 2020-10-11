@@ -338,7 +338,11 @@ function makeSvgDataUri(node, width, height) {
             return '<foreignObject x="0" y="0" width="100%" height="100%">' + xhtml + '</foreignObject>';
         })
         .then(function (foreignObject) {
-            const appStylesheet = Array.from(document.styleSheets).find(sheet => sheet.href.startsWith(window.location.origin));
+            const appStylesheet = Array.from(document.styleSheets)
+              .find(sheet => {
+                if (!sheet.href) return false;
+                return sheet.href.startsWith(window.location.origin) || sheet.href.startsWith('https://npmcharts.netlify.app')
+              });
             const cssRules = Array.from(appStylesheet.cssRules)
               .flatMap(cssRule => {
                 if (cssRule instanceof CSSKeyframeRule) return [];

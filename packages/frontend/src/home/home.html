@@ -98,16 +98,27 @@
           <input type="checkbox" :checked="useLogScale" /> log scale
         </router-link>
 
+
+        <select
+          aria-label="export chart as csv, svg, or png"
+          v-on:change="handleDownloadRequest"
+          v-bind:style="{marginLeft: 'auto', minWidth: '8em', textAlign: 'right'}"
+        >
+          <option disabled selected value="">{{ exportStatus ? exportStatus : 'export as ...' }}</option>
+          <option value="csv">csv</option>
+          <option value="svg">svg</option>
+          <option value="png">png</option>
+        </select>
+
         <router-link
           tag="button"
           class="minimal-mode"
+          v-bind:style="{marginLeft: '1em'}"
           :to="{ query: getMergedQueryParams({ minimal: 'true' })}"
           @click.native="track('enter-minimal-mode')"
           >enter minimal mode</router-link
         >
-        <button class="download-btn" v-on:click="handleDownloadCsv">
-          download csv
-        </button>
+
       </div>
     </form>
   </header>
