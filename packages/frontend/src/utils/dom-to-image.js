@@ -57,8 +57,8 @@ function toSvg(node, options) {
         .then(function (node) {
             return cloneNode(node, options.filter, true);
         })
-        .then(embedFonts)
-        .then(inlineImages)
+        // .then(embedFonts)
+        // .then(inlineImages)
         .then(applyOptions)
         .then(function (clone) {
             return makeSvgDataUri(clone,
