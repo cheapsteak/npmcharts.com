@@ -34,6 +34,8 @@ html(lang="en")
     meta(property="twitter:site" content="@npmcharts")
     meta(property="twitter:image" content=ogImage)
     meta(property="og:image" content=ogImage)
+    each url in prefetchUrls
+      link(rel="prefetch", href=url)
 
     link(rel="manifest", href="/manifest.json")
     if isEmbed

@@ -10,6 +10,7 @@ const getMinimalUrl = require('utils/getMinimalUrl');
 const shouldScreencapUrl = require('utils/shouldScreencapUrl');
 const getPackagesDownloadsDescriptions = require('utils/stats/getPackagesDownloadsDescription');
 const getPackgesFromUrl = require('utils/getPackagesFromUrl');
+const getPrefetchUrls = require('./prefetchUrls');
 
 // req.protocol is returning 'http' when it shouldn't
 const protocol = 'https';
@@ -26,6 +27,11 @@ const sendSPA = async function(req, res, next) {
         fullUrl.search ? fullUrl.search : ''
       }`
     : 'https://npmcharts.com/images/og-image-3.png';
+
+  const startDate = req.query.start ? req.query.start : 365;
+  const endDate = req.query.end ? req.query.end : 0;
+  const prefetchUrls = getPrefetchUrls(packages, startDate, endDate);
+
   const pageDescription = await getPackagesDownloadsDescriptions(packages);
 
   res.render('index', {
@@ -36,6 +42,7 @@ const sendSPA = async function(req, res, next) {
       format: 'json',
     })}`,
     ogImage,
+    prefetchUrls,
     isEmbed: !!req.query.minimal,
     canonicalUrl: `https://npmcharts.com${fullUrl.pathname}`,
     jsBundleSrc:

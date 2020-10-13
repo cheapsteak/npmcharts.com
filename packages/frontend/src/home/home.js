@@ -12,11 +12,10 @@ import fetchBundlesSizes from 'frontend/src/home/fetchBundlesSizes';
 import withRender from './home.html';
 import { downloadCsv } from './downloadCsv';
 import { domNodeToSvg, domNodeToPng } from '../utils/dom-to-image';
+import getPackageRequestPeriods from 'utils/getPackageRequestPeriods';
 
 const palette = config.palette;
 const presetComparisons = _.shuffle(config.presetComparisons);
-
-const maxRequestPeriod = 365; // ~1 year
 
 const {
   default: packageInput,
@@ -89,41 +88,33 @@ function mergePeriods(period0, period1) {
   return sumPackages;
 }
 
-function maxDate(a, b) {
-  return new Date(Math.max(a.getTime(), b.getTime()));
-}
-
 /**
  * @param names    {string} Package names
  * @param startDay {number} Start of period, 1 is yesterday
  * @param endDay   {number} End of period 0 is today
  * @returns {Promise<any>}
  */
-function getPackagesDownloadsOverPeriod(names, startDay, endDay) {
-  const requestPeriod = Math.min(maxRequestPeriod, startDay - endDay);
-  const requestEndDay = startDay - requestPeriod;
+async function getPackagesDownloadsOverPeriod(names, startDay, endDay) {
+  const requestPeriods = getPackageRequestPeriods(startDay, endDay);
+  const promises = requestPeriods.map(period => {
+    return getPackagesDownloads(names, {
+      startDate: period.startDate,
+      endDate: period.endDate,
+    });
+  });
+  const periods = await Promise.all(promises);
+  const mergedPeriod = periods.reduce(
+    (mergedPeriodsSoFar, currentPeriod, currentIndex) => {
+      if (currentIndex === 0) {
+        // Because the first period is used as init
+        return mergedPeriodsSoFar;
+      }
+      return mergePeriods(mergedPeriodsSoFar, currentPeriod);
+    },
+    periods[0],
+  );
 
-  const startStats = new Date(Date.UTC(2015, 1, 10));
-
-  let startDate = maxDate(startStats, subDays(new Date(), startDay));
-  let endDate = maxDate(startStats, subDays(new Date(), requestEndDay));
-
-  startDate = formatDate(startDate, 'YYYY-MM-DD', null, 'UTC');
-  endDate = formatDate(endDate, 'YYYY-MM-DD', null, 'UTC');
-
-  const period1 = getPackagesDownloads(names, { startDate, endDate });
-
-  if (requestEndDay > 0) {
-    const period2 = getPackagesDownloadsOverPeriod(
-      names,
-      startDay - requestPeriod - 1,
-      endDay,
-    );
-    return Promise.all([period1, period2]).then(res =>
-      mergePeriods(res[0], res[1]),
-    );
-  }
-  return period1;
+  return mergedPeriod;
 }
 
 export default withRender({
