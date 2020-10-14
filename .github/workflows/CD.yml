@@ -1,6 +1,8 @@
 name: CD
 
 on:
+  pull_request:
+    branches: [ '**' ]
   push:
     branches: [ '**' ]
 
