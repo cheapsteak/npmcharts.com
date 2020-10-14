@@ -5,10 +5,20 @@ const getPackageRequestPeriods = require('utils/getPackageRequestPeriods');
 function getPrefetchUrls(packageNames, start, end) {
   const requestPeriods = getPackageRequestPeriods(start, end);
 
-  // Need to partition into two because npmjs's api does not support retrieving data of scoped and unscoped packages in one request
-  const partitionedPackageNames = _partition(packageNames, isScopedPackageName);
+  // npmjs's api does not support retrieving data of >1 scoped packages (or mix of scoped and unscoped) in one request
+  const [scopedPackageNames, standardPackageNames] = _partition(
+    packageNames,
+    isScopedPackageName,
+  );
+  const requests = [
+    ...scopedPackageNames.map(scopedPackageName => [scopedPackageName]),
+    standardPackageNames,
+  ];
 
-  return partitionedPackageNames
+  return requests
+    .filter(packageNames => {
+      return packageNames.length > 0;
+    })
     .map(packageNames => {
       return requestPeriods.map(({ startDate, endDate }) => {
         return `https://api.npmjs.org/downloads/range/${startDate}:${endDate}/${packageNames.join(
