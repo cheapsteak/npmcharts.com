@@ -2426,6 +2426,22 @@
     source-map "^0.5.6"
     vue-template-es2015-compiler "^1.6.0"
 
+"@vue/component-compiler-utils@^3.1.0":
+  version "3.2.0"
+  resolved "https://upsidetravel.jfrog.io/upsidetravel/api/npm/npm-virtual/@vue/component-compiler-utils/-/component-compiler-utils-3.2.0.tgz#8f85182ceed28e9b3c75313de669f83166d11e5d"
+  integrity sha1-j4UYLO7Sjps8dTE95mn4MWbRHl0=
+  dependencies:
+    consolidate "^0.15.1"
+    hash-sum "^1.0.2"
+    lru-cache "^4.1.2"
+    merge-source-map "^1.1.0"
+    postcss "^7.0.14"
+    postcss-selector-parser "^6.0.2"
+    source-map "~0.6.1"
+    vue-template-es2015-compiler "^1.9.0"
+  optionalDependencies:
+    prettier "^1.18.2"
+
 "@webassemblyjs/ast@1.7.11":
   version "1.7.11"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.7.11.tgz#b988582cafbb2b095e8b556526f30c90d057cace"
@@ -4587,7 +4603,7 @@ chalk@^2.0.0, chalk@^2.0.1:
     escape-string-regexp "^1.0.5"
     supports-color "^5.2.0"
 
-chalk@^2.3.2:
+chalk@^2.3.2, chalk@^2.4.2:
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-2.4.2.tgz#cd42541677a54333cf541a49108c1432b44c9424"
   integrity sha512-Mti+f9lpJNcwF4tWV8/OrTTtF1gZi+f8FqlyAdouralcFWFQWF2+NgCHShjkCb+IFBLq9buZwE1xckQU4peSuQ==
@@ -5477,6 +5493,11 @@ css-what@2.1:
 cssesc@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/cssesc/-/cssesc-0.1.0.tgz#c814903e45623371a0477b40109aaafbeeaddbb4"
+
+cssesc@^3.0.0:
+  version "3.0.0"
+  resolved "https://upsidetravel.jfrog.io/upsidetravel/api/npm/npm-virtual/cssesc/-/cssesc-3.0.0.tgz#37741919903b868565e1c09ea747445cd18983ee"
+  integrity sha1-N3QZGZA7hoVl4cCep0dEXNGJg+4=
 
 cssom@0.3.x, "cssom@>= 0.3.2 < 0.4.0":
   version "0.3.2"
@@ -11734,6 +11755,16 @@ postcss-selector-parser@^3.1.1:
     indexes-of "^1.0.1"
     uniq "^1.0.1"
 
+postcss-selector-parser@^6.0.2:
+  version "6.0.4"
+  resolved "https://upsidetravel.jfrog.io/upsidetravel/api/npm/npm-virtual/postcss-selector-parser/-/postcss-selector-parser-6.0.4.tgz#56075a1380a04604c38b063ea7767a129af5c2b3"
+  integrity sha1-VgdaE4CgRgTDiwY+p3Z6Epr1wrM=
+  dependencies:
+    cssesc "^3.0.0"
+    indexes-of "^1.0.1"
+    uniq "^1.0.1"
+    util-deprecate "^1.0.2"
+
 postcss-value-parser@^3.3.0, postcss-value-parser@^3.3.1:
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/postcss-value-parser/-/postcss-value-parser-3.3.1.tgz#9ff822547e2893213cf1c30efa51ac5fd1ba8281"
@@ -11755,6 +11786,15 @@ postcss@^7.0.0, postcss@^7.0.6:
     source-map "^0.6.1"
     supports-color "^5.5.0"
 
+postcss@^7.0.14:
+  version "7.0.35"
+  resolved "https://upsidetravel.jfrog.io/upsidetravel/api/npm/npm-virtual/postcss/-/postcss-7.0.35.tgz#d2be00b998f7f211d8a276974079f2e92b970e24"
+  integrity sha1-0r4AuZj38hHYonaXQHny6SuXDiQ=
+  dependencies:
+    chalk "^2.4.2"
+    source-map "^0.6.1"
+    supports-color "^6.1.0"
+
 prelude-ls@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/prelude-ls/-/prelude-ls-1.1.2.tgz#21932a549f5e52ffd9a827f570e04be62a97da54"
@@ -11774,6 +11814,11 @@ prettier@1.13.7:
 prettier@^1.10.2:
   version "1.10.2"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.10.2.tgz#1af8356d1842276a99a5b5529c82dd9e9ad3cc93"
+
+prettier@^1.18.2:
+  version "1.19.1"
+  resolved "https://upsidetravel.jfrog.io/upsidetravel/api/npm/npm-virtual/prettier/-/prettier-1.19.1.tgz#f7d7f5ff8a9cd872a7be4ca142095956a60797cb"
+  integrity sha1-99f1/4qc2HKnvkyhQglZVqYHl8s=
 
 pretty-error@^2.0.2, pretty-error@^2.1.1:
   version "2.1.1"
@@ -15154,9 +15199,28 @@ vue-hot-reload-api@^2.3.0:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/vue-hot-reload-api/-/vue-hot-reload-api-2.3.1.tgz#b2d3d95402a811602380783ea4f566eb875569a2"
 
+vue-loader@15.9.3:
+  version "15.9.3"
+  resolved "https://upsidetravel.jfrog.io/upsidetravel/api/npm/npm-virtual/vue-loader/-/vue-loader-15.9.3.tgz#0de35d9e555d3ed53969516cac5ce25531299dda"
+  integrity sha1-DeNdnlVdPtU5aVFsrFziVTEpndo=
+  dependencies:
+    "@vue/component-compiler-utils" "^3.1.0"
+    hash-sum "^1.0.2"
+    loader-utils "^1.1.0"
+    vue-hot-reload-api "^2.3.0"
+    vue-style-loader "^4.1.0"
+
 vue-router@2:
   version "2.8.1"
   resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-2.8.1.tgz#9833c9ee57ac83beb0269056fefee71713f20695"
+
+vue-style-loader@4.1.2, vue-style-loader@^4.1.0:
+  version "4.1.2"
+  resolved "https://upsidetravel.jfrog.io/upsidetravel/api/npm/npm-virtual/vue-style-loader/-/vue-style-loader-4.1.2.tgz#dedf349806f25ceb4e64f3ad7c0a44fba735fcf8"
+  integrity sha1-3t80mAbyXOtOZPOtfApE+6c1/Pg=
+  dependencies:
+    hash-sum "^1.0.2"
+    loader-utils "^1.0.2"
 
 vue-template-compiler@2.6.12:
   version "2.6.12"
@@ -15169,6 +15233,11 @@ vue-template-compiler@2.6.12:
 vue-template-es2015-compiler@^1.6.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.6.0.tgz#dc42697133302ce3017524356a6c61b7b69b4a18"
+
+vue-template-es2015-compiler@^1.9.0:
+  version "1.9.1"
+  resolved "https://upsidetravel.jfrog.io/upsidetravel/api/npm/npm-virtual/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.9.1.tgz#1ee3bc9a16ecbf5118be334bb15f9c46f82f5825"
+  integrity sha1-HuO8mhbsv1EYvjNLsV+cRvgvWCU=
 
 vue-template-loader@1.1.0:
   version "1.1.0"

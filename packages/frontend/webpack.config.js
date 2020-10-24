@@ -5,6 +5,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const glob = require('glob');
 const TerserPlugin = require('terser-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 const outDir = path.resolve(__dirname, 'public');
 
@@ -37,55 +38,26 @@ module.exports = (env, opts) => {
     module: {
       rules: [
         {
-          oneOf: [
-            {
-              test: /\.html$/,
-              use: [
-                {
-                  loader: 'babel-loader',
-                  options: babelConfig,
-                },
-                {
-                  loader: 'vue-template-loader',
-                  options: {
-                    transformAssetUrls: {
-                      // The key should be an element name
-                      // The value should be an attribute name or an array of attribute names
-                      img: 'src',
-                    },
-                  },
-                },
-              ],
-            },
-            {
-              test: /\.js$/,
-              exclude: /node_modules/,
-              use: {
-                loader: 'babel-loader',
-                options: babelConfig,
-              },
-            },
-            {
-              test: /\.(styl|css)$/,
-              use: [
-                MiniCssExtractPlugin.loader,
-                'css-loader',
-                'stylus-loader',
-              ].filter(Boolean),
-            },
-            { test: /\.pug$/, loader: 'pug-loader' },
-            {
-              test: /\.svg$/,
-              loader: 'svg-inline-loader',
-            },
-            {
-              loader: require.resolve('file-loader'),
-              exclude: [/\.js$/, /\.html$/, /\.json$/],
-              options: {
-                name: 'static/media/[name].[hash:8].[ext]',
-              },
-            },
-          ],
+          test: /\.vue$/,
+          loader: 'vue-loader',
+        },
+        {
+          test: /\.(styl|css)$/,
+          exclude: /node_modules/,
+          loader: ['vue-style-loader', 'css-loader', 'stylus-loader'],
+        },
+        {
+          test: /\.js$/,
+          exclude: /node_modules/,
+          use: {
+            loader: 'babel-loader',
+            options: babelConfig,
+          },
+        },
+        { test: /\.pug$/, loader: 'pug-loader' },
+        {
+          test: /\.svg$/,
+          loader: 'svg-inline-loader',
         },
       ],
     },
@@ -133,6 +105,7 @@ module.exports = (env, opts) => {
         reportFilename: 'bundle-stats.html',
         openAnalyzer: false,
       }),
+      new VueLoaderPlugin(),
     ],
     // resolve: {
     //   alias: {

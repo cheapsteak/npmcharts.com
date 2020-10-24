@@ -1,4 +1,26 @@
-import withRender from './packages.html';
+<template>
+  <span>    
+  <input
+    class="package-input"
+    ref="textbox"
+    @keyup="validate"
+    @keyup.enter="handleEnter"
+    placeholder="enter a package name"
+    aria-label="package name"
+    autofocus
+  >
+  <button
+    class="add-package-btn"
+    :disabled="!isValid"
+    @click="handleClickSubmit($event)"
+  >
+    {{isUsingPresetComparisons ? 'set' : 'add'}}
+  </button>
+</span>
+</template>
+
+<script>
+
 export const packages = [];
 export const emitter = new (require('events')).EventEmitter();
 
@@ -17,7 +39,7 @@ export function setPackages(val, notify = true) {
   notify && emitter.emit('change');
 }
 
-export default withRender({
+export default {
   props: {
     onSubmit: Function,
     isUsingPresetComparisons: Boolean,
@@ -43,4 +65,6 @@ export default withRender({
       this.isValid = this.$refs.textbox.value.trim() !== '';
     },
   },
-});
+};
+
+</script>

@@ -1,9 +1,27 @@
+<template>
+  <div ref="chart" id="chart" class="with-3d-shadow with-transitions">
+  <graphLegend
+    v-if="packageDownloadStats.length && legendData"
+    :modules="legendData.modules"
+    :interval="interval"
+    :date="legendData.date"
+    @package-focus="handlePackageFocus"
+    @package-blur="handlePackageBlur"
+    @legend-blur="handleLegendBlur"
+    @legend-focus="handleLegendFocus"
+  >
+  </graphLegend>
+  <svg></svg>
+</div>
+
+</template>
+
+<script>
 import d3 from 'd3';
 import nv from 'nvd3';
 import _ from 'lodash';
 import { format as formatDate, startOfDay } from 'date-fns';
 import { line, curveCatmullRom } from 'd3-shape';
-import withRender from './graph.html';
 import { lineChart, xAccessor } from './chart/lineChart';
 
 const { palette } = require('configs');
@@ -47,7 +65,7 @@ const processEntriesMemo = _.memoize(processEntries, (...args) => {
   return JSON.stringify(args);
 });
 
-export default withRender({
+export default {
   props: {
     isMinimalMode: {
       type: Boolean,
@@ -262,6 +280,100 @@ export default withRender({
     },
   },
   components: {
-    graphLegend: require('./legend/legend').default,
+    graphLegend: require('./legend.vue').default,
   },
-});
+};
+
+</script>
+
+<style scoped>
+@import '../stylus/legend.styl'
+
+$lineColor = #f3f3f3;
+.nvd3 .nv-axis line
+  stroke: $lineColor;
+
+.nv-guideline
+  display: none
+.nvd3
+  .nv-axis.nv-x, .nv-axis.nv-y
+    path.domain
+      stroke-opacity: 0.3
+      stroke: #8398a9
+  .tick text
+    fill: #8398a9
+
+.nv-linesWrap path.nv-line
+  stroke-width: 2px
+
+.chart
+  .legend
+    position: absolute
+    left: 0
+    top: 10px
+    background-color: rgba(white, 0.7)
+    @media (min-width: $small)
+      left: 22px
+  .nv-context .nv-axis.nv-x text
+    @media (max-width: 550px)
+      display: none
+
+#chart
+  .nv-focus
+    .nv-point, .nv-line
+      transition: stroke-opacity 0.12s, fill-opacity 0.12s, stroke-width 0.12s;
+  .nv-focus
+    .nv-groups
+      &:not(.nv-groups--focused)
+        > .nv-group
+          .nv-line
+            stroke-opacity: 0.35 !important
+      &.nv-groups--focused
+        > .nv-group:not(.nv-series--focused)
+          .nv-line
+            stroke-opacity: 0.1 !important
+          .nv-point
+            fill-opacity: 0.1 !important
+        > .nv-series--focused
+          stroke-opacity: 0.35 !important
+          .nv-line
+            stroke-width: 2.5px
+    .nv-scatterWrap
+      .nv-point
+        &[releases]:not([releases=""])
+          // path
+          //   stroke: #ffffff
+          //   paint-order: stroke;
+          &.hover path
+            stroke: inherit
+            stroke-width: 5
+
+
+      .nv-point text
+        stroke-width: 0
+        fill: transparent
+        font-weight: bold
+        font-family monospace
+
+        paint-order: stroke;
+        stroke: #ffffff;
+        stroke-width: 3px;
+        stroke-linecap: butt;
+        stroke-linejoin: round;
+      .nv-point.hover text
+        fill: inherit
+      .nv-point:not(.hover)
+        stroke-width: 0
+        fill-opacity: 1
+
+  .nv-context
+    .nv-line > g > .nv-groups > .nv-group
+      stroke-opacity: 0.7 !important
+
+  .nvd3 .nv-brushBackground rect
+    stroke-opacity: 0.3
+  .nv-axisMaxMin
+    // for some reason the `showMaxMin` option is ignored when in minimal mode
+    display: none;
+
+</style>
