@@ -214,20 +214,12 @@
   </main>
   <footer>
     <div class="about">
-      <a
-        href="https://twitter.com/CheapSteak"
-        target="_blank"
+      <span
         class="created-by"
+        @click="handleClickContributor"
       >
-        Crafted in
-        <img
-          class="maple-leaf-icon"
-          src="/images/icon-maple-leaf.svg"
-          alt="Canada"
-          width="16"
-        />
-        by Chang Wang
-      </a>
+        Crafted in {{ contributorInfo.location }} by {{ contributorInfo.name }}
+      </span>
     </div>
     <div>
       <a
