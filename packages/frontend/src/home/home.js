@@ -13,6 +13,7 @@ import withRender from './home.html';
 import { downloadCsv } from './downloadCsv';
 import { domNodeToSvg, domNodeToPng } from '../utils/dom-to-image';
 import getPackageRequestPeriods from 'utils/getPackageRequestPeriods';
+import contributors from './contributors.json';
 
 const palette = config.palette;
 const presetComparisons = _.shuffle(config.presetComparisons);
@@ -86,6 +87,14 @@ function mergePeriods(period0, period1) {
   }
 
   return sumPackages;
+}
+
+/**
+ * Get a contributor from the list, randomly
+ */
+function getContributorRandom() {
+  const randomIndex = Math.floor(Math.random() * contributors.length);
+  return contributors[randomIndex];
 }
 
 /**
@@ -164,6 +173,7 @@ export default withRender({
         window.innerWidth >= 1000 &&
         !JSON.parse(!!window.localStorage.getItem('shouldShowComments')),
       exportStatus: null,
+      contributorInfo: getContributorRandom(),
     };
   },
   computed: {
@@ -354,6 +364,9 @@ export default withRender({
       e.target.value = '';
     },
     shuffle: _.shuffle,
+    handleClickContributor() {
+      this.contributorInfo = getContributorRandom();
+    },
   },
   components: {
     'package-input': packageInput,

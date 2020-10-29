@@ -231,6 +231,7 @@ footer
   padding: 1em 16px 0.5em
   display: flex
   justify-content: space-between
+  align-items: center
   color: #8D90A4
   .about
     font-size: 10px
@@ -238,7 +239,11 @@ footer
     .created-by
       color: inherit
       margin: 0
-      text-decoration: none
+      display: inline-block
+      cursor: pointer
+      width: 175px
+      @media (max-width: $small)
+        width: 125px
     .maple-leaf-icon
       width: 16px
       margin-bottom: -4px
@@ -248,10 +253,14 @@ footer
       opacity: 1
   .disclaimer
     font-size: 10px
+    text-align: right
   .repo-link
     opacity: 0.2
     transition: opacity 0.2s ease
     padding: 1em
+    display: flex
+    flex: 1
+    justify-content: center
     &:hover
       opacity: 0.6
   @media (max-width: $small)
