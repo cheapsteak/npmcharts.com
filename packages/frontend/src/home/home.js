@@ -369,6 +369,7 @@ export default withRender({
     shuffle: _.shuffle,
     handleClickContributor() {
       this.contributorInfo = getContributorRandom();
+      this.track('click contributor');
     },
   },
   components: {
