@@ -89,12 +89,15 @@ function mergePeriods(period0, period1) {
   return sumPackages;
 }
 
+let contributorCounter = 0;
+const shuffledContributorsList = _.shuffle(contributors);
 /**
  * Get a contributor from the list, randomly
  */
 function getContributorRandom() {
-  const randomIndex = Math.floor(Math.random() * contributors.length);
-  return contributors[randomIndex];
+  return shuffledContributorsList[
+    contributorCounter++ % shuffledContributorsList.length
+  ];
 }
 
 /**
