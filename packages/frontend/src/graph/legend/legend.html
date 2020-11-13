@@ -1,14 +1,13 @@
 <div
   class="legend"
 >
+  <div class="date" v-if="interval > 1">
+    {{formatInterval(date)}}
+  </div>
+  <div class="date" v-else>
+    {{date | formatDate('dddd MMMM Do, YYYY')}}
+  </div>
   <table class="modules">
-    <thead class="date" v-if="interval > 1">
-      <th class="" colspan="2">{{formatInterval(date)}}</th>
-    </thead>
-    <thead class="date" v-else>
-      <th class="package-downloads-heading">{{date | formatDate('dddd')}}</th>
-      <th class="package-name-heading">{{date | formatDate('MMMM Do, YYYY')}}</th>
-    </thead>
     <tbody
       @mouseEnter="handleMouseEnterLegend()"
       @mouseLeave="handleMouseLeaveLegend()"
@@ -22,14 +21,16 @@
         @mouseEnter="handleMouseEnterPackage(module.name)"
         @mouseLeave="handleMouseLeavePackage(module.name)"
       >
-        <td class="downloads">{{module.downloads.toLocaleString()}}</td>
         <td class="name-wrapper">
           <div class="name">
-            <div class="nub" role="presentation">
-              <div class="before" :style="{ backgroundColor: module.color }"></div>
-              <div class="after" :style="{ backgroundColor: module.color }"></div>
-            </div>
             {{module.name}}
+          </div>
+        </td>
+        <td class="downloads" style="min-width: 4.5em;">
+          {{module.downloads.toLocaleString()}}
+          <div class="nub" role="presentation">
+            <div class="before" :style="{ backgroundColor: module.color }"></div>
+            <div class="after" :style="{ backgroundColor: module.color }"></div>
           </div>
         </td>
       </tr>

@@ -3,13 +3,19 @@ $nubRadius = 7px
 .legend
   display: flex
   flex-direction: column
+  align-items: flex-start;
   padding: 10px
+  font-weight: 500
+  filter: drop-shadow(2px 2px 0px #fff) drop-shadow(-2px -2px 0px #fff) drop-shadow(2px -2px 0px #fff) drop-shadow(-2px 2px 0px #fff)
+  background-image: linear-gradient(to right, #ffffff1a, transparent);
+
+  font-size: 15px
   @media (max-width: 500px)
     font-size: 11px
   .date
     font-weight: 600
-    th:first-child
-      text-align: right
+    margin-bottom: 0.2em
+    padding-left: 0.2em
   .modules
     display: table  
     .module
@@ -32,11 +38,11 @@ $nubRadius = 7px
     .name-wrapper
       text-align: left
     .downloads
+      position: relative
       text-align: right
     .name
       position: relative
       display: inline-block
-      text-indent: $nubRadius + 3px
     .nub
       $nubRadius
       position: absolute
