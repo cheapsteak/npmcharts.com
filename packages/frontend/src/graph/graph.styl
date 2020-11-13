@@ -23,7 +23,11 @@ $lineColor = #f3f3f3;
     left: 0
     top: 10px
     @media (min-width: $small)
-      left: 22px
+      padding-left: 32px
+    @media (max-width: $small)
+      top: 0
+      padding-top: 0
+      padding-left: 14px
   .nv-context .nv-axis.nv-x text
     @media (max-width: 550px)
       display: none
