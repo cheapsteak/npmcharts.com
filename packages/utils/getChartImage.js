@@ -48,5 +48,6 @@ module.exports = async url => {
     return screenshot;
   } catch (e) {
     console.error('Error getting chart image', e);
+    throw e;
   }
 };
