@@ -1,4 +1,5 @@
 const _partition = require('lodash/partition');
+const _flatten = require('lodash/flatten');
 const isScopedPackageName = require('utils/isScopedPackageName');
 const getPackageRequestPeriods = require('utils/getPackageRequestPeriods');
 
@@ -15,18 +16,19 @@ function getPrefetchUrls(packageNames, start, end) {
     standardPackageNames,
   ];
 
-  return requests
-    .filter(packageNames => {
-      return packageNames.length > 0;
-    })
-    .map(packageNames => {
-      return requestPeriods.map(({ startDate, endDate }) => {
-        return `https://api.npmjs.org/downloads/range/${startDate}:${endDate}/${packageNames.join(
-          ',',
-        )}`;
-      });
-    })
-    .flat();
+  return _flatten(
+    requests
+      .filter(packageNames => {
+        return packageNames.length > 0;
+      })
+      .map(packageNames => {
+        return requestPeriods.map(({ startDate, endDate }) => {
+          return `https://api.npmjs.org/downloads/range/${startDate}:${endDate}/${packageNames.join(
+            ',',
+          )}`;
+        });
+      }),
+  );
 }
 
 module.exports = getPrefetchUrls;
