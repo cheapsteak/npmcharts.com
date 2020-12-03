@@ -7,7 +7,8 @@ module.exports = (packageNames, startDate, endDate) => {
   function fetchStats() {
     const baseUrl = baseApiUrls.shift();
     if (!baseUrl) {
-      throw new Error('Failed to download chart data.');
+      console.error(`Failed to fetch package stats for "${packageNames}"`);
+      return null;
     }
     const url = `${baseUrl}/downloads/range/${startDate}:${endDate}/${packageNamesParam}`;
     return fetch(url)

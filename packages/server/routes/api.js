@@ -18,6 +18,7 @@ router.get('/downloads*', async (req, res) => {
     return res.send((await cachios.get(proxiedPath)).data);
   } catch (exception) {
     console.error(exception);
+    res.status(exception.response.status).send(exception.response.data);
   }
 });
 
@@ -29,6 +30,7 @@ router.get('/npm-registry*', async (req, res) => {
     return res.send((await cachios.get(proxiedPath)).data.time);
   } catch (exception) {
     console.error(exception);
+    res.status(exception.response.status).send(exception.response.data);
   }
 });
 
