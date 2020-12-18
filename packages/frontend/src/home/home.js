@@ -157,7 +157,7 @@ export default withRender({
         this.$route.query.start ? this.$route.query.start : 365,
         this.$route.query.end ? this.$route.query.end : 0,
       ).then(response => {
-        this.packagesNpmMetadataResponse = response;
+        this.npmMetadataByPackageName = response;
         this.isLoadingNpmMetaData = false;
       });
     }
@@ -180,7 +180,7 @@ export default withRender({
 
       isLoadingNpmMetaData: true,
       shouldShowNpmMetaData: true,
-      packagesNpmMetadataResponse: null,
+      npmMetadataByPackageName: null,
 
       shouldFetchBundleSizes: true,
       palette,
@@ -199,7 +199,7 @@ export default withRender({
       return processPackagesStats(
         this.packagesDownloadStatsResponse,
         this.shouldShowVersionDates
-          ? this.packagesNpmMetadataResponse?.releaseDatesByVersion
+          ? this.npmMetadataByPackageName?.releaseDatesByVersion
           : null,
       );
     },
