@@ -22,12 +22,32 @@ router.get('/downloads*', async (req, res) => {
   }
 });
 
+// TODO: remove this once everything's using npm-metadata
 router.get('/npm-registry*', async (req, res) => {
   const reqPath = req.path.replace(/^\/npm-registry\//, '');
   console.log(reqPath);
   const proxiedPath = `https://registry.npmjs.org/${reqPath}`;
   try {
     return res.send((await cachios.get(proxiedPath)).data.time);
+  } catch (exception) {
+    console.error(exception);
+    res.status(exception.response.status).send(exception.response.data);
+  }
+});
+
+router.get('/npm-metadata*', async (req, res) => {
+  const reqPath = req.path.replace(/^\/npm-metadata\//, '');
+  const proxiedPath = `https://registry.npmjs.org/${reqPath}`;
+  try {
+    const npmRegistryData = (await cachios.get(proxiedPath)).data;
+    const latestVersionName = npmRegistryData['dist-tags'].latest;
+    const latestVersionData = npmRegistryData.versions[latestVersionName];
+    return res.send({
+      hasTypings: 'types' in latestVersionData,
+      latestVersion: latestVersionName,
+      description: latestVersionData.description,
+      releaseDatesByVersion: npmRegistryData.time,
+    });
   } catch (exception) {
     console.error(exception);
     res.status(exception.response.status).send(exception.response.data);
