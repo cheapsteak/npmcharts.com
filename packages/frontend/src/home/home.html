@@ -27,8 +27,8 @@
       <p
         class="sub-heading"
       >
-        <template v-if="!isLoadingVersionsDates && packageNames.length > 1">compare</template>
-        <template v-if="isLoadingVersionsDates">
+        <template v-if="!isLoadingNpmMetaData && packageNames.length > 1">compare</template>
+        <template v-if="isLoadingNpmMetaData">
           fetching package release dates..
         </template>
         <span

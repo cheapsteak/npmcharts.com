@@ -39,7 +39,7 @@ const getPackagesDownloadDataByNames = async (names, start, end) => {
   return operation;
 };
 
-const getPackagesReleaseDataByNames = async (
+const getPackagesMetaDataByNames = async (
   packageNames,
   startDaysOffset,
   endDaysOffset,
@@ -48,21 +48,30 @@ const getPackagesReleaseDataByNames = async (
   const endDate = subDays(Date.now(), endDaysOffset);
   const packageReleaseResponses = await Promise.all(
     packageNames.map(packageName =>
-      fetch(`/api/npm-registry/${packageName}`)
+      fetch(`/api/npm-metadata/${packageName}`)
         .then(response => response.json())
-        .then(versionDateMap => [
-          packageName,
-          _.invertBy(
-            _.omitBy(versionDateMap, (datePublished, versionName) => {
-              if (['created', 'modified'].includes(versionName)) return true;
-              if (!isWithinRange(datePublished, startDate, endDate))
-                return true;
-              if (versionName.includes('-')) return true;
-            }),
+        .then(metadata => {
+          const releaseDates = _.invertBy(
+            _.omitBy(
+              metadata.releaseDatesByVersion,
+              (datePublished, versionName) => {
+                if (['created', 'modified'].includes(versionName)) return true;
+                if (!isWithinRange(datePublished, startDate, endDate))
+                  return true;
+                if (versionName.includes('-')) return true;
+              },
+            ),
             datePublished =>
               formatDate(datePublished, 'YYYY-MM-DD', null, 'UTC'),
-          ),
-        ]),
+          );
+          return [
+            packageName,
+            {
+              releaseDates,
+              hasTypings: metadata.hasTypings,
+            },
+          ];
+        }),
     ),
   );
   return Object.fromEntries(packageReleaseResponses);
@@ -141,15 +150,15 @@ export default withRender({
       this.isLoadingDownloadStats = false;
     });
 
-    if (this.shouldShowVersionDates) {
-      this.isLoadingVersionsDates = true;
-      getPackagesReleaseDataByNames(
+    if (this.shouldShowNpmMetaData) {
+      this.isLoadingNpmMetaData = true;
+      getPackagesMetaDataByNames(
         this.packageNames,
         this.$route.query.start ? this.$route.query.start : 365,
         this.$route.query.end ? this.$route.query.end : 0,
-      ).then(packagesVersionsDatesResponse => {
-        this.packagesVersionsDatesResponse = packagesVersionsDatesResponse;
-        this.isLoadingVersionsDates = false;
+      ).then(response => {
+        this.packagesNpmMetadataResponse = response;
+        this.isLoadingNpmMetaData = false;
       });
     }
 
@@ -163,11 +172,16 @@ export default withRender({
       presetComparisons,
       samplePreset: [],
       packagesDownloadStatsResponse: null,
-      packagesVersionsDatesResponse: null,
+
       packagesBundleSizesResponse: null,
       isLoadingDownloadStats: true,
-      isLoadingVersionsDates: true,
+
       shouldShowVersionDates: true,
+
+      isLoadingNpmMetaData: true,
+      shouldShowNpmMetaData: true,
+      packagesNpmMetadataResponse: null,
+
       shouldFetchBundleSizes: true,
       palette,
       hoverCount: 0,
@@ -184,7 +198,9 @@ export default withRender({
       if (!this.packagesDownloadStatsResponse) return null;
       return processPackagesStats(
         this.packagesDownloadStatsResponse,
-        this.shouldShowVersionDates ? this.packagesVersionsDatesResponse : null,
+        this.shouldShowVersionDates
+          ? this.packagesNpmMetadataResponse?.releaseDatesByVersion
+          : null,
       );
     },
     shareUrl() {
