@@ -198,9 +198,7 @@ export default withRender({
       if (!this.packagesDownloadStatsResponse) return null;
       return processPackagesStats(
         this.packagesDownloadStatsResponse,
-        this.shouldShowVersionDates
-          ? this.npmMetadataByPackageName?.releaseDatesByVersion
-          : null,
+        this.shouldShowVersionDates ? this.npmMetadataByPackageName : null,
       );
     },
     shareUrl() {

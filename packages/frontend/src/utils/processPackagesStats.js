@@ -3,7 +3,7 @@ import { format as formatDate, startOfDay } from 'date-fns';
 
 export const processPackagesStats = (
   packagesDownloadStats,
-  packagesVersionsDates,
+  npmMetadataByPackageName,
 ) => {
   return packagesDownloadStats.flatMap(singlePackageDownloadStats => {
     if (!singlePackageDownloadStats) return [];
@@ -14,7 +14,7 @@ export const processPackagesStats = (
         day,
         count: npmModuleData.downloads,
         releases:
-          packagesVersionsDates?.[packageName]?.[
+          npmMetadataByPackageName?.[packageName]?.releaseDates[
             formatDate(day, 'YYYY-MM-DD', null, 'UTC')
           ] || [],
       };
