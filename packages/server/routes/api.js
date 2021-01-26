@@ -43,7 +43,8 @@ router.get('/npm-metadata*', async (req, res) => {
 
     return res.send({
       definitivelyTyped,
-      hasTypings: 'types' in latestVersionData,
+      hasTypings:
+        'types' in latestVersionData || 'typings' in latestVersionData,
       latestVersion: latestVersionName,
       description: latestVersionData.description,
       releaseDatesByVersion: npmRegistryData.time,
