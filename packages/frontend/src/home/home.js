@@ -69,6 +69,7 @@ const getPackagesMetaDataByNames = async (
             {
               releaseDates,
               hasTypings: metadata.hasTypings,
+              definitivelyTyped: metadata.definitivelyTyped,
             },
           ];
         }),
