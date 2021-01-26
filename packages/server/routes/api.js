@@ -24,12 +24,25 @@ router.get('/downloads*', async (req, res) => {
 
 router.get('/npm-metadata*', async (req, res) => {
   const reqPath = req.path.replace(/^\/npm-metadata\//, '');
-  const proxiedPath = `https://registry.npmjs.org/${reqPath}`;
   try {
-    const npmRegistryData = (await cachios.get(proxiedPath)).data;
+    const [
+      registryPackageResponse,
+      registryDefinitivelyTypedResponse,
+    ] = await Promise.all([
+      cachios.get(`https://registry.npmjs.org/${reqPath}`),
+      cachios.head(`https://registry.npmjs.org/@types/${reqPath}`, {
+        validateStatus: false,
+      }),
+    ]);
+
+    const npmRegistryData = registryPackageResponse.data;
+    const definitivelyTyped = registryDefinitivelyTypedResponse.status === 200;
+
     const latestVersionName = npmRegistryData['dist-tags'].latest;
     const latestVersionData = npmRegistryData.versions[latestVersionName];
+
     return res.send({
+      definitivelyTyped,
       hasTypings: 'types' in latestVersionData,
       latestVersion: latestVersionName,
       description: latestVersionData.description,
