@@ -35,6 +35,10 @@ export default withRender({
     submit(val) {
       this.onSubmit(this.$refs.textbox.value.trim());
       this.$refs.textbox.value = '';
+      this.$nextTick(() => {
+        // XXX: can't use `this.$refs.textbox.focus();` because that element is no longer in the dom
+        document.querySelector('input.package-input').focus();
+      });
     },
     handleEnter() {
       this.isValid && this.submit();
