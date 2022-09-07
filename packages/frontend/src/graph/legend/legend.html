@@ -9,8 +9,8 @@
   </div>
   <table class="modules">
     <tbody
-      @mouseEnter="handleMouseEnterLegend()"
-      @mouseLeave="handleMouseLeaveLegend()"
+      @mouseover="handleMouseEnterLegend()"
+      @mouseleave="handleMouseLeaveLegend()"
     >
       <tr
         class="module"
@@ -18,8 +18,8 @@
         track-by="name"
         :style="{color: module.color}"
         @click="removePackage(module.name)"
-        @mouseEnter="handleMouseEnterPackage(module.name)"
-        @mouseLeave="handleMouseLeavePackage(module.name)"
+        @mouseover="handleMouseEnterPackage(module.name)"
+        @mouseleave="handleMouseLeavePackage(module.name)"
       >
         <td class="name-wrapper">
           <div class="name">
