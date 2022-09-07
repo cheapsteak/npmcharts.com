@@ -53,10 +53,10 @@
   },
   "devDependencies": {
     "@babel/core": "*",
-    "@storybook/addon-actions": "^4.0.12",
-    "@storybook/addon-links": "^4.0.12",
-    "@storybook/addons": "^4.0.12",
-    "@storybook/vue": "^4.0.12",
+    "@storybook/addon-actions": "^6.5.10",
+    "@storybook/addon-links": "^6.5.10",
+    "@storybook/addons": "^6.5.10",
+    "@storybook/vue": "^6.5.10",
     "babel-preset-vue": "^2.0.2",
     "browser-sync": "^2.7.2",
     "browserify": "^10.2.1",
@@ -64,7 +64,7 @@
     "debug": "^3.1.0",
     "npm-run-all": "^4.0.2",
     "regenerator-runtime": "^0.12.1",
-    "storybook-chromatic": "1.2.1"
+    "chromatic": "6.9.0"
   },
   "prettier": {
     "trailingComma": "all",
