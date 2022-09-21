@@ -58,7 +58,6 @@ const getPackagesMetaDataByNames = async (
                 if (['created', 'modified'].includes(versionName)) return true;
                 if (!isWithinRange(datePublished, startDate, endDate))
                   return true;
-                if (versionName.includes('-')) return true;
               },
             ),
             datePublished =>
