@@ -43,7 +43,7 @@
             v-bind:title="'Visit https://www.npmjs.com/package/'+moduleName"
             :href="'https://www.npmjs.com/package/'+moduleName"
             target="_blank"
-            vv-bind:style="{color: npmMetadataByPackageName[moduleName].hasTypings ? '#3178c6' : ''}"
+            v-bind:style="{color: npmMetadataByPackageName[moduleName].hasTypings ? '#3178c6' : ''}"
           >{{ moduleName }}</a>
 
           <svg v-if="npmMetadataByPackageName[moduleName].hasTypings"
@@ -81,7 +81,7 @@
             target="_blank"
             style="margin-left: 2px;"
           >
-            ({{ packagesBundleSizesResponse[moduleName]["gzip"] }} gzipped)</small>
+            ({{ packagesBundleSizesResponse[moduleName]["gzip"] }} gzipped)
           </a>
         </span>
       </p>
