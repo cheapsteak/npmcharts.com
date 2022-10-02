@@ -245,7 +245,7 @@ export default withRender({
     },
   },
   watch: {
-    isMinimalMode(isMinimalMode, prevIsMinimalMode) {
+    isMinimalMode(isMinimalMode) {
       console.log('watch isMinimalMode');
       if (isMinimalMode) {
         document.body.classList.add('minimal');
@@ -354,7 +354,7 @@ export default withRender({
             );
             var csv = [['Date', ...packageNames]]
               .concat(
-                moduleWithLongestHistory.entries.map(({ day, downloads }) => {
+                moduleWithLongestHistory.entries.map(({ day }) => {
                   return [day.toLocaleDateString()].concat(
                     this.packageDownloadStats
                       .map(
