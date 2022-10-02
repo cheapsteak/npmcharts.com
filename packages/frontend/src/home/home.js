@@ -204,7 +204,7 @@ export default withRender({
     shareUrl() {
       return (
         this.packageNames &&
-        `http://npmcharts.com/compare/${this.packageNames.join(',')}`
+        `https://npmcharts.com/compare/${this.packageNames.join(',')}`
       );
     },
     twitterShareUrl() {
