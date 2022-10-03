@@ -1,7 +1,6 @@
 import Vue from 'vue';
-import 'storybook-chromatic';
+import 'chromatic';
 import { configure } from '@storybook/vue';
-
 
 import { format as formatDate } from 'date-fns';
 
