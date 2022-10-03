@@ -38,7 +38,7 @@ jobs:
         node-version: '12.x'
 
     - name: Set node version env var
-      run: echo ::set-env name=NODE_VERSION::$(node --version)
+      run: echo "NODE_VERSION=$(node --version)" >> $GITHUB_ENV
 
     - uses: actions/cache@v1
       id: cache-dependencies
