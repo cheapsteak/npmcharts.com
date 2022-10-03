@@ -35,7 +35,7 @@ jobs:
     - name: Use Node.js
       uses: actions/setup-node@v1
       with:
-        node-version: '12.x'
+        node-version: '16.x'
 
     - name: Set node version env var
       run: echo "NODE_VERSION=$(node --version)" >> $GITHUB_ENV
@@ -49,7 +49,7 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-yarn-
 
-    - name: Install
+    - name: Install dependencies
       if: steps.cache-dependencies.outputs.cache-hit != 'true'
       run: yarn --frozen-lockfile
 
