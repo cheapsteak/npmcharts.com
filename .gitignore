@@ -8,3 +8,4 @@ npm-debug.log*
 screenshots/*
 storybook-static
 yarn-error.log
+build-storybook.log
