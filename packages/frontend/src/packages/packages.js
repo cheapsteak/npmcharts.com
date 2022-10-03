@@ -32,7 +32,7 @@ export default withRender({
       e && e.preventDefault() && e.stopPropagation();
       this.submit();
     },
-    submit(val) {
+    submit() {
       this.onSubmit(this.$refs.textbox.value.trim());
       this.$refs.textbox.value = '';
       this.$nextTick(() => {
