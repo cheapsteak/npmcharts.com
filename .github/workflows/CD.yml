@@ -68,7 +68,7 @@ jobs:
       run: echo "::set-output name=branch_name_escaped::$(git rev-parse --abbrev-ref HEAD | tr '/' '-')"
 
     - name: Deploy Artifacts to GCP
-      uses: actions-hub/gcloud@289.0.0
+      uses: actions-hub/gcloud@master
       env:
         PROJECT_ID: npmcharts-210003
         APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
