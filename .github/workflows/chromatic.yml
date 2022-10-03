@@ -34,9 +34,6 @@ jobs:
         if: steps.cache-dependencies.outputs.cache-hit != 'true'
         run: yarn --frozen-lockfile
 
-      - name: Install dependencies
-        run: yarn
-
       - name: Publish to Chromatic
         uses: chromaui/action@v1
         with:
