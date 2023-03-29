@@ -17,10 +17,14 @@
         v-for="module in sortedModules"
         track-by="name"
         :style="{color: module.color}"
-        @click="removePackage(module.name)"
         @mouseover="handleMouseEnterPackage(module.name)"
         @mouseleave="handleMouseLeavePackage(module.name)"
       >
+        <td class="actions">
+          <button class="remove-entry-button" @click="removePackage(module.name)" :title="`remove '${module.name}' from comparison`">
+            <div class="nub" :style="{ '--module-color': module.color }"></div>
+          </button>
+        </td>
         <td class="name-wrapper">
           <div class="name">
             {{module.name}}
@@ -28,10 +32,6 @@
         </td>
         <td class="downloads" style="min-width: 4.5em;">
           {{module.downloads.toLocaleString()}}
-          <div class="nub" role="presentation">
-            <div class="before" :style="{ backgroundColor: module.color }"></div>
-            <div class="after" :style="{ backgroundColor: module.color }"></div>
-          </div>
         </td>
       </tr>
     </tbody>
