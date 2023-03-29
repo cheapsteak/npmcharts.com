@@ -73,8 +73,9 @@ module.exports = (env, opts) => {
             {
               test: /\.(styl|css)$/,
               use: [
-                MiniCssExtractPlugin.loader,
-                'vue-style-loader',
+                options.mode === 'production'
+                  ? MiniCssExtractPlugin.loader
+                  : 'vue-style-loader',
                 'css-loader',
                 'stylus-loader',
               ].filter(Boolean),
