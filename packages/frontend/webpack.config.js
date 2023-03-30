@@ -39,26 +39,21 @@ module.exports = (env, opts) => {
       rules: [
         {
           test: /\.vue$/,
+          include: path.resolve(__dirname, 'srcs'),
           loader: 'vue-loader',
         },
         {
           oneOf: [
+            {
+              test: /\.vue$/,
+              loader: 'vue-loader',
+            },
             {
               test: /\.html$/,
               use: [
                 {
                   loader: 'babel-loader',
                   options: babelConfig,
-                },
-                {
-                  loader: 'vue-template-loader',
-                  options: {
-                    transformAssetUrls: {
-                      // The key should be an element name
-                      // The value should be an attribute name or an array of attribute names
-                      img: 'src',
-                    },
-                  },
                 },
               ],
             },
