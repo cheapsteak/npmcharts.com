@@ -1,0 +1,676 @@
+<template>
+<!-- this div is only here because vue 2 doesn't support multiple root elements -->
+<div
+  id="home"
+  class="opaque-once-stylesheet-loads"
+  style="opacity: 0; --typescript-blue: #3178c6b4;"
+>
+  <header
+    class="page-header"
+    :class="{
+    loading: isLoadingDownloadStats,
+  }"
+  >
+    <h1 class="heading">
+      <router-link
+        v-if="!isEmbedded"
+        href="/"
+        class="identity"
+        to="/"
+        title="npmcharts"
+      >
+        <img src="/images/logo.svg" width="190" alt="npmcharts" />
+      </router-link>
+      <a
+        v-else
+        :href=" $route.params.packages ? '/compare/' + $route.params.packages : '/' "
+        class="identity"
+        title="npmcharts"
+      >
+        <img src="/images/logo.svg" width="190" alt="npmcharts" />
+      </a>
+      <p
+        class="sub-heading"
+      >
+        <template v-if="!isLoadingNpmMetaData && packageNames.length > 1">compare</template>
+        <template v-if="isLoadingNpmMetaData">
+          fetching package release dates..
+        </template>
+        <span
+          v-else
+          class="package-entry" v-for="moduleName in packageNames">
+          <a
+            class="package-name"
+            v-bind:title="'Visit https://www.npmjs.com/package/'+moduleName"
+            :href="'https://www.npmjs.com/package/'+moduleName"
+            target="_blank"
+            v-bind:style="{color: npmMetadataByPackageName[moduleName].hasTypings ? '#3178c6' : ''}"
+          >{{ moduleName }}</a>
+
+          <svg v-if="npmMetadataByPackageName[moduleName].hasTypings"
+            style="margin-left: 3px; width: 13px; height: auto;"
+            fill="none" width="12" height="12" viewBox="0 0 27 26" xmlns="http://www.w3.org/2000/svg">
+            <path fill="var(--typescript-blue)" fill-rule="evenodd" clip-rule="evenodd" d="m.98608 0h24.32332c.5446 0 .9861.436522.9861.975v24.05c0 .5385-.4415.975-.9861.975h-24.32332c-.544597 0-.98608-.4365-.98608-.975v-24.05c0-.538478.441483-.975.98608-.975zm13.63142 13.8324v-2.1324h-9.35841v2.1324h3.34111v9.4946h2.6598v-9.4946zm1.0604 9.2439c.4289.2162.9362.3784 1.5218.4865.5857.1081 1.2029.1622 1.8518.1622.6324 0 1.2331-.0595 1.8023-.1784.5691-.1189 1.0681-.3149 1.497-.5879s.7685-.6297 1.0187-1.0703.3753-.9852.3753-1.6339c0-.4703-.0715-.8824-.2145-1.2365-.1429-.3541-.3491-.669-.6186-.9447-.2694-.2757-.5925-.523-.9692-.7419s-.8014-.4257-1.2743-.6203c-.3465-.1406-.6572-.2771-.9321-.4095-.275-.1324-.5087-.2676-.7011-.4054-.1925-.1379-.3409-.2838-.4454-.4379-.1045-.154-.1567-.3284-.1567-.523 0-.1784.0467-.3392.1402-.4824.0935-.1433.2254-.2663.3959-.369s.3794-.1824.6269-.2392c.2474-.0567.5224-.0851.8248-.0851.22 0 .4523.0162.697.0486.2447.0325.4908.0825.7382.15.2475.0676.4881.1527.7218.2555.2337.1027.4495.2216.6475.3567v-2.4244c-.4015-.1514-.84-.2636-1.3157-.3365-.4756-.073-1.0214-.1095-1.6373-.1095-.6268 0-1.2207.0662-1.7816.1987-.5609.1324-1.0544.3392-1.4806.6203s-.763.6392-1.0104 1.0743c-.2475.4352-.3712.9555-.3712 1.5609 0 .7731.2268 1.4326.6805 1.9785.4537.546 1.1424 1.0082 2.0662 1.3866.363.146.7011.2892 1.0146.4298.3134.1405.5842.2865.8124.4378.2282.1514.4083.3162.5403.4946s.198.3811.198.6082c0 .1676-.0413.323-.1238.4662-.0825.1433-.2076.2676-.3753.373s-.3766.1879-.6268.2473c-.2502.0595-.5431.0892-.8785.0892-.5719 0-1.1383-.0986-1.6992-.2959-.5608-.1973-1.0805-.4933-1.5589-.8879z"></path>
+          </svg>
+
+          <a
+            v-else-if="npmMetadataByPackageName[moduleName].definitivelyTyped"
+            target="_blank"
+            rel="noopener noreferrer"
+            :href="'https://www.npmjs.com/package/@types/'+moduleName"
+            title="@types/react-google-recaptcha provides TypeScript declarations for this package"
+            style="
+              margin-left: 3px;
+              padding-left: 1px;
+              font-size: 8px;
+              font-weight: 600;
+              height: 11px;
+              width: 11px;
+              border: 1px solid var(--typescript-blue);
+              color: var(--typescript-blue);
+              display: inline-block;
+              "
+            >
+            <span style="display: inline-block; transform: translateY(3px);">DT</span>
+          </a>
+
+          <a
+            v-if="packagesBundleSizesResponse && packagesBundleSizesResponse[moduleName]"
+            class="package-size"
+            title="Inspect bundlesize on bundlephobia"
+            :href="`https://bundlephobia.com/result?p=${moduleName}`"
+            target="_blank"
+            style="margin-left: 2px;"
+          >
+            ({{ packagesBundleSizesResponse[moduleName]["gzip"] }} gzipped)
+          </a>
+        </span>
+      </p>
+
+    </h1>
+    <form class="header-controls-wrapper">
+      <package-input
+        class="package-input"
+        :on-submit="addPackage"
+        :is-using-preset-packages="isUsingPresetComparisons"
+      ></package-input>
+      <div class="graph-config">
+        <!--
+      <label class="include-item" @change="track(showWeekends ? 'show-weekends' : 'hide-weekends')"><input type="checkbox" v-model="showWeekends"/>include weekends</label>
+      -->
+
+        <router-link
+          tag="label"
+          v-if="packageNames"
+          :to="{ path: '/compare/' + packageNames.join(','), query: getMergedQueryParams({interval: 1})}"
+          @click.native="track('set interval', interval)"
+        >
+          <input type="radio" :checked="interval === 1" /> daily
+        </router-link>
+        <router-link
+          tag="label"
+          v-if="packageNames"
+          :to="{ path: '/compare/' + packageNames.join(',') + '?', query: getMergedQueryParams({interval: 7})}"
+          @click.native="track('set interval', interval)"
+        >
+          <input type="radio" :checked="interval === 7" /> weekly
+        </router-link>
+        <router-link
+          tag="label"
+          v-if="packageNames"
+          :to="{ path: '/compare/' + packageNames.join(',') + '?', query: getMergedQueryParams({interval: 30})}"
+          @click.native="track('set interval', interval)"
+        >
+          <input type="radio" :checked="interval === 30" /> monthly
+        </router-link>
+
+        <router-link
+          tag="label"
+          :to="{ query: getMergedQueryParams({ log: !useLogScale }) }"
+          @click.native="track('set scale', !useLogScale)"
+          style="margin-left: 2em;"
+        >
+          <input type="checkbox" :checked="useLogScale" /> log scale
+        </router-link>
+
+
+        <select
+          aria-label="export chart as csv, svg, or png"
+          v-on:change="handleDownloadRequest"
+          v-bind:style="{marginLeft: 'auto', minWidth: '8em', textAlign: 'right'}"
+        >
+          <option disabled selected value="">{{ exportStatus ? exportStatus : 'export as ...' }}</option>
+          <option value="csv">csv</option>
+          <option value="svg">svg</option>
+          <option value="png">png</option>
+        </select>
+
+        <router-link
+          tag="button"
+          class="minimal-mode"
+          v-bind:style="{marginLeft: '1em'}"
+          :to="{ query: getMergedQueryParams({ minimal: 'true' })}"
+          @click.native="track('enter-minimal-mode')"
+          >enter minimal mode</router-link
+        >
+
+      </div>
+    </form>
+  </header>
+  <main
+    :class="{
+  loading: isLoadingDownloadStats,
+}"
+  >
+    <div class="chart-container">
+      <div class="sample-matches">
+        <span
+          class="tweet-this-chart"
+          @click="handleClickTwitter"
+          @mouseenter="handleMouseEnterTwitter"
+          @mouseleave="handleMouseLeaveTwitter"
+          style="
+            color: #1da1f2;
+            font-size: 11px;
+            font-weight: 500;
+            display: inline-block;
+            padding: 4px 8px;
+            margin-left: -4px;
+          "
+        >
+          <i
+            v-html="twitterIcon"
+            aria-label="tweet"
+            style="
+              width: 12px;
+              height: auto;
+              display: inline-block;
+            "
+          ></i>
+          this chart
+        </span>
+        <div class="caption">or check out</div>
+
+        <router-link
+          v-for="packages in presetComparisons"
+          :to="'/compare/' + packages.join(',') + '?' + queryString"
+          @click.native="track('click-preset', packages.join(','))"
+          class="match"
+          :key="packages.join(',')"
+        >
+          <template v-for="(packageItem, index) in packages">
+            <span class="vs" v-if="index !==0" :key="packageItem + 'vs'"
+              >, </span
+            ><span
+              :key="packageItem"
+              class="package-name"
+              :style="{
+                color: packageNames && packageNames.indexOf(packageItem) > -1 ? palette[packageNames.indexOf(packageItem) % palette.length] : ''
+              }"
+              >{{packageItem}}</span
+            >
+          </template>
+        </router-link>
+      </div>
+      <graph
+        class="chart"
+        v-if="!isLoadingDownloadStats"
+        ref="graph"
+        :module-names="packageNames"
+        :package-download-stats="packageDownloadStats"
+        :interval="interval"
+        :is-minimal-mode="isMinimalMode === 'true'"
+        :useLogScale="useLogScale"
+      >
+      </graph>
+      <div class="no-packages-selected" v-if="!packageDownloadStats && !isLoadingDownloadStats">
+        <p>No packages selected.</p>
+        <p>
+          Why not try
+          <router-link
+            tag="span"
+            class="match"
+            :to="'/compare/' + samplePreset.join(',')"
+          >
+            <template v-for="(packageItem, index) in samplePreset">
+              <span class="vs" v-if="index !==0"> vs </span
+              ><span
+                class="package-name"
+                :style="{
+                color: palette[index % palette.length]
+              }"
+                >{{packageItem}}</span
+              >
+            </template> </router-link
+          >?
+        </p>
+      </div>
+    </div>
+  </main>
+  <footer>
+    <div class="about">
+      <span
+        class="created-by"
+        @click="handleClickContributor"
+      >
+        Crafted in {{ contributorInfo.location }} by {{ contributorInfo.name }}
+      </span>
+    </div>
+    <div>
+      <a
+        class="repo-link"
+        href="https://github.com/cheapsteak/npmcharts.com/"
+        target="_blank"
+        title="Github Repo, star, fork, do what you will 😄"
+      >
+        <img src="/images/icon-github.svg" alt="Github Repo" width="16" />
+      </a>
+    </div>
+    <small class="disclaimer">npm is a trademark of npm, Inc.</small>
+  </footer>
+</div>
+
+</template>
+
+<script>
+import querystring from 'querystring';
+import _ from 'lodash';
+import fileSaver from 'file-saver';
+import { format as formatDate, subDays, isWithinRange } from 'date-fns';
+import config from 'configs';
+import { setPackages } from '../packages/packages.js';
+import { processPackagesStats } from 'frontend/src/utils/processPackagesStats';
+import getPackagesDownloads from 'utils/stats/getPackagesDownloads';
+import isPackageName from 'utils/isPackageName';
+import fetchReposCommitsStats from 'frontend/src/home/fetchReposCommitStats';
+import fetchBundlesSizes from 'frontend/src/home/fetchBundlesSizes';
+
+import { downloadCsv } from './downloadCsv';
+import { domNodeToSvg, domNodeToPng } from '../utils/dom-to-image';
+import getPackageRequestPeriods from 'utils/getPackageRequestPeriods';
+import contributors from './contributors.json';
+
+const palette = config.palette;
+const presetComparisons = _.shuffle(config.presetComparisons);
+
+const {
+  default: packageInput,
+  emitter: packageEvents,
+  packages,
+} = require('../packages/packages');
+
+const getPackagesDownloadDataByNames = async (names, start, end) => {
+  setTimeout(() => ga('send', 'pageview'));
+
+  // set notify to false to prevent triggering route change
+  setPackages(names, false);
+
+  const operation = _.every(names, isPackageName)
+    ? // names are npm packages
+      getPackagesDownloadsOverPeriod(names, start, end)
+    : // names are github repo names
+      fetchReposCommitsStats(names);
+
+  return operation;
+};
+
+const getPackagesMetaDataByNames = async (
+  packageNames,
+  startDaysOffset,
+  endDaysOffset,
+) => {
+  const startDate = subDays(Date.now(), startDaysOffset);
+  const endDate = subDays(Date.now(), endDaysOffset);
+  const packageReleaseResponses = await Promise.all(
+    packageNames.map(packageName =>
+      fetch(`/api/npm-metadata/${packageName}`)
+        .then(response => response.json())
+        .then(metadata => {
+          const releaseDates = _.invertBy(
+            _.omitBy(
+              metadata.releaseDatesByVersion,
+              (datePublished, versionName) => {
+                if (['created', 'modified'].includes(versionName)) return true;
+                if (!isWithinRange(datePublished, startDate, endDate))
+                  return true;
+              },
+            ),
+            datePublished =>
+              formatDate(datePublished, 'YYYY-MM-DD', null, 'UTC'),
+          );
+          return [
+            packageName,
+            {
+              releaseDates,
+              hasTypings: metadata.hasTypings,
+              definitivelyTyped: metadata.definitivelyTyped,
+            },
+          ];
+        }),
+    ),
+  );
+  return Object.fromEntries(packageReleaseResponses);
+};
+
+/**
+ * Merge 2 statistic periods
+ * @param period0 Period before period1
+ * @param period1 Period after period0
+ * @returns The merged period
+ */
+function mergePeriods(period0, period1) {
+  const sumPackages = [];
+
+  for (let p = 0; p < period0.length; ++p) {
+    sumPackages.push({
+      downloads: period0[p].downloads.concat(period1[p].downloads),
+      package: period0[p].package,
+      start: period0[p].start,
+      end: period1[p].end,
+    });
+  }
+
+  return sumPackages;
+}
+
+let contributorCounter = 0;
+const shuffledContributorsList = _.shuffle(contributors);
+/**
+ * Get a contributor from the list, randomly
+ */
+function getContributorRandom() {
+  return shuffledContributorsList[
+    contributorCounter++ % shuffledContributorsList.length
+  ];
+}
+
+/**
+ * @param names    {string} Package names
+ * @param startDay {number} Start of period, 1 is yesterday
+ * @param endDay   {number} End of period 0 is today
+ * @returns {Promise<any>}
+ */
+async function getPackagesDownloadsOverPeriod(names, startDay, endDay) {
+  const requestPeriods = getPackageRequestPeriods(startDay, endDay);
+  const promises = requestPeriods.map(period => {
+    return getPackagesDownloads(names, {
+      startDate: period.startDate,
+      endDate: period.endDate,
+    });
+  });
+  const periods = await Promise.all(promises);
+  const mergedPeriod = periods.reduce(
+    (mergedPeriodsSoFar, currentPeriod, currentIndex) => {
+      if (currentIndex === 0) {
+        // Because the first period is used as init
+        return mergedPeriodsSoFar;
+      }
+      return mergePeriods(mergedPeriodsSoFar, currentPeriod);
+    },
+    periods[0],
+  );
+
+  return mergedPeriod;
+}
+
+export default {
+  created() {
+    this.isLoadingDownloadStats = true;
+    getPackagesDownloadDataByNames(
+      this.packageNames,
+      this.$route.query.start ? this.$route.query.start : 365,
+      this.$route.query.end ? this.$route.query.end : 0,
+    ).then(packagesDownloadStatsResponse => {
+      this.packagesDownloadStatsResponse = packagesDownloadStatsResponse;
+      this.isLoadingDownloadStats = false;
+    });
+
+    if (this.shouldShowNpmMetaData) {
+      this.isLoadingNpmMetaData = true;
+      getPackagesMetaDataByNames(
+        this.packageNames,
+        this.$route.query.start ? this.$route.query.start : 365,
+        this.$route.query.end ? this.$route.query.end : 0,
+      ).then(response => {
+        this.npmMetadataByPackageName = response;
+        this.isLoadingNpmMetaData = false;
+      });
+    }
+
+    if (this.shouldFetchBundleSizes) {
+      this.packagesBundleSizesResponse = fetchBundlesSizes(this.packageNames);
+    }
+  },
+  // render: withRender.default,
+  data() {
+    return {
+      presetComparisons,
+      samplePreset: [],
+      packagesDownloadStatsResponse: null,
+
+      packagesBundleSizesResponse: null,
+      isLoadingDownloadStats: true,
+
+      shouldShowVersionDates: true,
+
+      isLoadingNpmMetaData: true,
+      shouldShowNpmMetaData: true,
+      npmMetadataByPackageName: null,
+
+      shouldFetchBundleSizes: true,
+      palette,
+      hoverCount: 0,
+      twitterIcon: require('../assets/images/icon-twitter.svg'),
+      shouldShowComments:
+        window.innerWidth >= 1000 &&
+        !JSON.parse(!!window.localStorage.getItem('shouldShowComments')),
+      exportStatus: null,
+      contributorInfo: getContributorRandom(),
+    };
+  },
+  computed: {
+    packageDownloadStats() {
+      if (!this.packagesDownloadStatsResponse) return null;
+      return processPackagesStats(
+        this.packagesDownloadStatsResponse,
+        this.shouldShowVersionDates ? this.npmMetadataByPackageName : null,
+      );
+    },
+    shareUrl() {
+      return (
+        this.packageNames &&
+        `https://npmcharts.com/compare/${this.packageNames.join(',')}`
+      );
+    },
+    twitterShareUrl() {
+      return (
+        this.shareUrl &&
+        `https://twitter.com/intent/tweet?url=${window.encodeURIComponent(
+          this.shareUrl,
+        )}`
+      );
+    },
+    isEmbedded() {
+      return this.isMinimalMode;
+    },
+    queryString() {
+      return querystring.stringify(this.$route.query);
+    },
+    interval() {
+      return Number(
+        this.$route.query.interval || this.$route.query.periodLength || 7,
+      );
+    },
+    isUsingPresetComparisons() {
+      return !this.$route.params.packages;
+    },
+    packageNames() {
+      const packageNames = this.isUsingPresetComparisons
+        ? _.sample(presetComparisons)
+        : this.$route.params.packages
+            .split(',')
+            .map(packageName => window.decodeURIComponent(packageName));
+      return packageNames;
+    },
+    isMinimalMode() {
+      return this.$route.query.minimal === 'true';
+    },
+    useLogScale() {
+      return this.$route.query.log === 'true' || this.$route.query.log === true;
+    },
+  },
+  watch: {
+    isMinimalMode(isMinimalMode) {
+      console.log('watch isMinimalMode');
+      if (isMinimalMode) {
+        document.body.classList.add('minimal');
+      } else {
+        document.body.classList.remove('minimal');
+      }
+    },
+  },
+  mounted() {
+    if (this.isMinimalMode) {
+      document.body.classList.add('minimal');
+    } else {
+      document.body.classList.remove('minimal');
+    }
+    packageEvents.on('change', this.handlePackagesChange);
+    // expose router so puppeteer can trigger route changes
+    window.router = this.$router;
+  },
+  beforeDestroy() {
+    packageEvents.removeListener('change', this.handlePackagesChange);
+  },
+  methods: {
+    track(eventName, value) {
+      ga('send', 'event', eventName, value);
+    },
+    getMergedQueryParams(params) {
+      const merged = { ...this.$route.query, ...params };
+      delete merged.periodLength;
+      return merged;
+    },
+    handlePackagesChange() {
+      const nextRouteSansQuery = `/compare/${packages.join(',')}`;
+      if (this.$router.app.$route.path !== nextRouteSansQuery) {
+        this.$router.push(`${nextRouteSansQuery}?${this.queryString}`);
+      }
+    },
+    addPackage(packageName) {
+      ga(
+        'send',
+        'event',
+        'packageInput',
+        'add',
+        `${packageName} existing:${this.packageNames}`,
+      );
+
+      this.$router.push({
+        path: `/compare/${
+          this.$route.params && this.$route.params.packages
+            ? this.$route.params.packages + ',' + packageName
+            : packageName
+        }`,
+        query: this.$route.query,
+      });
+    },
+    clearPackages() {
+      this.$router.push('/compare');
+    },
+    handleClickTwitter() {
+      ga('send', 'event', 'share', 'twitter', this.twitterShareUrl);
+      window.open(this.twitterShareUrl);
+    },
+    handleHoverTwitter() {
+      this.hoverCount++;
+      ga(
+        'send',
+        'event',
+        'hoverShare',
+        'twitter',
+        this.twitterShareUrl,
+        this.hoverCount,
+      );
+    },
+    handleMouseEnterTwitter() {
+      this.twitterEventTimeout = setTimeout(this.handleHoverTwitter, 500);
+    },
+    handleMouseLeaveTwitter() {
+      clearTimeout(this.twitterEventTimeout);
+    },
+    handleDownloadRequest(e) {
+      const packageNames = this.packageDownloadStats.map(x => x.name);
+      switch (e.target.value) {
+        case 'png':
+          this.exportStatus = 'exporting png';
+          setTimeout(() => {
+            domNodeToPng(this.$refs.graph.$el).then(dataUrl => {
+              fileSaver.saveAs(dataUrl, `${packageNames}.png`);
+              this.exportStatus = null;
+            });
+          });
+          break;
+        case 'svg':
+          this.exportStatus = 'exporting svg';
+          setTimeout(() => {
+            domNodeToSvg(this.$refs.graph.$el).then(dataUrl => {
+              fileSaver.saveAs(dataUrl, `${packageNames}.svg`);
+              this.exportStatus = null;
+            });
+          });
+          break;
+        case 'csv':
+          this.exportStatus = 'exporting csv';
+          setTimeout(() => {
+            const moduleWithLongestHistory = _.maxBy(
+              this.packageDownloadStats,
+              x => x.entries.length,
+            );
+            var csv = [['Date', ...packageNames]]
+              .concat(
+                moduleWithLongestHistory.entries.map(({ day }) => {
+                  return [day.toLocaleDateString()].concat(
+                    this.packageDownloadStats
+                      .map(
+                        packageDownloadStats =>
+                          packageDownloadStats.entries.find(
+                            x => x.day.toISOString() === day.toISOString(),
+                          ).count || '',
+                      )
+                      .join(','),
+                  );
+                }),
+              )
+              .join('\n');
+            this.track('download csv', packageNames);
+            downloadCsv(csv, `${packageNames}.csv`);
+            this.exportStatus = null;
+          });
+          break;
+        default:
+        case '':
+          this.exportStatus = null;
+          return;
+      }
+      e.target.value = '';
+    },
+    shuffle: _.shuffle,
+    handleClickContributor() {
+      this.contributorInfo = getContributorRandom();
+      this.track('click contributor');
+    },
+  },
+  components: {
+    'package-input': packageInput,
+    graph: () =>
+      import(
+        /* webpackPrefetch: true, webpackChunkName: "graph" */ '../graph/graph.vue'
+      ),
+  },
+};
+
+</script>
+
+<style lang="styl" src="./home.styl"></style>
+<style lang="styl" src="./home.minimal.styl" scoped></style>
