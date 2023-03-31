@@ -294,9 +294,7 @@ const palette = config.palette;
 const presetComparisons = _.shuffle(config.presetComparisons);
 
 const {
-  default: packageInput,
   emitter: packageEvents,
-  packages,
 } = require('../packages/packages');
 
 const getPackagesDownloadDataByNames = async (names, start, end) => {
@@ -662,7 +660,7 @@ export default {
     },
   },
   components: {
-    'package-input': packageInput,
+    'package-input': require('../packages/packages').default,
     graph: () =>
       import(
         /* webpackPrefetch: true, webpackChunkName: "graph" */ '../graph/graph.vue'
