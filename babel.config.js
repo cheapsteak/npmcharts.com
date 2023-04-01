@@ -1,6 +1,7 @@
 module.exports = {
   sourceType: 'unambiguous',
   presets: [
+    '@babel/preset-react',
     [
       '@babel/preset-env',
       {
@@ -14,6 +15,7 @@ module.exports = {
   plugins: [
     'lodash',
     'date-fns',
+    'vuera/babel',
     '@babel/plugin-proposal-object-rest-spread',
     '@babel/plugin-proposal-optional-chaining',
   ],

@@ -1,17 +1,13 @@
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+
 import Vue from 'vue';
 import { format as formatDate } from 'date-fns';
-import router from './router.js';
+import Index from './index.vue';
 
 Vue.filter('formatDate', function(date, format) {
   return formatDate(date, format);
 });
 
-new Vue({
-  el: '#root',
-  router,
-  render(h) {
-    return h('router-view', {
-      key: this.$route.fullPath,
-    });
-  },
-});
+const root = createRoot(document.getElementById('root'));
+root.render(<Index />);

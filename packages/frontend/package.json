@@ -39,6 +39,8 @@
     "nvd3": "1.8.3",
     "pm2": "^2.6.1",
     "pug-loader": "^2.4.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
     "storybook-vue-router": "1.0.2",
     "stylus": "0.54.5",
     "stylus-loader": "^3.0.2",
@@ -55,6 +57,7 @@
   },
   "devDependencies": {
     "@babel/core": "*",
+    "@babel/preset-react": "7.18.6",
     "@storybook/addon-actions": "^4.0.12",
     "@storybook/addon-links": "^4.0.12",
     "@storybook/addons": "^4.0.12",
@@ -66,7 +69,8 @@
     "connect-modrewrite": "^0.8.2",
     "debug": "^3.1.0",
     "npm-run-all": "^4.0.2",
-    "regenerator-runtime": "^0.12.1"
+    "regenerator-runtime": "^0.12.1",
+    "vuera": "0.2.7"
   },
   "prettier": {
     "trailingComma": "all",
