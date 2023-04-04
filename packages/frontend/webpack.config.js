@@ -16,7 +16,7 @@ module.exports = (env, opts) => {
 
   return {
     entry: {
-      app: ['./src/index.js', ...glob.sync('./src/**/*.styl')],
+      app: ['./src/index.tsx', ...glob.sync('./src/**/*.styl')],
     },
     output: {
       path: outDir,
@@ -58,7 +58,7 @@ module.exports = (env, opts) => {
               ],
             },
             {
-              test: /\.js$/,
+              test: /\.(js|ts|tsx)$/,
               exclude: /node_modules/,
               use: {
                 loader: 'babel-loader',
@@ -138,10 +138,8 @@ module.exports = (env, opts) => {
         openAnalyzer: false,
       }),
     ],
-    // resolve: {
-    //   alias: {
-    //     vue$: 'vue/dist/vue.esm.js',
-    //   },
-    // },
+    resolve: {
+      extensions: ['.ts', '.tsx', '.js', '.json'],
+    },
   };
 };
