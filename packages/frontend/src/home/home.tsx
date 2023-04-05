@@ -1,4 +1,4 @@
-import { useState, useEffect, Fragment } from 'react';
+import { useState, useEffect, Fragment, useRef } from 'react';
 import { NavLink, useSearchParams, useNavigate } from 'react-router-dom';
 import { processPackagesStats } from '../utils/processPackagesStats';
 import { format as formatDate, subDays, isWithinRange } from 'date-fns';
@@ -14,7 +14,6 @@ import fetchReposCommitsStats from 'frontend/src/home/fetchReposCommitStats';
 import fileSaver from 'file-saver';
 import { fetchBundleSize } from 'frontend/src/home/fetchBundlesSizes';
 import { downloadCsv } from './downloadCsv';
-import PackageInput from '../packages/packages.vue';
 import { domNodeToSvg, domNodeToPng } from '../utils/dom-to-image';
 import _ from 'lodash';
 import config from 'configs';
@@ -163,6 +162,9 @@ export const Home = ({
 
   const isEmbedded = isMinimalMode;
 
+  const packageInputRef = useRef(null);
+  const [packageInputValue, setPackageInputValue] = useState('');
+
   const [npmMetadataByPackageName, setNpmMetadataByPackageName] = useState<
     Record<
       string,
@@ -243,8 +245,24 @@ export const Home = ({
     // });
   }, []);
 
-  function addPackage() {
-    // Add package logic here
+  function addPackage(packageName) {
+    // @ts-ignore
+    ga(
+      'send',
+      'event',
+      'packageInput',
+      'add',
+      `${packageName} existing:${packageNames}`,
+    );
+
+    navigate({
+      pathname: `/compare/${
+        isUsingPresetComparisons
+          ? packageName
+          : _.uniq(packageNames.concat(packageName)).join(',')
+      }`,
+      search: searchParams.toString(),
+    });
   }
 
   const getMergedQueryParams = params => {
@@ -398,7 +416,7 @@ export const Home = ({
                     >
                       {moduleName}
                     </a>
-                    {npmMetadataByPackageName?.[moduleName].hasTypings ? (
+                    {npmMetadataByPackageName?.[moduleName]?.hasTypings ? (
                       <svg
                         style={{
                           marginLeft: '3px',
@@ -419,7 +437,7 @@ export const Home = ({
                         />
                       </svg>
                     ) : npmMetadataByPackageName?.[moduleName]
-                        .definitivelyTyped ? (
+                        ?.definitivelyTyped ? (
                       <a
                         target="_blank"
                         rel="noopener noreferrer"
@@ -467,8 +485,39 @@ export const Home = ({
             )}
           </p>
         </h1>
-        <form className="header-controls-wrapper">
-          <div className="package-input" onSubmit={addPackage} />
+        <div className="header-controls-wrapper">
+          <form
+            className="package-input"
+            onSubmit={e => {
+              e.preventDefault();
+              e.stopPropagation();
+              if (packageInputValue.trim() === '') return;
+              addPackage(packageInputValue);
+              setPackageInputValue('');
+              packageInputRef.current.focus();
+            }}
+          >
+            <input
+              ref={packageInputRef}
+              className="package-input"
+              placeholder="enter a package name"
+              aria-label="package name"
+              spellCheck={false}
+              autoFocus
+              value={packageInputValue}
+              onChange={e => {
+                setPackageInputValue(e.currentTarget.value);
+              }}
+            />
+            <button
+              className="add-package-btn"
+              disabled={packageInputValue.trim() === ''}
+            >
+              {packageNames.length > 0 && isUsingPresetComparisons
+                ? 'set'
+                : 'add'}
+            </button>
+          </form>
           <div className="graph-config">
             {packageNames && (
               <>
@@ -562,7 +611,7 @@ export const Home = ({
               enter minimal mode
             </NavLink>
           </div>
-        </form>
+        </div>
       </header>
       <main className={isLoadingDownloadStats ? 'loading' : ''}>
         <div className="chart-container">
