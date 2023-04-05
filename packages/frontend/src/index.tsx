@@ -17,13 +17,13 @@ const root = createRoot(document.getElementById('root'));
 
 const App = () => {
   const params = useParams();
-  const packageNames = params['*']?.split(',')
+  const packageNames = params['*'] ? params['*'].split(',') : null;
 
   return (
     <Home
       packageNames={packageNames ?? _.shuffle(config.presetComparisons)[0]}
       isMinimalMode={false}
-      isUsingPresetComparisons={packageNames?.length === 0}
+      isUsingPresetComparisons={!packageNames}
     />
   );
 };
