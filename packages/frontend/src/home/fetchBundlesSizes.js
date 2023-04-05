@@ -1,4 +1,4 @@
-async function fetchBundleSize(pkgName) {
+export async function fetchBundleSize(pkgName) {
   const url = `https://bundlephobia.com/api/size?package=${pkgName}`;
   const resp = await fetch(url);
 
@@ -19,13 +19,14 @@ async function fetchBundleSize(pkgName) {
   }
 }
 
-export const fetchBundlesSizes = pkgNames => {
-  return pkgNames.reduce((acc, pkgName) => {
-    fetchBundleSize(pkgName).then(bundle => {
-      if (bundle) acc[pkgName] = bundle;
-    });
-    return acc;
-  }, {});
-};
+// export const fetchBundlesSizes = pkgNames => {
+//   return pkgNames.reduce((acc, pkgName) => {
+//     fetchBundleSize(pkgName).then(bundle => {
+//       if (bundle) acc[pkgName] = bundle;
+//     });
+//     return acc;
+//   }, {});
+//   return Promise.all(pkgNames.map(pkgName => fetchBundleSize(pkgName))
+// };
 
-export default fetchBundlesSizes;
+// export default fetchBundlesSizes;
