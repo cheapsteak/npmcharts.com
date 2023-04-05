@@ -3,7 +3,7 @@ import { NavLink, useSearchParams, useNavigate } from 'react-router-dom';
 import { processPackagesStats } from '../utils/processPackagesStats';
 import { format as formatDate, subDays, isWithinRange } from 'date-fns';
 
-import queryString from 'querystring';
+import * as queryString from 'querystring';
 
 import Graph from '../graph/graph.vue';
 import { setPackages } from '../packages/packages.js';
@@ -11,7 +11,11 @@ import isPackageName from 'utils/isPackageName';
 import getPackagesDownloads from 'utils/stats/getPackagesDownloads';
 import getPackageRequestPeriods from 'utils/getPackageRequestPeriods';
 import fetchReposCommitsStats from 'frontend/src/home/fetchReposCommitStats';
+import fileSaver from 'file-saver';
+import { fetchBundleSize } from 'frontend/src/home/fetchBundlesSizes';
+import { downloadCsv } from './downloadCsv';
 import PackageInput from '../packages/packages.vue';
+import { domNodeToSvg, domNodeToPng } from '../utils/dom-to-image';
 import _ from 'lodash';
 import config from 'configs';
 import contributors from './contributors.json';
@@ -158,7 +162,6 @@ export const Home = ({
   const shouldUseLogScale = searchParams.get('log') === 'true';
 
   const isEmbedded = isMinimalMode;
-  const packagesBundleSizesResponse = {};
 
   const [npmMetadataByPackageName, setNpmMetadataByPackageName] = useState<
     Record<
@@ -172,6 +175,18 @@ export const Home = ({
   >(null);
   const [isLoadingDownloadStats, setIsLoadingDownloadStats] = useState(false);
   const [isLoadingNpmMetaData, setIsLoadingNpmMetaData] = useState(false);
+  const [
+    packagesBundleSizesResponse,
+    setPackagesBundleSizesResponse,
+  ] = useState<
+    Record<
+      string,
+      {
+        gzip: string;
+        size: string;
+      }
+    >
+  >({});
   const [showWeekends, setShowWeekends] = useState(false);
   const [exportStatus, setExportStatus] = useState(null);
 
@@ -212,15 +227,24 @@ export const Home = ({
       setNpmMetadataByPackageName(response);
       setIsLoadingNpmMetaData(false);
     });
+
+    Promise.all(
+      packageNames.map(async packageName => ({
+        [packageName]: await fetchBundleSize(packageName),
+      })),
+    ).then(bundleSizesResponses => {
+      setPackagesBundleSizesResponse(
+        bundleSizesResponses.reduce((acc, x) => ({ ...acc, ...x })),
+      );
+    });
+    // fetchBundlesSizes(packageNames).then(bundleSizesResponse => {
+    //   console.log({ bundleSizesResponse });
+    //   // setPackagesBundleSizesResponse(bundleSizesResponse);
+    // });
   }, []);
 
   function addPackage() {
     // Add package logic here
-  }
-
-  function handleDownloadRequest(event) {
-    const selectedOption = event.target.value;
-    // Handle download logic here
   }
 
   const getMergedQueryParams = params => {
@@ -230,9 +254,13 @@ export const Home = ({
   };
 
   function handleClickTwitter() {
+    const shareUrl = `https://npmcharts.com/compare/${packageNames.join(',')}`;
+    const twitterShareUrl = `https://twitter.com/intent/tweet?url=${window.encodeURIComponent(
+      shareUrl,
+    )}`;
     // @ts-ignore
-    window.ga('send', 'event', 'share', 'twitter', this.twitterShareUrl);
-    window.open(this.twitterShareUrl);
+    window.ga('send', 'event', 'share', 'twitter', twitterShareUrl);
+    window.open(twitterShareUrl);
   }
   function handleHoverTwitter() {
     this.hoverCount++;
@@ -268,7 +296,62 @@ export const Home = ({
     this.track('click contributor');
   }
 
-  console.log({ interval });
+  function handleDownloadRequest(e) {
+    const packageNames = packageDownloadStats.map(x => x.name);
+    switch (e.target.value) {
+      case 'png':
+        setExportStatus('exporting png');
+        setTimeout(() => {
+          domNodeToPng(this.$refs.graph.$el).then(dataUrl => {
+            fileSaver.saveAs(dataUrl, `${packageNames}.png`);
+            setExportStatus(null);
+          });
+        });
+        break;
+      case 'svg':
+        setExportStatus('exporting svg');
+        setTimeout(() => {
+          domNodeToSvg(this.$refs.graph.$el).then(dataUrl => {
+            fileSaver.saveAs(dataUrl, `${packageNames}.svg`);
+            setExportStatus(null);
+          });
+        });
+        break;
+      case 'csv':
+        setExportStatus('exporting csv');
+        setTimeout(() => {
+          const moduleWithLongestHistory = _.maxBy(
+            this.packageDownloadStats,
+            x => x.entries.length,
+          );
+          var csv = [['Date', ...packageNames]]
+            .concat(
+              moduleWithLongestHistory.entries.map(({ day }) => {
+                return [day.toLocaleDateString()].concat(
+                  this.packageDownloadStats
+                    .map(
+                      packageDownloadStats =>
+                        packageDownloadStats.entries.find(
+                          x => x.day.toISOString() === day.toISOString(),
+                        ).count || '',
+                    )
+                    .join(','),
+                );
+              }),
+            )
+            .join('\n');
+          track('download csv', packageNames);
+          downloadCsv(csv, `${packageNames}.csv`);
+          setExportStatus(null);
+        });
+        break;
+      default:
+      case '':
+        setExportStatus(null);
+        return;
+    }
+    e.target.value = '';
+  }
 
   return (
     <div
@@ -302,7 +385,7 @@ export const Home = ({
               ''
             ) : (
               <>
-                compare
+                compare{' '}
                 {packageNames.map(moduleName => (
                   <span className="package-entry">
                     <a
@@ -312,11 +395,6 @@ export const Home = ({
                       }
                       href={'https://www.npmjs.com/package/' + moduleName}
                       target="_blank"
-                      style={{
-                        color: npmMetadataByPackageName?.[moduleName].hasTypings
-                          ? '#3178c6'
-                          : '',
-                      }}
                     >
                       {moduleName}
                     </a>
