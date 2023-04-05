@@ -38,7 +38,7 @@ router.get('/npm-metadata*', async (req, res) => {
     const npmRegistryData = registryPackageResponse.data;
     const definitivelyTyped = registryDefinitivelyTypedResponse.status === 200;
 
-    const latestVersionName = npmRegistryData['dist-tags'].latest;
+    const latestVersionName = npmRegistryData['dist-tags']?.latest;
     const latestVersionData = npmRegistryData.versions[latestVersionName];
 
     return res.send({
