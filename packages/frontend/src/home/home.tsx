@@ -405,7 +405,7 @@ export const Home = ({
               <>
                 compare{' '}
                 {packageNames.map(moduleName => (
-                  <span className="package-entry">
+                  <span className="package-entry" key={moduleName}>
                     <a
                       className="package-name"
                       title={
