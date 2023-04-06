@@ -5,7 +5,7 @@ import { format as formatDate, subDays, isWithinRange } from 'date-fns';
 
 import * as queryString from 'querystring';
 
-import Graph from '../graph/graph.vue';
+import { Graph } from '../graph/Graph';
 import { setPackages } from '../packages/packages.js';
 import isPackageName from 'utils/isPackageName';
 import getPackagesDownloads from 'utils/stats/getPackagesDownloads';
@@ -243,7 +243,7 @@ export const Home = ({
     //   console.log({ bundleSizesResponse });
     //   // setPackagesBundleSizesResponse(bundleSizesResponse);
     // });
-  }, []);
+  }, [packageNames]);
 
   function addPackage(packageName) {
     // @ts-ignore
@@ -339,17 +339,17 @@ export const Home = ({
         setExportStatus('exporting csv');
         setTimeout(() => {
           const moduleWithLongestHistory = _.maxBy(
-            this.packageDownloadStats,
+            packageDownloadStats,
             x => x.entries.length,
           );
           var csv = [['Date', ...packageNames]]
             .concat(
               moduleWithLongestHistory.entries.map(({ day }) => {
                 return [day.toLocaleDateString()].concat(
-                  this.packageDownloadStats
+                  packageDownloadStats
                     .map(
-                      packageDownloadStats =>
-                        packageDownloadStats.entries.find(
+                      stats =>
+                        stats.entries.find(
                           x => x.day.toISOString() === day.toISOString(),
                         ).count || '',
                     )
@@ -679,15 +679,12 @@ export const Home = ({
               </NavLink>
             ))}
           </div>
-          {!isLoadingDownloadStats && false && (
+          {!isLoadingDownloadStats && packageDownloadStats && (
             <Graph
-              className="chart"
-              ref="graph"
-              module-names={packageNames}
-              package-download-stats={packageDownloadStats ?? {}}
+              moduleNames={packageNames}
+              packageDownloadStats={packageDownloadStats ?? []}
               interval={interval}
-              is-minimal-mode={isMinimalMode}
-              useLogScale={shouldUseLogScale}
+              shouldUseLogScale={shouldUseLogScale}
             />
           )}
         </div>
