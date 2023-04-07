@@ -400,7 +400,6 @@ export const Home = ({
         className={'page-header' + (isLoadingDownloadStats ? ' loading' : '')}
       >
         <h1 className="heading">
-          {/* @ts-expect-error 'NavLink' cannot be used as a JSX component. */}
           <NavLink
             to={
               isEmbedded ? '/' : packageNames ? '/compare/' + packageNames : '/'
@@ -613,7 +612,6 @@ export const Home = ({
               <option value="svg">svg</option>
               <option value="png">png</option>
             </select>
-            {/* @ts-expect-error 'NavLink' cannot be used as a JSX component. */}
             <NavLink
               className="minimal-mode"
               style={{ marginLeft: '1em' }}
@@ -659,7 +657,6 @@ export const Home = ({
             </span>{' '}
             <div className="caption">or check out</div>{' '}
             {presetComparisons.map(packages => (
-              // @ts-expect-error 'NavLink' cannot be used as a JSX component.
               <NavLink
                 to={`/compare/${packages.join(',')}?${searchParams.toString()}`}
                 onClick={() => track('click-preset', packages.join(','))}
@@ -667,7 +664,6 @@ export const Home = ({
                 key={packages.join(',')}
               >
                 {packages.map((packageItem, index) => (
-                  // @ts-expect-error 'Fragment' cannot be used as a JSX component.
                   <Fragment key={packageItem}>
                     {index !== 0 && (
                       <span className="vs" key={packageItem + 'vs'}>
