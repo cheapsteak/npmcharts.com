@@ -72,6 +72,7 @@
     "@storybook/addon-links": "^4.0.12",
     "@storybook/addons": "^4.0.12",
     "@storybook/vue": "^4.0.12",
+    "@types/d3": "3.5.44",
     "babel-preset-vue": "^2.0.2",
     "browser-sync": "^2.7.2",
     "browserify": "^10.2.1",
