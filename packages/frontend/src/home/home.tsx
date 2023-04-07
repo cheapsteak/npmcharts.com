@@ -389,7 +389,7 @@ export const Home = ({
   return (
     <div
       id="home"
-      className="opaque-once-stylesheet-loads"
+      className={"opaque-once-stylesheet-loads" + (isMinimalMode ? ' minimal' : '')}
       style={{
         opacity: 0,
         // @ts-ignore
@@ -618,7 +618,6 @@ export const Home = ({
               className="minimal-mode"
               style={{ marginLeft: '1em' }}
               to={{
-                pathname: '',
                 search: `?minimal=true`,
               }}
               onClick={() => track('enter-minimal-mode')}
