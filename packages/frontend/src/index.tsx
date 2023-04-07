@@ -1,17 +1,10 @@
 import { BrowserRouter, Routes, Route, useParams } from 'react-router-dom';
 import { createRoot } from 'react-dom/client';
 import _ from 'lodash';
-import Vue from 'vue';
-import { format as formatDate } from 'date-fns';
 import config from 'configs';
 
 import { Home } from './home/home';
 import './style.styl';
-// import Home from './home/home.vue';
-
-Vue.filter('formatDate', function(date, format) {
-  return formatDate(date, format);
-});
 
 const root = createRoot(document.getElementById('root'));
 
