@@ -6,7 +6,6 @@ import { format as formatDate, subDays, isWithinRange } from 'date-fns';
 import * as queryString from 'querystring';
 
 import { Graph } from '../graph/Graph';
-import { setPackages } from '../packages/packages.js';
 import isPackageName from 'utils/isPackageName';
 import getPackagesDownloads from 'utils/stats/getPackagesDownloads';
 import getPackageRequestPeriods from 'utils/getPackageRequestPeriods';
@@ -20,6 +19,7 @@ import config from 'configs';
 import contributors from './contributors.json';
 
 import './home.styl';
+import './home.minimal.styl';
 
 const presetComparisons = _.shuffle(config.presetComparisons);
 
@@ -94,9 +94,6 @@ async function getPackagesDownloadsOverPeriod(names, startDay, endDay) {
 const getPackagesDownloadDataByNames = async (names, start, end) => {
   // @ts-ignore
   setTimeout(() => ga('send', 'pageview'));
-
-  // set notify to false to prevent triggering route change
-  setPackages(names, false);
 
   const operation = _.every(names, isPackageName)
     ? // names are npm packages
@@ -261,6 +258,22 @@ export const Home = ({
           ? packageName
           : _.uniq(packageNames.concat(packageName)).join(',')
       }`,
+      search: searchParams.toString(),
+    });
+  }
+
+  function removePackage(packageName) {
+    // @ts-ignore
+    ga(
+      'send',
+      'event',
+      'packageInput',
+      'remove',
+      `${packageName} existing:${packageNames}`,
+    );
+
+    navigate({
+      pathname: `/compare/${_.without(packageNames, packageName).join(',')}`,
       search: searchParams.toString(),
     });
   }
@@ -683,8 +696,9 @@ export const Home = ({
             <Graph
               moduleNames={packageNames}
               packageDownloadStats={packageDownloadStats ?? []}
-              interval={interval}
+              interval={Number(interval) as 1 | 7 | 30}
               shouldUseLogScale={shouldUseLogScale}
+              onRemovePackage={removePackage}
             />
           )}
         </div>
