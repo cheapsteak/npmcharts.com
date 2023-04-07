@@ -16,7 +16,7 @@ module.exports = (env, opts) => {
 
   return {
     entry: {
-      app: ['./src/index.tsx', ...glob.sync('./src/**/*.styl')],
+      app: ['./src/index.tsx', './src/style.styl'],
     },
     output: {
       path: outDir,

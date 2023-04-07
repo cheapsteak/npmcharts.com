@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
-import d3 from 'd3';
+import * as d3 from 'd3';
 import nv from 'nvd3';
 import _ from 'lodash';
 import { format as formatDate, startOfDay } from 'date-fns';
 import { line, curveCatmullRom } from 'd3-shape';
 import { lineChart, xAccessor } from './chart/lineChart';
+import { Legend } from './legend/Legend';
+import './graph.styl';
 
 const { palette } = require('configs');
 
@@ -128,6 +130,20 @@ export const Graph = ({
   packageDownloadStats,
   interval,
   shouldUseLogScale,
+  onRemovePackage,
+}: {
+    moduleNames: Array<string>;
+    packageDownloadStats: Array<{
+        name: string;
+        entries: Array<{
+            count: number;
+            day: Date;
+            releases: Array<string>;
+        }>;
+    }>;
+    interval: number;
+    shouldUseLogScale: boolean;
+    onRemovePackage: (packageName: string) => void;
 }) => {
   const processedData = processForD3({
     downloadStats: packageDownloadStats,
@@ -151,10 +167,16 @@ export const Graph = ({
     left: 16,
   };
 
-  const svgRef = useRef<SVGSVGElement>(null);
+  const svgD3Ref = useRef<
+    d3.Selection<{
+      count: number;
+      day: string;
+      releases: Array<string>;
+    }>
+  >(null);
 
   useEffect(() => {
-    const svg = d3.select(svgRef.current);
+    const svg = svgD3Ref.current;
     const chart = lineChart();
 
     chart.margin(margin).color(palette);
@@ -241,6 +263,33 @@ export const Graph = ({
     };
   }, [packageDownloadStats, interval, shouldUseLogScale]);
 
+  function handlePackageFocus(moduleName) {
+    svgD3Ref.current
+      .selectAll('.nv-series--focused')
+      .classed('nv-series--focused', false);
+    svgD3Ref.current
+      .selectAll(`.nv-series-${moduleNames.indexOf(moduleName)}`)
+      .classed('nv-series--focused', true);
+  }
+  function handlePackageBlur(moduleName) {
+    svgD3Ref.current
+      .selectAll(`.nv-series-${moduleNames.indexOf(moduleName)}`)
+      .classed('nv-series--focused', false);
+  }
+  function handleLegendFocus() {
+    svgD3Ref.current
+      .selectAll('.nv-focus .nv-groups')
+      .classed('nv-groups--focused', true);
+  }
+  function handleLegendBlur() {
+    svgD3Ref.current
+      .selectAll('.nv-series--focused')
+      .classed('nv-series--focused', false);
+    svgD3Ref.current
+      .selectAll('.nv-focus .nv-groups')
+      .classed('nv-groups--focused', false);
+  }
+
   if (typeof window !== 'undefined') {
     // @ts-expect-error Property '__currently_rendered_graph__' does not exist on type 'Window & typeof globalThis'.
     // signal for puppeteer to know when a new graph is rendered
@@ -248,7 +297,23 @@ export const Graph = ({
   }
   return (
     <div id="chart" className="with-3d-shadow with-transitions chart">
-      <svg ref={svgRef}></svg>
+      <svg
+        ref={node => {
+          svgD3Ref.current = d3.select(node);
+        }}
+      ></svg>
+      {packageDownloadStats.length && legendData && (
+        <Legend
+          modules={legendData.modules}
+          interval={interval}
+          date={legendData.date}
+          onPackageFocus={handlePackageFocus}
+          onPackageBlur={handlePackageBlur}
+          onLegendBlur={handleLegendBlur}
+          onLegendFocus={handleLegendFocus}
+          onRemovePackage={onRemovePackage}
+        />
+      )}
     </div>
   );
 };
