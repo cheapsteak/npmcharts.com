@@ -80,8 +80,7 @@
     "connect-modrewrite": "^0.8.2",
     "debug": "^3.1.0",
     "npm-run-all": "^4.0.2",
-    "regenerator-runtime": "^0.12.1",
-    "vuera": "0.2.7"
+    "regenerator-runtime": "^0.12.1"
   },
   "prettier": {
     "trailingComma": "all",
