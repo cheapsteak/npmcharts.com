@@ -1,6 +1,5 @@
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const { VueLoaderPlugin } = require('vue-loader');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const glob = require('glob');
@@ -38,16 +37,7 @@ module.exports = (env, opts) => {
     module: {
       rules: [
         {
-          test: /\.vue$/,
-          include: path.resolve(__dirname, 'srcs'),
-          loader: 'vue-loader',
-        },
-        {
           oneOf: [
-            {
-              test: /\.vue$/,
-              loader: 'vue-loader',
-            },
             {
               test: /\.html$/,
               use: [
@@ -68,9 +58,7 @@ module.exports = (env, opts) => {
             {
               test: /\.(styl|css)$/,
               use: [
-                options.mode === 'production'
-                  ? MiniCssExtractPlugin.loader
-                  : 'vue-style-loader',
+                MiniCssExtractPlugin.loader,
                 'css-loader',
                 'stylus-loader',
               ].filter(Boolean),
@@ -109,8 +97,6 @@ module.exports = (env, opts) => {
     },
 
     plugins: [
-      new VueLoaderPlugin(),
-
       new MiniCssExtractPlugin({
         // Options similar to the same options in webpackOptions.output
         filename: '[name].css',
