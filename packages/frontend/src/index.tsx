@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, useParams } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useParams, useSearchParams } from 'react-router-dom';
 import { createRoot } from 'react-dom/client';
 import _ from 'lodash';
 import config from 'configs';
@@ -10,12 +10,13 @@ const root = createRoot(document.getElementById('root'));
 
 const App = () => {
   const params = useParams();
+  const [searchParams] = useSearchParams();
   const packageNames = params['*'] ? params['*'].split(',') : null;
 
   return (
     <Home
       packageNames={packageNames ?? _.shuffle(config.presetComparisons)[0]}
-      isMinimalMode={false}
+      isMinimalMode={searchParams.get('minimal') === 'true'}
       isUsingPresetComparisons={!packageNames}
     />
   );
