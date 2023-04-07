@@ -237,10 +237,6 @@ export const Home = ({
         bundleSizesResponses.reduce((acc, x) => ({ ...acc, ...x })),
       );
     });
-    // fetchBundlesSizes(packageNames).then(bundleSizesResponse => {
-    //   console.log({ bundleSizesResponse });
-    //   // setPackagesBundleSizesResponse(bundleSizesResponse);
-    // });
   }, [packageNames]);
 
   function addPackage(packageName) {
@@ -334,7 +330,6 @@ export const Home = ({
       case 'png':
         setExportStatus('exporting png');
         setTimeout(() => {
-          console.log('graphWrapperElementRef.current', graphWrapperElementRef.current)
           domNodeToPng(graphWrapperElementRef.current).then(dataUrl => {
             fileSaver.saveAs(dataUrl, `${packageNames}.png`);
             setExportStatus(null);
