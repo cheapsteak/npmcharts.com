@@ -389,7 +389,9 @@ export const Home = ({
   return (
     <div
       id="home"
-      className={"opaque-once-stylesheet-loads" + (isMinimalMode ? ' minimal' : '')}
+      className={
+        'opaque-once-stylesheet-loads' + (isMinimalMode ? ' minimal' : '')
+      }
       style={{
         opacity: 0,
         // @ts-ignore
@@ -400,13 +402,7 @@ export const Home = ({
         className={'page-header' + (isLoadingDownloadStats ? ' loading' : '')}
       >
         <h1 className="heading">
-          <NavLink
-            to={
-              isEmbedded ? '/' : packageNames ? '/compare/' + packageNames : '/'
-            }
-            className="identity"
-            title="npmcharts"
-          >
+          <NavLink to="/" className="identity" title="npmcharts">
             <img src="/images/logo.svg" width="190" alt="npmcharts" />
           </NavLink>
 
