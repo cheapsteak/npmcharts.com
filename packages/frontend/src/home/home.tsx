@@ -160,6 +160,7 @@ export const Home = ({
   const isEmbedded = isMinimalMode;
 
   const packageInputRef = useRef(null);
+  const graphWrapperElementRef = useRef<HTMLDivElement>(null);
   const [packageInputValue, setPackageInputValue] = useState('');
 
   const [npmMetadataByPackageName, setNpmMetadataByPackageName] = useState<
@@ -333,7 +334,8 @@ export const Home = ({
       case 'png':
         setExportStatus('exporting png');
         setTimeout(() => {
-          domNodeToPng(this.$refs.graph.$el).then(dataUrl => {
+          console.log('graphWrapperElementRef.current', graphWrapperElementRef.current)
+          domNodeToPng(graphWrapperElementRef.current).then(dataUrl => {
             fileSaver.saveAs(dataUrl, `${packageNames}.png`);
             setExportStatus(null);
           });
@@ -342,7 +344,7 @@ export const Home = ({
       case 'svg':
         setExportStatus('exporting svg');
         setTimeout(() => {
-          domNodeToSvg(this.$refs.graph.$el).then(dataUrl => {
+          domNodeToSvg(graphWrapperElementRef.current).then(dataUrl => {
             fileSaver.saveAs(dataUrl, `${packageNames}.svg`);
             setExportStatus(null);
           });
@@ -694,6 +696,7 @@ export const Home = ({
           </div>
           {!isLoadingDownloadStats && packageDownloadStats && (
             <Graph
+              ref={graphWrapperElementRef}
               moduleNames={packageNames}
               packageDownloadStats={packageDownloadStats ?? []}
               interval={Number(interval) as 1 | 7 | 30}
