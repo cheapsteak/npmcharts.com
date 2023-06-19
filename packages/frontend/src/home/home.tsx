@@ -146,16 +146,17 @@ export const Home = ({
   isMinimalMode,
   packageNames,
   isUsingPresetComparisons,
+  interval,
+  shouldUseLogScale,
 }: {
   isMinimalMode: boolean;
   packageNames: Array<string> | undefined;
   isUsingPresetComparisons: boolean;
+  interval: 1 | 7 | 30;
+  shouldUseLogScale: boolean;
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
-
-  const interval = searchParams.get('interval') || '7';
-  const shouldUseLogScale = searchParams.get('log') === 'true';
 
   const isEmbedded = isMinimalMode;
 
@@ -530,7 +531,7 @@ export const Home = ({
                   <input
                     type="radio"
                     name="interval"
-                    checked={interval === '1'}
+                    checked={interval === 1}
                     value="1"
                     onChange={e => {
                       navigate({
@@ -544,7 +545,7 @@ export const Home = ({
                   <input
                     type="radio"
                     name="interval"
-                    checked={interval === '7'}
+                    checked={interval === 7}
                     value="7"
                     onChange={e => {
                       navigate({
@@ -558,7 +559,7 @@ export const Home = ({
                   <input
                     type="radio"
                     name="interval"
-                    checked={interval === '30'}
+                    checked={interval === 30}
                     value="30"
                     onChange={e => {
                       navigate({
@@ -685,7 +686,7 @@ export const Home = ({
               ref={graphWrapperElementRef}
               moduleNames={packageNames}
               packageDownloadStats={packageDownloadStats ?? []}
-              interval={Number(interval) as 1 | 7 | 30}
+              interval={interval}
               shouldUseLogScale={shouldUseLogScale}
               onRemovePackage={removePackage}
             />
