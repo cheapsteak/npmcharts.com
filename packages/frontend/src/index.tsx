@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route, useParams, useSearchParams } from 'react-router-dom';
+import { useEffect } from 'react';
+import { BrowserRouter, Routes, Route, useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import { createRoot } from 'react-dom/client';
 import _ from 'lodash';
 import config from 'configs';
@@ -9,6 +10,7 @@ import './style.styl';
 const root = createRoot(document.getElementById('root'));
 
 const App = () => {
+  const navigate = useNavigate();
   const params = useParams();
   const [searchParams] = useSearchParams();
   const packageNames = params['*'] ? params['*'].split(',') : null;
@@ -18,6 +20,15 @@ const App = () => {
   if(interval !== 1 && interval !== 7 && interval !== 30) {
     throw new Error('Invalid interval, must be one of "1", "7", or "30"');
   }
+
+  // integrate with getChartImage's navigationCommand
+  // TODO: remove this once the backend no longer needs to load the app to capture a snapthos
+  useEffect(() => {
+    if (!window) return;
+    (window as any).router = {
+      push: (path: string) => navigate(path)
+    }
+  }, []);
 
   return (
     <Home
