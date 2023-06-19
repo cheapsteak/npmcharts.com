@@ -6,10 +6,8 @@ import { format as formatDate, subDays, isWithinRange } from 'date-fns';
 import * as queryString from 'querystring';
 
 import { Graph } from '../graph/Graph';
-import isPackageName from 'utils/isPackageName';
 import getPackagesDownloads from 'utils/stats/getPackagesDownloads';
 import getPackageRequestPeriods from 'utils/getPackageRequestPeriods';
-import fetchReposCommitsStats from 'frontend/src/home/fetchReposCommitStats';
 import fileSaver from 'file-saver';
 import { fetchBundleSize } from 'frontend/src/home/fetchBundlesSizes';
 import { downloadCsv } from './downloadCsv';
@@ -91,15 +89,6 @@ async function getPackagesDownloadsOverPeriod(names, startDay, endDay) {
   return mergedPeriod;
 }
 
-const getPackagesDownloadDataByNames = async (names, start, end) => {
-  const operation = _.every(names, isPackageName)
-    ? // names are npm packages
-      getPackagesDownloadsOverPeriod(names, start, end)
-    : // names are github repo names
-      fetchReposCommitsStats(names);
-
-  return operation;
-};
 
 const getPackagesMetaDataByNames = async (
   packageNames,
@@ -206,7 +195,7 @@ export const Home = ({
     // @ts-ignore
     setTimeout(() => ga('send', 'pageview'));
 
-    getPackagesDownloadDataByNames(
+    getPackagesDownloadsOverPeriod(
       packageNames,
       searchParams.get('start') ? searchParams.get('start') : 365,
       searchParams.get('end') ? searchParams.get('end') : 0,
