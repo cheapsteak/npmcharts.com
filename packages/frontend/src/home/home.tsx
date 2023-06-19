@@ -286,22 +286,7 @@ export const Home = ({
   const twitterShareUrl = `https://twitter.com/intent/tweet?url=${window.encodeURIComponent(
     shareUrl,
   )}`;
-  function handleClickTwitter() {
-    // @ts-ignore
-    window.ga('send', 'event', 'share', 'twitter', twitterShareUrl);
-    window.open(twitterShareUrl);
-  }
-  function handleHoverTwitter() {
-    // @ts-ignore
-    window.ga(
-      'send',
-      'event',
-      'hoverShare',
-      'twitter',
-      twitterShareUrl,
-    );
-  }
-  
+
   const packageDownloadStats = !packagesDownloadStatsResponse
     ? null
     : processPackagesStats(
@@ -613,10 +598,24 @@ export const Home = ({
       <main className={isLoadingDownloadStats ? 'loading' : ''}>
         <div className="chart-container">
           <div className="sample-matches">
-            <span
+            <a
               className="tweet-this-chart"
-              onClick={handleClickTwitter}
-              onMouseEnter={handleHoverTwitter}
+              href={twitterShareUrl}
+              target="_blank"
+              onMouseEnter={() => {
+                // @ts-ignore
+                window.ga(
+                  'send',
+                  'event',
+                  'hoverShare',
+                  'twitter',
+                  twitterShareUrl,
+                );
+              }}
+              onClick={() => {
+                // @ts-ignore
+                window.ga('send', 'event', 'share', 'twitter', twitterShareUrl);
+              }}
               style={{
                 color: '#1da1f2',
                 fontSize: '11px',
@@ -638,7 +637,7 @@ export const Home = ({
                 }}
               />{' '}
               this chart{' '}
-            </span>{' '}
+            </a>{' '}
             <div className="caption">or check out</div>{' '}
             {presetComparisons.map(packages => (
               <NavLink
