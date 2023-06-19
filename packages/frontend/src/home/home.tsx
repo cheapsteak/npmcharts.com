@@ -92,9 +92,6 @@ async function getPackagesDownloadsOverPeriod(names, startDay, endDay) {
 }
 
 const getPackagesDownloadDataByNames = async (names, start, end) => {
-  // @ts-ignore
-  setTimeout(() => ga('send', 'pageview'));
-
   const operation = _.every(names, isPackageName)
     ? // names are npm packages
       getPackagesDownloadsOverPeriod(names, start, end)
@@ -205,6 +202,9 @@ export const Home = ({
 
   useEffect(() => {
     setIsLoadingDownloadStats(true);
+
+    // @ts-ignore
+    setTimeout(() => ga('send', 'pageview'));
 
     getPackagesDownloadDataByNames(
       packageNames,
