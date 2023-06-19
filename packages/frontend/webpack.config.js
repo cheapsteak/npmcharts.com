@@ -2,7 +2,6 @@ const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const glob = require('glob');
 const TerserPlugin = require('terser-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
@@ -27,7 +26,7 @@ module.exports = (env, opts) => {
     },
     devServer: {
       historyApiFallback: true,
-      contentBase: [path.join(__dirname, 'src/assets')],
+      static: [path.join(__dirname, 'src/assets')],
       compress: true,
       port: 9001,
       proxy: {
@@ -38,15 +37,6 @@ module.exports = (env, opts) => {
       rules: [
         {
           oneOf: [
-            {
-              test: /\.html$/,
-              use: [
-                {
-                  loader: 'babel-loader',
-                  options: babelConfig,
-                },
-              ],
-            },
             {
               test: /\.(js|ts|tsx)$/,
               exclude: /node_modules/,
@@ -68,13 +58,6 @@ module.exports = (env, opts) => {
               test: /\.svg$/,
               loader: 'svg-inline-loader',
             },
-            {
-              loader: require.resolve('file-loader'),
-              exclude: [/\.js$/, /\.html$/, /\.json$/],
-              options: {
-                name: 'static/media/[name].[hash:8].[ext]',
-              },
-            },
           ],
         },
       ],
@@ -84,13 +67,11 @@ module.exports = (env, opts) => {
       minimize: options.mode === 'production',
       minimizer: [
         new TerserPlugin({
-          cache: false,
           terserOptions: {
             compress: false,
             mangle: true,
           },
           parallel: true,
-          sourceMap: true,
           extractComments: true,
         }),
       ],
