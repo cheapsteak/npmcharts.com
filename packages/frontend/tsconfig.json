@@ -3,5 +3,7 @@
     "lib": ["esnext", "dom"],
     "jsx": "preserve",
     "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true
   }
 }
