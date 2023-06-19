@@ -282,33 +282,26 @@ export const Home = ({
     return queryString.stringify(merged);
   };
 
+  const shareUrl = `https://npmcharts.com/compare/${packageNames.join(',')}`;
+  const twitterShareUrl = `https://twitter.com/intent/tweet?url=${window.encodeURIComponent(
+    shareUrl,
+  )}`;
   function handleClickTwitter() {
-    const shareUrl = `https://npmcharts.com/compare/${packageNames.join(',')}`;
-    const twitterShareUrl = `https://twitter.com/intent/tweet?url=${window.encodeURIComponent(
-      shareUrl,
-    )}`;
     // @ts-ignore
     window.ga('send', 'event', 'share', 'twitter', twitterShareUrl);
     window.open(twitterShareUrl);
   }
   function handleHoverTwitter() {
-    this.hoverCount++;
     // @ts-ignore
     window.ga(
       'send',
       'event',
       'hoverShare',
       'twitter',
-      this.twitterShareUrl,
-      this.hoverCount,
+      twitterShareUrl,
     );
   }
-  function handleMouseEnterTwitter() {
-    this.twitterEventTimeout = setTimeout(this.handleHoverTwitter, 500);
-  }
-  function handleMouseLeaveTwitter() {
-    clearTimeout(this.twitterEventTimeout);
-  }
+  
   const packageDownloadStats = !packagesDownloadStatsResponse
     ? null
     : processPackagesStats(
@@ -623,8 +616,7 @@ export const Home = ({
             <span
               className="tweet-this-chart"
               onClick={handleClickTwitter}
-              onMouseEnter={handleMouseEnterTwitter}
-              onMouseLeave={handleMouseLeaveTwitter}
+              onMouseEnter={handleHoverTwitter}
               style={{
                 color: '#1da1f2',
                 fontSize: '11px',
