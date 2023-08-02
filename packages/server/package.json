@@ -20,6 +20,7 @@
     "pug": "~2.0.0-beta11",
     "puppeteer": "^5.3.1",
     "serve-favicon": "~2.4.2",
+    "sharp": "0.32.1",
     "vhost": "3.0.2"
   },
   "devDependencies": {
