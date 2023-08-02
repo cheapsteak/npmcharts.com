@@ -30,6 +30,17 @@ module.exports = {
     ],
     // http frameworks
     ['express', 'koa', '@hapi/hapi', 'connect', '@nestjs/core', 'fastify'],
+    // sql/orm
+    [
+      '@prisma/client',
+      'typeorm',
+      'drizzle-orm',
+      'kysely',
+      'knex',
+      'sequelize',
+      'pg',
+      'slonik',
+    ],
   ],
   palette: [
     '#2196F3',
