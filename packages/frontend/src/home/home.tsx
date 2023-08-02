@@ -6,8 +6,8 @@ import { format as formatDate, subDays, isWithinRange } from 'date-fns';
 import * as queryString from 'querystring';
 
 import { Graph } from '../graph/Graph';
-import getPackagesDownloads from 'utils/stats/getPackagesDownloads';
-import getPackageRequestPeriods from 'utils/getPackageRequestPeriods';
+import getPackagesDownloadsOverPeriod from 'utils/getPackagesDownloadsOverPeriod';
+
 import fileSaver from 'file-saver';
 import { fetchBundleSize } from 'frontend/src/home/fetchBundlesSizes';
 import { downloadCsv } from './downloadCsv';
@@ -28,27 +28,6 @@ function track(eventName, value = undefined) {
   ga('send', 'event', eventName, value);
 }
 
-/**
- * Merge 2 statistic periods
- * @param period0 Period before period1
- * @param period1 Period after period0
- * @returns The merged period
- */
-function mergePeriods(period0, period1) {
-  const sumPackages = [];
-
-  for (let p = 0; p < period0.length; ++p) {
-    sumPackages.push({
-      downloads: period0[p].downloads.concat(period1[p].downloads),
-      package: period0[p].package,
-      start: period0[p].start,
-      end: period1[p].end,
-    });
-  }
-
-  return sumPackages;
-}
-
 let contributorCounter = 0;
 const shuffledContributorsList = _.shuffle(contributors);
 /**
@@ -60,34 +39,7 @@ function getContributorRandom() {
   ];
 }
 
-/**
- * @param names    {string} Package names
- * @param startDay {number} Start of period, 1 is yesterday
- * @param endDay   {number} End of period 0 is today
- * @returns {Promise<any>}
- */
-async function getPackagesDownloadsOverPeriod(names, startDay, endDay) {
-  const requestPeriods = getPackageRequestPeriods(startDay, endDay);
-  const promises = requestPeriods.map(period => {
-    return getPackagesDownloads(names, {
-      startDate: period.startDate,
-      endDate: period.endDate,
-    });
-  });
-  const periods = await Promise.all(promises);
-  const mergedPeriod = periods.reduce(
-    (mergedPeriodsSoFar, currentPeriod, currentIndex) => {
-      if (currentIndex === 0) {
-        // Because the first period is used as init
-        return mergedPeriodsSoFar;
-      }
-      return mergePeriods(mergedPeriodsSoFar, currentPeriod);
-    },
-    periods[0],
-  );
 
-  return mergedPeriod;
-}
 
 
 const getPackagesMetaDataByNames = async (
