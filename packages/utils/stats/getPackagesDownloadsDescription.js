@@ -1,7 +1,7 @@
-const _orderBy = require('lodash/orderBy');
-const _compact = require('lodash/compact');
-const numeral = require('numeral');
-const getPackagesDownloadsComparisons = require('./getPackagesDownloadsComparisons');
+import _ from 'lodash';
+import numeral from 'numeral';
+
+import getPackagesDownloadsComparisons from './getPackagesDownloadsComparisons.js';
 
 const formatDownloadCount = x => numeral(x).format('0,0');
 const formatPercentage = x => numeral(x).format('+0.0%');
@@ -10,7 +10,7 @@ const getPackagesDescriptions = async packages => {
   let description;
 
   const comparisons = await getPackagesDownloadsComparisons(packages);
-  const trimmedComparisons = _compact(comparisons);
+  const trimmedComparisons = _.compact(comparisons);
 
   if (trimmedComparisons.length === 0) {
     description = `Compare npm package download counts over time to spot trends and see which to use and which to avoid.`;
@@ -28,7 +28,7 @@ const getPackagesDescriptions = async packages => {
   } else {
     description =
       'Weekly downloads - ' +
-      _orderBy(trimmedComparisons, x => x.weekly.downloads, 'desc')
+      _.orderBy(trimmedComparisons, x => x.weekly.downloads, 'desc')
         .map(
           packageStats =>
             `${packageStats.package}: ${formatDownloadCount(
@@ -41,4 +41,4 @@ const getPackagesDescriptions = async packages => {
   return description;
 };
 
-module.exports = getPackagesDescriptions;
+export default getPackagesDescriptions;

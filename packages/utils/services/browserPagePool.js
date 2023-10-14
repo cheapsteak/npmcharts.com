@@ -41,4 +41,4 @@ const browserPool = genericPool.createPool(factory, {
   autostart: false,
 });
 
-module.exports = browserPool;
+export default  browserPool;

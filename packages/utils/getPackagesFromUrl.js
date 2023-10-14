@@ -1,6 +1,6 @@
-const url = require('url');
+import * as url from 'url';
 
-module.exports = urlString => {
+export default urlString => {
   // pathName does not include query params
   const pathname = url.parse(urlString).pathname;
   if (pathname === '/') {

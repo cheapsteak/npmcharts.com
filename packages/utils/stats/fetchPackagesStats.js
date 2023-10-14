@@ -1,6 +1,6 @@
-const fetch = require('isomorphic-fetch');
+import fetch from 'isomorphic-fetch';
 
-module.exports = (packageNames, startDate, endDate) => {
+export default (packageNames, startDate, endDate) => {
   const packageNamesParam = packageNames.join(',');
   const baseApiUrls = ['https://api.npmjs.org', '/api'];
 

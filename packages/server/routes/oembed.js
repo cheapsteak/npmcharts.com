@@ -1,9 +1,10 @@
-const url = require('url');
-const express = require('express');
-const cors = require('cors');
-const router = express.Router();
+import * as url from 'url';
+import express from 'express';
+import cors from 'cors';
 
-const getOembedObject = require('utils/getOembedObject');
+import getOembedObject from 'utils/getOembedObject.js';
+
+const router = express.Router();
 
 router.get('/', cors(), function(req, res, next) {
   const incomingUrl = url.parse(req.query.url);
@@ -21,4 +22,4 @@ router.get('/', cors(), function(req, res, next) {
   }
 });
 
-module.exports = router;
+export default router;

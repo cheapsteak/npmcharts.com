@@ -3,4 +3,4 @@ const scopedRegex = opts =>
   opts && opts.exact ? new RegExp(`^${regex}$`, 'i') : new RegExp(regex, 'gi');
 const isScopedPackage = input => scopedRegex({ exact: true }).test(input);
 
-module.exports = isScopedPackage;
+export default  isScopedPackage;
