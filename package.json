@@ -68,5 +68,8 @@
   "prettier": {
     "trailingComma": "all",
     "singleQuote": true
+  },
+  "volta": {
+    "node": "18.17.1"
   }
 }

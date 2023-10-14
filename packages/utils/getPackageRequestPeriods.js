@@ -1,4 +1,5 @@
-const { format: formatDate, subDays } = require('date-fns');
+import dateFns from 'date-fns';
+const { format: formatDate, subDays } = dateFns;
 
 const maxRequestPeriod = 365; // ~1 year
 
@@ -39,4 +40,4 @@ function getPackageRequestPeriods(startDay, endDay) {
 
   return periods;
 }
-module.exports = getPackageRequestPeriods;
+export default getPackageRequestPeriods;

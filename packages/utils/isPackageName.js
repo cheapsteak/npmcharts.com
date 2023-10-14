@@ -1,4 +1,4 @@
 const isScopedPackageName = require('./isScopedPackageName');
 
-module.exports = packageName =>
+export default  packageName =>
   isScopedPackageName(packageName) || !packageName.includes('/');

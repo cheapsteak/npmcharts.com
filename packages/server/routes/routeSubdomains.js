@@ -1,5 +1,5 @@
-const httpProxy = require('http-proxy');
-const psl = require('psl');
+import httpProxy from 'http-proxy';
+import psl from 'psl';
 
 const proxy = httpProxy.createProxyServer();
 
@@ -25,7 +25,7 @@ const getDeploymentRoot = (deploymentType, deploymentId) => {
  * @param {!express:Response} res HTTP response context.
  */
 
-exports.routeSubdomains = (req, res) => {
+export const routeSubdomains = (req, res) => {
   const { subdomain } = psl.parse(req.host);
   const subdomainMatches = subdomainRegex.exec(subdomain);
   if (!subdomainMatches) {

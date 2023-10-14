@@ -29,8 +29,15 @@ function mergePeriods(period0, period1) {
  * @param endDay   {number} End of period 0 is today
  * @returns {Promise<any>}
  */
-async function getPackagesDownloadsOverPeriod(packageNames, startDay, endDay) {
-  const requestPeriods = getPackageRequestPeriods(startDay, endDay);
+export async function getPackagesDownloadsOverPeriod({
+  packageNames,
+  startDaysOffset,
+  endDaysOffset,
+}) {
+  const requestPeriods = getPackageRequestPeriods(
+    startDaysOffset,
+    endDaysOffset,
+  );
   const promises = requestPeriods.map(period => {
     return getPackagesDownloads(packageNames, {
       startDate: period.startDate,
@@ -51,5 +58,3 @@ async function getPackagesDownloadsOverPeriod(packageNames, startDay, endDay) {
 
   return mergedPeriod;
 }
-
-module.exports = getPackagesDownloadsOverPeriod;

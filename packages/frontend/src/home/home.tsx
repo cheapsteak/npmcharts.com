@@ -1,12 +1,12 @@
 import { useState, useEffect, Fragment, useRef } from 'react';
 import { NavLink, useSearchParams, useNavigate } from 'react-router-dom';
-import { processPackagesStats } from '../utils/processPackagesStats';
+import { processPackagesStats } from 'utils/processPackagesStats';
 import { format as formatDate, subDays, isWithinRange } from 'date-fns';
 
 import * as queryString from 'querystring';
 
 import { Graph } from '../graph/Graph';
-import getPackagesDownloadsOverPeriod from 'utils/getPackagesDownloadsOverPeriod';
+import { getPackagesDownloadsOverPeriod } from 'utils/getPackagesDownloadsOverPeriod';
 
 import fileSaver from 'file-saver';
 import { fetchBundleSize } from 'frontend/src/home/fetchBundlesSizes';
@@ -38,9 +38,6 @@ function getContributorRandom() {
     contributorCounter++ % shuffledContributorsList.length
   ];
 }
-
-
-
 
 const getPackagesMetaDataByNames = async (
   packageNames,
@@ -147,11 +144,12 @@ export const Home = ({
     // @ts-ignore
     setTimeout(() => ga('send', 'pageview'));
 
-    getPackagesDownloadsOverPeriod(
+    getPackagesDownloadsOverPeriod({
       packageNames,
-      searchParams.get('start') ? searchParams.get('start') : 365,
-      searchParams.get('end') ? searchParams.get('end') : 0,
-    ).then(packagesDownloadStatsResponse => {
+      startDaysOffset: searchParams.get('start') ? searchParams.get('start') : 365,
+      endDaysOffset: searchParams.get('end') ? searchParams.get('end') : 0,
+    }).then(packagesDownloadStatsResponse => {
+      console.log({packagesDownloadStatsResponse});
       setPackagesDownloadStatsResponse(
         'package' in packagesDownloadStatsResponse
           ? [packagesDownloadStatsResponse]

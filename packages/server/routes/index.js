@@ -1,16 +1,20 @@
-const url = require('url');
-const querystring = require('querystring');
-const express = require('express');
-const vhost = require('vhost');
-const router = express.Router();
-const debug = require('debug')('server:server');
+import { Router } from 'express';
+import vhost from 'vhost';
+import debugBase from 'debug';
+import * as url from 'url';
+import * as querystring from 'querystring';
 
-const getTitle = require('utils/getTitle');
-const getMinimalUrl = require('utils/getMinimalUrl');
-const shouldScreencapUrl = require('utils/shouldScreencapUrl');
-const getPackagesDownloadsDescriptions = require('utils/stats/getPackagesDownloadsDescription');
-const getPackgesFromUrl = require('utils/getPackagesFromUrl');
-const getPrefetchUrls = require('./prefetchUrls');
+import getTitle from 'utils/getTitle.js';
+import getMinimalUrl from 'utils/getMinimalUrl.js';
+import shouldScreencapUrl from 'utils/shouldScreencapUrl.js';
+import getPackagesDownloadsDescriptions from 'utils/stats/getPackagesDownloadsDescription.js';
+import getPackgesFromUrl from 'utils/getPackagesFromUrl.js';
+import getPrefetchUrls from './prefetchUrls.js';
+
+import { routeSubdomains } from './routeSubdomains.js';
+
+const router = Router();
+const debug = debugBase('server:server');
 
 // req.protocol is returning 'http' when it shouldn't
 const protocol = 'https';
@@ -73,12 +77,6 @@ router.get('//compare/:packages*', (req, res) =>
     ).href,
   ),
 );
+router.use(vhost('*.deploys.npmcharts.com', routeSubdomains));
 
-router.use(
-  vhost(
-    '*.deploys.npmcharts.com',
-    require('./routeSubdomains').routeSubdomains,
-  ),
-);
-
-module.exports = router;
+export default router;

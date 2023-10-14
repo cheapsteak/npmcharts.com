@@ -4,6 +4,7 @@ import nv from 'nvd3';
 import _ from 'lodash';
 import { format as formatDate, startOfDay } from 'date-fns';
 import { line, curveCatmullRom } from 'd3-shape';
+import { aggregateByInterval } from 'utils/aggregateByInterval';
 import { lineChart, xAccessor } from './chart/lineChart';
 import { Legend } from './legend/Legend';
 import './graph.styl';
@@ -28,34 +29,9 @@ const catmulRomInterpolation = (points, tension) =>
     .curve(curveCatmullRom)(points)
     .replace(/^M/, '');
 
-function processEntries(entries, { interval = 7 }) {
-  if (interval !== 1) {
-    entries = _.flow([
-      entries =>
-        _.groupBy(entries, entry =>
-          Math.floor((entries.length - entries.indexOf(entry) - 1) / interval),
-        ),
-      _.values,
-      entries =>
-        entries.map(entriesInGroup => ({
-          count: _.sumBy(entriesInGroup, entry => entry.count),
-          day: entriesInGroup[0].day,
-          releases: entriesInGroup.flatMap(entry => entry.releases),
-        })),
-      /*
-        x axis entries need to be in ascending order
-        finding the point to highlight relies on nv.interactiveBisect
-        (used in lineChart.js on "elementMousemove")
-        which "Will not work if the data points move backwards
-      */
-      _.reverse,
-    ])(entries);
-  }
 
-  return entries;
-}
 
-const processEntriesMemo = _.memoize(processEntries, (...args) => {
+const processEntriesMemo = _.memoize(aggregateByInterval, (...args) => {
   return JSON.stringify(args);
 });
 
