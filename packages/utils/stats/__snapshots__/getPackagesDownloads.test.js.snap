@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`getPackageDownloads Processes fetched data 1`] = `
+exports[`getPackagesDownloads Processes fetched data 1`] = `
 Object {
   "downloads": Array [
     Object {
