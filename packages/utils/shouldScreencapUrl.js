@@ -1,7 +1,7 @@
 import * as url from 'url';
 import { getPackagesFromUrl } from './getPackagesFromUrl.js';
 
-export default urlString => {
+export const shouldScreencapUrl = urlString => {
   const parsedUrl = url.parse(urlString);
 
   if (!['npmcharts.com', 'localhost'].includes(parsedUrl.hostname)) {
