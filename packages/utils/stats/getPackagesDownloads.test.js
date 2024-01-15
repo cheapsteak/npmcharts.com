@@ -1,4 +1,4 @@
-import { getPackageDownloads } from './getPackagesDownloads';
+import { getPackagesDownloads } from './getPackagesDownloads';
 import dummyData from '../dummyData';
 
 jest.mock('./fetchPackagesStats');
@@ -8,11 +8,11 @@ const packages = ['log4js', 'winston'];
 const startDate = '2017-08-25';
 const endDate = '2017-08-25';
 
-describe('getPackageDownloads', () => {
+describe('getPackagesDownloads', () => {
   it('Calls fetchPackagesStats with the correct arguments', async done => {
     fetchPackagesStats.mockImplementationOnce(args => Promise.resolve({}));
 
-    await getPackageDownloads(packages, { startDate, endDate });
+    await getPackagesDownloads(packages, { startDate, endDate });
 
     expect(fetchPackagesStats).toHaveBeenCalledWith(
       packages,
@@ -27,7 +27,10 @@ describe('getPackageDownloads', () => {
       Promise.resolve(dummyData[modules.join(',')]),
     );
 
-    const results = await getPackageDownloads(packages, { startDate, endDate });
+    const results = await getPackagesDownloads(packages, {
+      startDate,
+      endDate,
+    });
 
     expect(results[0]).toMatchSnapshot();
     done();
