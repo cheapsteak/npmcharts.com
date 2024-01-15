@@ -1,7 +1,7 @@
 import qs from 'query-string';
 import express from 'express';
 import debug from 'debug';
-import getChartImage from 'utils/getChartImage.js';
+import { getChartImage } from 'utils/getChartImage.js';
 
 const router = express.Router();
 

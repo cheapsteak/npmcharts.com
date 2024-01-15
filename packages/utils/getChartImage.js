@@ -13,7 +13,7 @@ import { curveCatmullRom, line } from 'd3-shape';
 
 const dateParser = timeParse('%Y-%m-%d');
 
-export default async urlString => {
+export const getChartImage = async urlString => {
   try {
     const packageNames = getPackagesFromUrl(urlString);
     const parsedUrl = url.parse(urlString);
