@@ -1,4 +1,4 @@
-const getTitle = require('./getTitle');
+const { getTitle } = require('./getTitle');
 const getPackagesFromUrl = require('./getPackagesFromUrl');
 const { getMinimalUrl } = require('./getMinimalUrl');
 
