@@ -1,5 +1,5 @@
 import * as url from 'url';
-import getPackagesFromUrl from './getPackagesFromUrl.js';
+import { getPackagesFromUrl } from './getPackagesFromUrl.js';
 
 export default urlString => {
   const parsedUrl = url.parse(urlString);

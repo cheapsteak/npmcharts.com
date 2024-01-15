@@ -1,6 +1,6 @@
 import * as url from 'url';
 
-export default urlString => {
+export const getPackagesFromUrl = urlString => {
   // pathName does not include query params
   const pathname = url.parse(urlString).pathname;
   if (pathname === '/') {
