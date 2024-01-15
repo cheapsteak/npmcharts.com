@@ -4,7 +4,7 @@ import debugBase from 'debug';
 import * as url from 'url';
 import * as querystring from 'querystring';
 
-import getTitle from 'utils/getTitle.js';
+import { getTitle } from 'utils/getTitle.js';
 import { getMinimalUrl } from 'utils/getMinimalUrl.js';
 import shouldScreencapUrl from 'utils/shouldScreencapUrl.js';
 import getPackagesDownloadsDescriptions from 'utils/stats/getPackagesDownloadsDescription.js';
