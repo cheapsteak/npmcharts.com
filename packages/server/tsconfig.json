@@ -1,5 +1,10 @@
 {
     "extends": "../../tsconfig.json",
-    "include": ["bin/**/*", "routes/**/*", "views/**/*", "app.ts", "../utils/**/*"],
-    "exclude": ["node_modules", "**/*.spec.ts", "**/*.test.ts"]
+    "include": ["bin/**/*", "routes/**/*", "views/**/*", "../utils/**/*"],
+    "exclude": ["node_modules", "**/*.spec.ts", "**/*.test.ts"],
+    "compilerOptions": {
+        "paths": {
+            "utils": ["../utils"],
+        }
+    }
 }
