@@ -8,7 +8,7 @@ import { getTitle } from 'utils/getTitle.js';
 import { getMinimalUrl } from 'utils/getMinimalUrl.js';
 import shouldScreencapUrl from 'utils/shouldScreencapUrl.js';
 import getPackagesDownloadsDescriptions from 'utils/stats/getPackagesDownloadsDescription.js';
-import getPackgesFromUrl from 'utils/getPackagesFromUrl.js';
+import { getPackagesFromUrl } from 'utils/getPackagesFromUrl.js';
 import getPrefetchUrls from './prefetchUrls.js';
 
 import { routeSubdomains } from './routeSubdomains.js';
@@ -21,7 +21,7 @@ const protocol = 'https';
 
 const sendSPA = async function(req, res, next) {
   debug('sendSPA: is prod node env?', process.env.NODE_ENV);
-  const packages = getPackgesFromUrl(req.originalUrl);
+  const packages = getPackagesFromUrl(req.originalUrl);
   const fullUrl = url.parse(
     protocol + '://' + req.get('host') + req.originalUrl,
   );

@@ -1,5 +1,5 @@
 import debug from 'debug';
-import getPackagesFromUrl from './getPackagesFromUrl.js';
+import { getPackagesFromUrl } from './getPackagesFromUrl.js';
 import _ from 'lodash';
 import sharp from 'sharp';
 import url from 'url';
