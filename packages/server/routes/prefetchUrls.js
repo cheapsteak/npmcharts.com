@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import isScopedPackageName from 'utils/isScopedPackageName.js';
-import getPackageRequestPeriods from 'utils/getPackageRequestPeriods.js';
+import { getPackageRequestPeriods } from 'utils/getPackageRequestPeriods.js';
 
 function getPrefetchUrls(packageNames, start, end) {
   const requestPeriods = getPackageRequestPeriods(start, end);
