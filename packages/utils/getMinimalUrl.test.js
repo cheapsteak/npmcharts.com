@@ -1,4 +1,4 @@
-const getMinimalUrl = require('./getMinimalUrl');
+const { getMinimalUrl } = require('./getMinimalUrl');
 
 test('getMinimalUrl outputs correct minimal url', () => {
   expect(

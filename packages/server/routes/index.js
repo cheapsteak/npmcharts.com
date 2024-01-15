@@ -5,7 +5,7 @@ import * as url from 'url';
 import * as querystring from 'querystring';
 
 import getTitle from 'utils/getTitle.js';
-import getMinimalUrl from 'utils/getMinimalUrl.js';
+import { getMinimalUrl } from 'utils/getMinimalUrl.js';
 import shouldScreencapUrl from 'utils/shouldScreencapUrl.js';
 import getPackagesDownloadsDescriptions from 'utils/stats/getPackagesDownloadsDescription.js';
 import getPackgesFromUrl from 'utils/getPackagesFromUrl.js';
