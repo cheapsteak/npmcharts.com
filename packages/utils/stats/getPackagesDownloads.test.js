@@ -2,7 +2,7 @@ import { getPackageDownloads } from './getPackagesDownloads';
 import dummyData from '../dummyData';
 
 jest.mock('./fetchPackagesStats');
-const fetchPackagesStats = require('./fetchPackagesStats');
+const { fetchPackagesStats } = require('./fetchPackagesStats');
 
 const packages = ['log4js', 'winston'];
 const startDate = '2017-08-25';

@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { isScopedPackageName } from '../isScopedPackageName.js';
-import fetchPackagesStats from './fetchPackagesStats.js';
+import { fetchPackagesStats } from './fetchPackagesStats.js';
 import standardizeNpmPackageResponse from './standardizeNpmPackageResponse.js';
 
 export async function getPackagesDownloads(

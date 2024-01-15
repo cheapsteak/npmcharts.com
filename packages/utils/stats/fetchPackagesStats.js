@@ -1,6 +1,6 @@
 import fetch from 'isomorphic-fetch';
 
-export default (packageNames, startDate, endDate) => {
+export const fetchPackagesStats = (packageNames, startDate, endDate) => {
   const packageNamesParam = packageNames.join(',');
   const baseApiUrls = ['https://api.npmjs.org', '/api'];
 
