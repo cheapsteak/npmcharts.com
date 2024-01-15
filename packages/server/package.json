@@ -18,14 +18,11 @@
     "morgan": "~1.9.1",
     "psl": "1.8.0",
     "pug": "~2.0.0-beta11",
-    "puppeteer": "^5.3.1",
     "serve-favicon": "~2.4.2",
     "sharp": "0.32.1",
     "vhost": "3.0.2"
   },
   "devDependencies": {
-    "@types/puppeteer": "2.0.1",
-    "cross-env": "5.2.0",
     "tsx": "4.7.0"
   }
 }
