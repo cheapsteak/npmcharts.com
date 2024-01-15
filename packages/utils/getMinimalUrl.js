@@ -1,7 +1,7 @@
 import * as url from 'url';
 import * as querystring from 'querystring';
 
-export default urlString => {
+export const getMinimalUrl = urlString => {
   const parsedUrl = url.parse(urlString);
   const queryParams = querystring.parse(parsedUrl.query);
   const outgoingQueryParams = querystring.stringify(
