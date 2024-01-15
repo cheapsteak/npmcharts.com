@@ -6,7 +6,7 @@
 
 import http from 'http';
 import debugBase from 'debug';
-import app from '../app.js';
+import { app } from '../app.js';
 var debug = debugBase('server:server');
 
 /**

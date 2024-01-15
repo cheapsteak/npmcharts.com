@@ -13,7 +13,7 @@ import { chartImageRouter } from './routes/chartImage.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-var app = express();
+export const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -52,5 +52,3 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-
-export default app;
