@@ -1,4 +1,4 @@
-import getPackageDownloads from './getPackagesDownloads';
+import { getPackageDownloads } from './getPackagesDownloads';
 import dummyData from '../dummyData';
 
 jest.mock('./fetchPackagesStats');

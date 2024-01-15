@@ -3,7 +3,10 @@ import isScopedPackageName from '../isScopedPackageName.js';
 import fetchPackagesStats from './fetchPackagesStats.js';
 import standardizeNpmPackageResponse from './standardizeNpmPackageResponse.js';
 
-async function getPackagesDownloads(packageNames, { startDate, endDate }) {
+export async function getPackagesDownloads(
+  packageNames,
+  { startDate, endDate },
+) {
   const [scopedPackageNames, standardPackageNames] = _.partition(
     packageNames,
     isScopedPackageName,
@@ -38,5 +41,3 @@ async function getPackagesDownloads(packageNames, { startDate, endDate }) {
     combinedPackagesStats.find(entry => entry.package === packageName),
   );
 }
-
-export default getPackagesDownloads;

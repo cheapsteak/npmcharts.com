@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import dateFns from 'date-fns';
 
-import getPackagesDownloads from './getPackagesDownloads.js';
+import { getPackagesDownloads } from './getPackagesDownloads.js';
 
 const { format: formatDate, subDays } = dateFns;
 

@@ -1,5 +1,5 @@
-const getPackageRequestPeriods = require('./getPackageRequestPeriods');
-const getPackagesDownloads = require('./stats/getPackagesDownloads');
+const { getPackageRequestPeriods } = require('./getPackageRequestPeriods');
+const { getPackagesDownloads } = require('./stats/getPackagesDownloads');
 
 /**
  * Merge 2 statistic periods
