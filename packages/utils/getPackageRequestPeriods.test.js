@@ -1,4 +1,4 @@
-const getPackageRequestPeriods = require('./getPackageRequestPeriods');
+const { getPackageRequestPeriods } = require('./getPackageRequestPeriods');
 
 beforeEach(() => {
   jest.useFakeTimers('modern').setSystemTime(new Date('2020-10-13').getTime());
