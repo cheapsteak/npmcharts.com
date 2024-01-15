@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { isScopedPackageName } from 'utils/isScopedPackageName.js';
 import { getPackageRequestPeriods } from 'utils/getPackageRequestPeriods.js';
 
-function getPrefetchUrls(packageNames, start, end) {
+export function getPrefetchUrls(packageNames, start, end) {
   const requestPeriods = getPackageRequestPeriods(start, end);
 
   // npmjs's api does not support retrieving data of >1 scoped packages (or mix of scoped and unscoped) in one request
@@ -29,5 +29,3 @@ function getPrefetchUrls(packageNames, start, end) {
       }),
   );
 }
-
-export default getPrefetchUrls;

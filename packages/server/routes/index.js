@@ -9,7 +9,7 @@ import { getMinimalUrl } from 'utils/getMinimalUrl.js';
 import { shouldScreencapUrl } from 'utils/shouldScreencapUrl.js';
 import { getPackagesDownloadsDescriptions } from 'utils/stats/getPackagesDownloadsDescription.js';
 import { getPackagesFromUrl } from 'utils/getPackagesFromUrl.js';
-import getPrefetchUrls from './prefetchUrls.js';
+import { getPrefetchUrls } from './getPrefetchUrls.js';
 
 import { routeSubdomains } from './routeSubdomains.js';
 

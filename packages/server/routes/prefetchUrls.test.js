@@ -1,4 +1,4 @@
-const getPrefetchUrls = require('./prefetchUrls');
+const { getPrefetchUrls } = require('./getPrefetchUrls');
 
 beforeEach(() => {
   jest.useFakeTimers('modern').setSystemTime(new Date('2020-10-13').getTime());
