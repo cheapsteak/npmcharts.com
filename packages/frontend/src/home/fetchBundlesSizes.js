@@ -18,15 +18,3 @@ export async function fetchBundleSize(pkgName) {
     };
   }
 }
-
-// export const fetchBundlesSizes = pkgNames => {
-//   return pkgNames.reduce((acc, pkgName) => {
-//     fetchBundleSize(pkgName).then(bundle => {
-//       if (bundle) acc[pkgName] = bundle;
-//     });
-//     return acc;
-//   }, {});
-//   return Promise.all(pkgNames.map(pkgName => fetchBundleSize(pkgName))
-// };
-
-// export default fetchBundlesSizes;
