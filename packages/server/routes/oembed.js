@@ -2,7 +2,7 @@ import * as url from 'url';
 import express from 'express';
 import cors from 'cors';
 
-import getOembedObject from 'utils/getOembedObject.js';
+import { getOembedObject } from 'utils/getOembedObject.js';
 
 const router = express.Router();
 

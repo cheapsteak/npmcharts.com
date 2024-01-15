@@ -1,4 +1,4 @@
-const getOembedObject = require('./getOembedObject');
+const { getOembedObject } = require('./getOembedObject');
 
 test('getOembedObject output matches snapshot', () => {
   expect(
