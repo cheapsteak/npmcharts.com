@@ -5,10 +5,10 @@ import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import { fileURLToPath } from 'url';
 
-import indexRouter from './routes/index.js';
-import apiRouter from './routes/api.js';
-import oembedRouter from './routes/oembed.js';
-import chartImageRouter from './routes/chartImage.js';
+import { indexRouter } from './routes/index.js';
+import { apiRouter } from './routes/api.js';
+import { oembedRouter } from './routes/oembed.js';
+import { chartImageRouter } from './routes/chartImage.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

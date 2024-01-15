@@ -38,4 +38,4 @@ router.get('/:packages*', async function(req, res, next) {
   }
 });
 
-export default router;
+export const chartImageRouter = router;
