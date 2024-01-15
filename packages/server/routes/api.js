@@ -55,4 +55,4 @@ router.get('/npm-metadata*', async (req, res) => {
   }
 });
 
-export default router;
+export const apiRouter = router;

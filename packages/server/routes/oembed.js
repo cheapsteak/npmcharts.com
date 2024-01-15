@@ -22,4 +22,4 @@ router.get('/', cors(), function(req, res, next) {
   }
 });
 
-export default router;
+export const oembedRouter = router;

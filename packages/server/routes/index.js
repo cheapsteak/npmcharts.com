@@ -79,4 +79,4 @@ router.get('//compare/:packages*', (req, res) =>
 );
 router.use(vhost('*.deploys.npmcharts.com', routeSubdomains));
 
-export default router;
+export const indexRouter = router;
