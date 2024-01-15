@@ -6,7 +6,7 @@ import getPackagesDownloadsComparisons from './getPackagesDownloadsComparisons.j
 const formatDownloadCount = x => numeral(x).format('0,0');
 const formatPercentage = x => numeral(x).format('+0.0%');
 
-const getPackagesDescriptions = async packages => {
+export const getPackagesDownloadsDescriptions = async packages => {
   let description;
 
   const comparisons = await getPackagesDownloadsComparisons(packages);
@@ -40,5 +40,3 @@ const getPackagesDescriptions = async packages => {
 
   return description;
 };
-
-export default getPackagesDescriptions;
