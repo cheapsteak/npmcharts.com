@@ -91,7 +91,8 @@ module.exports = (env, opts) => {
     },
 
     optimization: {
-      minimize: options.mode === 'production',
+      minimize: false,
+      // options.mode === 'production',
       minimizer: [
         new TerserPlugin({
           cache: false,
