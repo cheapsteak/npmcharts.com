@@ -110,7 +110,7 @@ export const scatter = function() {
               x.range(xRange || [0, availableWidth]);
 
 
-           var min = d3.min(seriesData.map(d => d.y || null));
+           var min = d3.min(seriesData.map(d => d.y ?? null));
            var max = d3.max(seriesData.map(d => d.y));
            if (useLogScale) {
                   y.clamp(true)
