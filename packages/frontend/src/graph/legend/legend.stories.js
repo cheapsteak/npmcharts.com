@@ -3,7 +3,7 @@
 import { storiesOf } from '@storybook/vue';
 import { action } from '@storybook/addon-actions';
 
-import legend from './legend.js';
+import legend from './legend.vue';
 
 const makeLegend = data => ({
   components: { graphLegend: legend },

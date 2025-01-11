@@ -1,12 +1,31 @@
+<template>
+  <div ref="chart" id="chart" class="with-3d-shadow with-transitions">
+    <graphLegend
+      v-if="packageDownloadStats.length && legendData"
+      :modules="legendData.modules"
+      :interval="interval"
+      :date="legendData.date"
+      @package-focus="handlePackageFocus"
+      @package-blur="handlePackageBlur"
+      @legend-blur="handleLegendBlur"
+      @legend-focus="handleLegendFocus"
+    >
+    </graphLegend>
+    <svg></svg>
+  </div>
+</template>
+
+<script>
 import d3 from 'd3';
 import nv from 'nvd3';
 import _ from 'lodash';
 import { format as formatDate, startOfDay } from 'date-fns';
 import { line, curveCatmullRom } from 'd3-shape';
-import withRender from './graph.html';
 import { lineChart, xAccessor } from './chart/lineChart';
 
 const { palette } = require('configs');
+
+import GraphLegend from "./legend/legend.vue";
 
 // this can't go in the data of the component, observing it changes it.
 let svg;
@@ -59,7 +78,7 @@ const processEntriesMemo = _.memoize(processEntries, (...args) => {
   return JSON.stringify(args);
 });
 
-export default withRender({
+export default {
   props: {
     isMinimalMode: {
       type: Boolean,
@@ -274,6 +293,7 @@ export default withRender({
     },
   },
   components: {
-    graphLegend: require('./legend/legend').default,
+    GraphLegend,
   },
-});
+};
+</script>

@@ -4,7 +4,7 @@ import { processPackagesStats } from 'frontend/src/utils/processPackagesStats';
 import standardizeNpmPackageResponse from 'utils/stats/standardizeNpmPackageResponse';
 import dummyData from 'utils/dummyData';
 
-import graph from './graph.js';
+import graph from './graph.vue';
 
 const makeGraph = data => ({
   components: { graph },

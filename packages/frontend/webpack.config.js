@@ -5,6 +5,8 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const glob = require('glob');
 const TerserPlugin = require('terser-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const { VueLoaderPlugin } = require('vue-loader')
+
 
 const outDir = path.resolve(__dirname, 'public');
 
@@ -27,15 +29,22 @@ module.exports = (env, opts) => {
     },
     devServer: {
       historyApiFallback: true,
-      contentBase: [path.join(__dirname, 'src/assets')],
+      static: [path.join(__dirname, 'src/assets')],
       compress: true,
       port: 9001,
-      proxy: {
-        '/api': 'http://localhost:3896',
-      },
+      proxy: [
+        {
+          context: ['/api'],
+          target: 'http://localhost:3896',
+        }
+      ]
     },
     module: {
       rules: [
+        {
+          test: /\.vue$/,
+          loader: 'vue-loader'
+        },
         {
           oneOf: [
             {
@@ -79,12 +88,26 @@ module.exports = (env, opts) => {
               loader: 'svg-inline-loader',
             },
             {
-              loader: require.resolve('file-loader'),
-              exclude: [/\.js$/, /\.html$/, /\.json$/],
-              options: {
-                name: 'static/media/[name].[hash:8].[ext]',
-              },
+              exclude: [
+                /\.html$/,
+                /\.(js|jsx|mjs)$/,
+                /\.(ts|tsx)$/,
+                /\.(vue)$/,
+                /\.(less)$/,
+                /\.(re)$/,
+                /\.(s?css|sass)$/,
+                /\.json$/,
+                /\.bmp$/,
+                /\.gif$/,
+                /\.jpe?g$/,
+                /\.png$/
+              ],
+              use: (info) => {
+                return info.compiler !== 'HtmlWebpackCompiler' ? [{
+                  loader: require.resolve('file-loader')
+                }]:[]},
             },
+            
           ],
         },
       ],
@@ -118,21 +141,22 @@ module.exports = (env, opts) => {
         template: 'src/index.pug',
       }),
 
-      new CopyWebpackPlugin(
-        [
+      new CopyWebpackPlugin({
+        patterns: [
           {
             from: '**/*',
             to: outDir,
+            context: './src/assets'
           },
-        ],
-        { context: './src/assets' },
-      ),
+        ]
+      }),
 
       new BundleAnalyzerPlugin({
         analyzerMode: 'static',
         reportFilename: 'bundle-stats.html',
         openAnalyzer: false,
       }),
+      new VueLoaderPlugin(),
     ],
     // resolve: {
     //   alias: {
