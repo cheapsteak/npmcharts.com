@@ -1,5 +1,5 @@
-import _ from 'lodash';
-import { format as formatDate, startOfDay } from 'date-fns';
+const _ = require('lodash');
+const { format: formatDate, startOfDay } = require('date-fns');
 
 export const processPackagesStats = (
   packagesDownloadStats,

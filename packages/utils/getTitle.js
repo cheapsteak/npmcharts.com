@@ -1,6 +1,6 @@
-const arrayToSentence = require('array-to-sentence');
+import arrayToSentence from 'array-to-sentence';
 
-module.exports = packages =>
+export const getTitle = packages =>
   packages && packages.length
     ? packages.length === 1
       ? packages[0] + ' download trends - npmcharts 📈'

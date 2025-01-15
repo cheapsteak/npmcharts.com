@@ -26,5 +26,3 @@ export const fetchReposStats = orgRepos =>
       name: orgRepo,
     })),
   );
-
-export default fetchReposStats;

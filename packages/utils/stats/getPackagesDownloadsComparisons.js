@@ -1,23 +1,22 @@
-const _last = require('lodash/last');
-const _sumBy = require('lodash/sumBy');
-const _initial = require('lodash/initial');
-const _difference = require('lodash/difference');
-const { format: formatDate, subDays } = require('date-fns');
+import _ from 'lodash';
+import dateFns from 'date-fns';
 
-const getPackagesDownloads = require('./getPackagesDownloads');
+import { getPackagesDownloads } from './getPackagesDownloads.js';
+
+const { format: formatDate, subDays } = dateFns;
 
 const DATE_FORMAT = 'YYYY-MM-DD';
 
 const getDownloadComparisonForPeriod = (downloads, intervalInDays) => {
   const trimmedDownloads =
-    _last(downloads).downloads === 0 ? _initial(downloads) : downloads;
+    _.last(downloads).downloads === 0 ? _.initial(downloads) : downloads;
 
-  const currentPeriodDownloads = _sumBy(
+  const currentPeriodDownloads = _.sumBy(
     trimmedDownloads.slice(-intervalInDays),
     x => x.downloads,
   );
-  const previousPeriodDownloads = _sumBy(
-    _difference(
+  const previousPeriodDownloads = _.sumBy(
+    _.difference(
       trimmedDownloads.slice(-intervalInDays * 2),
       trimmedDownloads.slice(-intervalInDays),
     ),
@@ -53,4 +52,4 @@ const getPackagesDownloadsComparisons = async packageNames => {
   return results;
 };
 
-module.exports = getPackagesDownloadsComparisons;
+export default getPackagesDownloadsComparisons;

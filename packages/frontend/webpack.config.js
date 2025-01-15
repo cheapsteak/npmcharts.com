@@ -2,7 +2,6 @@ const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const glob = require('glob');
 const TerserPlugin = require('terser-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
@@ -15,7 +14,7 @@ module.exports = (env, opts) => {
 
   return {
     entry: {
-      app: ['./src/index.js', ...glob.sync('./src/**/*.styl')],
+      app: ['./src/index.tsx', './src/style.styl'],
     },
     output: {
       path: outDir,
@@ -27,7 +26,7 @@ module.exports = (env, opts) => {
     },
     devServer: {
       historyApiFallback: true,
-      contentBase: [path.join(__dirname, 'src/assets')],
+      static: [path.join(__dirname, 'src/assets')],
       compress: true,
       port: 9001,
       proxy: {
@@ -39,26 +38,7 @@ module.exports = (env, opts) => {
         {
           oneOf: [
             {
-              test: /\.html$/,
-              use: [
-                {
-                  loader: 'babel-loader',
-                  options: babelConfig,
-                },
-                {
-                  loader: 'vue-template-loader',
-                  options: {
-                    transformAssetUrls: {
-                      // The key should be an element name
-                      // The value should be an attribute name or an array of attribute names
-                      img: 'src',
-                    },
-                  },
-                },
-              ],
-            },
-            {
-              test: /\.js$/,
+              test: /\.(js|ts|tsx)$/,
               exclude: /node_modules/,
               use: {
                 loader: 'babel-loader',
@@ -78,13 +58,6 @@ module.exports = (env, opts) => {
               test: /\.svg$/,
               loader: 'svg-inline-loader',
             },
-            {
-              loader: require.resolve('file-loader'),
-              exclude: [/\.js$/, /\.html$/, /\.json$/],
-              options: {
-                name: 'static/media/[name].[hash:8].[ext]',
-              },
-            },
           ],
         },
       ],
@@ -94,13 +67,11 @@ module.exports = (env, opts) => {
       minimize: options.mode === 'production',
       minimizer: [
         new TerserPlugin({
-          cache: false,
           terserOptions: {
             compress: false,
             mangle: true,
           },
           parallel: true,
-          sourceMap: true,
           extractComments: true,
         }),
       ],
@@ -134,10 +105,8 @@ module.exports = (env, opts) => {
         openAnalyzer: false,
       }),
     ],
-    // resolve: {
-    //   alias: {
-    //     vue$: 'vue/dist/vue.esm.js',
-    //   },
-    // },
+    resolve: {
+      extensions: ['.ts', '.tsx', '.js', '.json'],
+    },
   };
 };

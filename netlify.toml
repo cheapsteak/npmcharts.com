@@ -4,6 +4,10 @@
   functions = "lambdas"
   publish = "packages/frontend/public/"
 
+[build.environment]
+  NODE_VERSION = "18.17.0"
+  YARN_VERSION = "1.18.0"
+
 [[headers]]
   for = "/app.css"
   [headers.values]

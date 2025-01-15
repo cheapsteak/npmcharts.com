@@ -1,13 +1,12 @@
-const _partition = require('lodash/partition');
-const _flatten = require('lodash/flatten');
-const isScopedPackageName = require('utils/isScopedPackageName');
-const getPackageRequestPeriods = require('utils/getPackageRequestPeriods');
+import _ from 'lodash';
+import { isScopedPackageName } from 'utils/isScopedPackageName.js';
+import { getPackageRequestPeriods } from 'utils/getPackageRequestPeriods.js';
 
-function getPrefetchUrls(packageNames, start, end) {
+export function getPrefetchUrls(packageNames, start, end) {
   const requestPeriods = getPackageRequestPeriods(start, end);
 
   // npmjs's api does not support retrieving data of >1 scoped packages (or mix of scoped and unscoped) in one request
-  const [scopedPackageNames, standardPackageNames] = _partition(
+  const [scopedPackageNames, standardPackageNames] = _.partition(
     packageNames,
     isScopedPackageName,
   );
@@ -16,7 +15,7 @@ function getPrefetchUrls(packageNames, start, end) {
     standardPackageNames,
   ];
 
-  return _flatten(
+  return _.flatten(
     requests
       .filter(packageNames => {
         return packageNames.length > 0;
@@ -30,5 +29,3 @@ function getPrefetchUrls(packageNames, start, end) {
       }),
   );
 }
-
-module.exports = getPrefetchUrls;

@@ -1,11 +1,13 @@
-const _compact = require('lodash/compact');
-const _partition = require('lodash/partition');
-const isScopedPackageName = require('../isScopedPackageName');
-const fetchPackagesStats = require('./fetchPackagesStats');
-const standardizeNpmPackageResponse = require('./standardizeNpmPackageResponse');
+import _ from 'lodash';
+import { isScopedPackageName } from '../isScopedPackageName.js';
+import { fetchPackagesStats } from './fetchPackagesStats.js';
+import standardizeNpmPackageResponse from './standardizeNpmPackageResponse.js';
 
-async function getPackagesDownloads(packageNames, { startDate, endDate }) {
-  const [scopedPackageNames, standardPackageNames] = _partition(
+export async function getPackagesDownloads(
+  packageNames,
+  { startDate, endDate },
+) {
+  const [scopedPackageNames, standardPackageNames] = _.partition(
     packageNames,
     isScopedPackageName,
   );
@@ -30,7 +32,7 @@ async function getPackagesDownloads(packageNames, { startDate, endDate }) {
     scopedPackagesResponse,
   );
 
-  const combinedPackagesStats = _compact([
+  const combinedPackagesStats = _.compact([
     ...standardPackagesStats,
     ...scopedPackagesStats,
   ]);
@@ -39,5 +41,3 @@ async function getPackagesDownloads(packageNames, { startDate, endDate }) {
     combinedPackagesStats.find(entry => entry.package === packageName),
   );
 }
-
-module.exports = getPackagesDownloads;

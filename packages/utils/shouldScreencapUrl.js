@@ -1,7 +1,7 @@
-const url = require('url');
-const getPackagesFromUrl = require('./getPackagesFromUrl');
+import * as url from 'url';
+import { getPackagesFromUrl } from './getPackagesFromUrl.js';
 
-module.exports = urlString => {
+export const shouldScreencapUrl = urlString => {
   const parsedUrl = url.parse(urlString);
 
   if (!['npmcharts.com', 'localhost'].includes(parsedUrl.hostname)) {

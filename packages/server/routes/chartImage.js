@@ -1,7 +1,8 @@
-const qs = require('query-string');
-const express = require('express');
-const debug = require('debug')('server:server');
-const getChartImage = require('utils/getChartImage');
+import qs from 'query-string';
+import express from 'express';
+import debug from 'debug';
+import { getChartImage } from 'utils/getChartImage.js';
+
 const router = express.Router();
 
 router.get('/:packages*', async function(req, res, next) {
@@ -10,12 +11,12 @@ router.get('/:packages*', async function(req, res, next) {
   const host = req.get('host');
   const pathname = req.originalUrl.split('?')[0];
 
-  const packages =
+  const packageNames =
     pathname
       .replace(/^\/chart-image\//, '')
       .replace(/\.png/, '')
       .split(',') || [];
-  if (!packages.length) {
+  if (!packageNames.length) {
     debug('path doesnt require dynamic screencap');
     // send the fallback image for invalid urls
     res.redirect('https://npmcharts.com/images/og-image-3.png');
@@ -24,7 +25,7 @@ router.get('/:packages*', async function(req, res, next) {
       const queryString = qs.stringify(
         Object.assign({}, req.query, { minimal: true }),
       );
-      const packagesString = packages.join(',');
+      const packagesString = packageNames.join(',');
       const urlToScreencap = `${protocol}://${host}/compare/${packagesString}?${queryString}`;
       debug(`attempting to get chart image for: ${urlToScreencap}`);
       const imageBuffer = await getChartImage(urlToScreencap);
@@ -37,4 +38,4 @@ router.get('/:packages*', async function(req, res, next) {
   }
 });
 
-module.exports = router;
+export const chartImageRouter = router;

@@ -1,6 +1,6 @@
-const express = require('express');
-const cachios = require('cachios');
-const LRU = require('lru-cache');
+import express from 'express';
+import cachios from 'cachios';
+import LRU from 'lru-cache';
 
 cachios.cache = LRU({
   max: 1000,
@@ -38,7 +38,7 @@ router.get('/npm-metadata*', async (req, res) => {
     const npmRegistryData = registryPackageResponse.data;
     const definitivelyTyped = registryDefinitivelyTypedResponse.status === 200;
 
-    const latestVersionName = npmRegistryData['dist-tags'].latest;
+    const latestVersionName = npmRegistryData['dist-tags']?.latest;
     const latestVersionData = npmRegistryData.versions[latestVersionName];
 
     return res.send({
@@ -55,4 +55,4 @@ router.get('/npm-metadata*', async (req, res) => {
   }
 });
 
-module.exports = router;
+export const apiRouter = router;

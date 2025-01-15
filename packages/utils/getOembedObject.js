@@ -1,8 +1,8 @@
-const getTitle = require('./getTitle');
-const getPackagesFromUrl = require('./getPackagesFromUrl');
-const getMinimalUrl = require('./getMinimalUrl');
+const { getTitle } = require('./getTitle');
+const { getPackagesFromUrl } = require('./getPackagesFromUrl');
+const { getMinimalUrl } = require('./getMinimalUrl');
 
-module.exports = ({ url, width, height }) => {
+export const getOembedObject = ({ url, width, height }) => {
   const packages = getPackagesFromUrl(url);
   const embedUrl = getMinimalUrl(url);
   return {

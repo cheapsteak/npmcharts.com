@@ -1,4 +1,4 @@
-const shouldScreencapUrl = require('./shouldScreencapUrl');
+const { shouldScreencapUrl } = require('./shouldScreencapUrl');
 
 test('only allow urls of packages to return true', () => {
   expect(shouldScreencapUrl('https://npmcharts.com/compare/glamor')).toBe(true);

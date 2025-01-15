@@ -1,4 +1,4 @@
-const getPackagesFromUrl = require('./getPackagesFromUrl');
+const { getPackagesFromUrl } = require('./getPackagesFromUrl');
 
 test('getPackagesFromUrl correctly parses packages from url', () => {
   expect(

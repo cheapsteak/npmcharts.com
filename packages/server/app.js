@@ -1,10 +1,19 @@
-var express = require('express');
-var path = require('path');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+import express from 'express';
+import path from 'path';
+import logger from 'morgan';
+import cookieParser from 'cookie-parser';
+import bodyParser from 'body-parser';
+import { fileURLToPath } from 'url';
 
-var app = express();
+import { indexRouter } from './routes/index.js';
+import { apiRouter } from './routes/api.js';
+import { oembedRouter } from './routes/oembed.js';
+import { chartImageRouter } from './routes/chartImage.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -21,10 +30,10 @@ app.use(
   express.static(path.join(__dirname, '../frontend/public'), { index: false }),
 );
 
-app.use('/', require('./routes/index'));
-app.use('/api', require('./routes/api'));
-app.use('/oembed', require('./routes/oembed'));
-app.use('/chart-image', require('./routes/chartImage'));
+app.use('/', indexRouter);
+app.use('/api', apiRouter);
+app.use('/oembed', oembedRouter);
+app.use('/chart-image', chartImageRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -43,5 +52,3 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-
-module.exports = app;

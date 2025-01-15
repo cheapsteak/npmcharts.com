@@ -1,7 +1,7 @@
-const url = require('url');
-const querystring = require('querystring');
+import * as url from 'url';
+import * as querystring from 'querystring';
 
-module.exports = urlString => {
+export const getMinimalUrl = urlString => {
   const parsedUrl = url.parse(urlString);
   const queryParams = querystring.parse(parsedUrl.query);
   const outgoingQueryParams = querystring.stringify(

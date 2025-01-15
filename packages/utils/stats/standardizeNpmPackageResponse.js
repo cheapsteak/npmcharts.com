@@ -1,2 +1,2 @@
-module.exports = response =>
+export default  response =>
   'package' in response ? [response] : Object.values(response);
