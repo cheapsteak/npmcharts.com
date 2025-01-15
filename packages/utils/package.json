@@ -6,7 +6,6 @@
   "scripts": {
     "test": "jest"
   },
-  "type": "module",
   "dependencies": {
     "d3-scale": "4.0.2",
     "d3-shape": "3.2.0",
