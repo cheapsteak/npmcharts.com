@@ -1,0 +1,7 @@
+{
+    "version": 2,
+    "env": {
+        "NODE_VERSION": "18.17.0",
+        "YARN_VERSION": "1.18.0"
+    }
+}
