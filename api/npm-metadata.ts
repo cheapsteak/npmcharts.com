@@ -3,36 +3,43 @@ import ky from 'ky';
 
 export default async function handler(req: VercelRequest, res: VercelResponse): Promise<void> {
     const packageName = req.query.packageName;
-    console.log(packageName);
+
     try {
         const [
             registryPackageResponse,
             registryDefinitivelyTypedResponse,
         ] = await Promise.all([
-            ky.get(`https://registry.npmjs.org/${packageName}`).json(),
+            ky.get(`https://registry.npmjs.org/${packageName}`).json() as Promise<{
+                'dist-tags': {
+                    latest?: string;
+                };
+                versions: Record<string, {
+                    name: string;
+                    version: string;
+                    description?: string;
+                    time?: Record<string, string>;
+                }>;
+            }>,
             ky.head(`https://registry.npmjs.org/@types/${packageName}`, {
                 throwHttpErrors: false,
             }),
         ]);
 
-        console.log(registryDefinitivelyTypedResponse.status);
-        // console.log(registryDefinitivelyTypedResponse.status);
-
         const npmRegistryData = registryPackageResponse;
         const definitivelyTyped = registryDefinitivelyTypedResponse.status === 200;
 
         const latestVersionName = npmRegistryData['dist-tags']?.latest;
-        const latestVersionData = npmRegistryData.versions[latestVersionName];
-        res.setHeader('Cache-Control', 'public, max-age=3600, stale-while-revalidate=3600');
+        const latestVersionData = latestVersionName ? npmRegistryData.versions[latestVersionName] : null;
+
         res.setHeader('Cache-Control', 'public, max-age=0, stale-while-revalidate=3600');
 
         res.send({
             definitivelyTyped,
             hasTypings:
-                'types' in latestVersionData || 'typings' in latestVersionData,
+                latestVersionData && ('types' in latestVersionData || 'typings' in latestVersionData),
             latestVersion: latestVersionName,
-            description: latestVersionData.description,
-            releaseDatesByVersion: npmRegistryData.time,
+            description: latestVersionData?.description,
+            releaseDatesByVersion: latestVersionData?.time,
         });
     } catch (exception) {
         console.error(exception);
