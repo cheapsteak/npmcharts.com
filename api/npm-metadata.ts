@@ -23,6 +23,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
 
         const latestVersionName = npmRegistryData['dist-tags']?.latest;
         const latestVersionData = npmRegistryData.versions[latestVersionName];
+        res.setHeader('Cache-Control', 'public, max-age=3600, stale-while-revalidate=3600');
+        res.setHeader('Cache-Control', 'public, max-age=0, stale-while-revalidate=3600');
 
         res.send({
             definitivelyTyped,
