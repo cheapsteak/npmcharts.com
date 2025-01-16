@@ -1,0 +1,15 @@
+{
+    "name": "api",
+    "type": "module",
+    "version": "1.0.0",
+    "private": true,
+    "volta": {
+        "node": "20.18.1"
+    },
+    "devDependencies": {
+        "@vercel/node": "5.0.2"
+    },
+    "dependencies": {
+        "ky": "1.7.4"
+    }
+}

@@ -3,21 +3,14 @@
   "version": "1.0.0",
   "private": true,
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "api"
   ],
   "description": "Project template for gulp.js",
   "author": "Riku Rouvila <riku.rouvila@leonidasoy.fi>",
   "license": "MIT",
   "scripts": {
-    "production": "PORT=3896 pm2 start ecosystem.config.js --env production",
-    "prod:reload": "pm2 reload ecosystem.config.js --update-env --only npmcharts --env production",
-    "startup": "pm2 startup",
-    "stop:production": "pm2 stop npmcharts",
-    "start": "yarn dev",
-    "start:server": "cd packages/server && yarn start",
-    "dev:frontend": "cd packages/frontend && yarn dev",
-    "dev:server": "cd packages/server && yarn dev",
-    "dev": "npm-run-all --parallel dev:*",
+    "dev": "yarn workspace frontend dev",
     "build": "NODE_ENV=production yarn build:frontend",
     "build:frontend": "cd packages/frontend && yarn build",
     "lint": "eslint .",

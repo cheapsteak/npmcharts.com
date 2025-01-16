@@ -48,7 +48,7 @@ const getPackagesMetaDataByNames = async (
   const endDate = subDays(Date.now(), endDaysOffset);
   const packageReleaseResponses = await Promise.all(
     packageNames.map(packageName =>
-      fetch(`/api/npm-metadata/${packageName}`)
+      fetch(`/api/npm-metadata?packageName=${encodeURIComponent(packageName)}`)
         .then(response => response.json())
         .then(metadata => {
           const releaseDates = _.invertBy(
