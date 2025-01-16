@@ -3,5 +3,11 @@
     "env": {
         "NODE_VERSION": "18.17.0",
         "YARN_VERSION": "1.18.0"
-    }
+    },
+    "rewrites": [
+        {
+            "source": "/compare/:path*",
+            "destination": "/index.html"
+        }
+    ]
 }
