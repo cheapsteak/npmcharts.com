@@ -110,14 +110,13 @@ export const scatter = function() {
               x.range(xRange || [0, availableWidth]);
 
 
-           var min = d3.min(seriesData.map(d => d.y ?? null));
            var max = d3.max(seriesData.map(d => d.y));
            if (useLogScale) {
                   y.clamp(true)
-                      .domain(yDomain || [min || 0, max * 1.01])
+                      .domain(yDomain || [0, max * 1.01])
                       .range(yRange || [availableHeight, 0]);
               } else {
-                      y.domain(yDomain || [min || 0, max * 1.01])
+                      y.domain(yDomain || [0, max * 1.01])
                       .range(yRange || [availableHeight, 0]);
               }
 
